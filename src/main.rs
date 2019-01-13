@@ -3,9 +3,10 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::game::Game;
-use wizardscastle::player::{Race, Gender};
+use wizardscastle::player::{Stat, Race, Gender};
 
 mod win;
+mod names;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
@@ -133,6 +134,71 @@ impl G {
         G::popup_close(w);
     }
 
+    /// Choose stats
+    fn choose_stats(&mut self) {
+        let w = G::popup(15, 50);
+
+
+        let stats = [
+            Stat::Strength,
+            Stat::Intelligence,
+            Stat::Dexterity,
+        ];
+
+        for stat in stats.iter() {
+            let additional_points = self.game.player_additional_points();
+
+            if additional_points == 0 {
+                break;
+            }
+
+            wclear(w);
+
+            self.wcon(w, A_TITLE);
+            G::mvwprintw_center(w, 2, &format!("Ok, {}, you have these statistics:", self.player_race_name()));
+            self.wcoff(w, A_TITLE);
+
+            G::mvwprintw_center_notrim(w, 4, &format!("{:>12}: {:>2}", G::stat_name(Stat::Strength), self.game.player_stat(Stat::Strength)));
+            G::mvwprintw_center_notrim(w, 5, &format!("{:>12}: {:>2}", G::stat_name(Stat::Intelligence), self.game.player_stat(Stat::Intelligence)));
+            G::mvwprintw_center_notrim(w, 6, &format!("{:>12}: {:>2}", G::stat_name(Stat::Dexterity), self.game.player_stat(Stat::Dexterity)));
+
+            G::mvwprintw_center(w, 8, &format!("And {} other points to allocate as you wish.", additional_points));
+
+            G::mvwprintw_center(w, 10, &format!("How many points do you add to {}?", G::stat_name(*stat).to_uppercase()));
+
+            G::mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
+
+            box_(w, 0, 0);
+
+            wrefresh(w);
+
+            loop {
+                let key = getch();
+
+                let nkey = G::norm_key(key);
+
+                match nkey {
+                    '0'...'9' => {
+                        let v = nkey.to_digit(10).unwrap();
+
+                        if v > additional_points {
+                            continue;
+                        }
+
+                        if let Err(err) = self.game.player_allocate_points(*stat, v) {
+                            panic!(err);
+                        }
+
+                        break;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        G::popup_close(w);
+    }
+
     /// Normalize an input character from getch(), making it uppercase
     fn norm_key(key: i32) -> char {
         let v: Vec<_> = char::from_u32(key as u32).unwrap().to_uppercase().collect();
@@ -157,6 +223,7 @@ impl G {
 
             self.choose_class();
             self.choose_gender();
+            self.choose_stats();
 
             playing = false;
         }
