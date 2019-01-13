@@ -55,7 +55,9 @@ impl G {
         G::mvwprintw_center(w, 2, "All right, Bold One. You may be an:");
         self.wcoff(w, G::A_TITLE());
 
+        wattr_on(w, A_BOLD());
         G::mvwprintw_center(w, 4, "|[E]|lf  |[D]|warf  Hu|[m]|an  |[H]|obbit");
+        wattr_off(w, A_BOLD());
 
         box_(w, 0, 0);
 
@@ -84,7 +86,9 @@ impl G {
         G::mvwprintw_center(w, 2, "Which sex do you prefer?");
         self.wcoff(w, G::A_TITLE());
 
+        wattr_on(w, A_BOLD());
         G::mvwprintw_center(w, 4, "|[F]|emale  |[M]|ale");
+        wattr_off(w, A_BOLD());
 
         box_(w, 0, 0);
 
@@ -133,9 +137,11 @@ impl G {
 
             G::mvwprintw_center(w, 8, &format!("And {} other points to allocate as you wish.", additional_points));
 
+            wattr_on(w, A_BOLD());
             G::mvwprintw_center(w, 10, &format!("How many points do you add to {}?", G::stat_name(*stat).to_uppercase()));
 
             G::mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
+            wattr_off(w, A_BOLD());
 
             box_(w, 0, 0);
 
