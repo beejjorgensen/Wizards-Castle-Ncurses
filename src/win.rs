@@ -45,7 +45,24 @@ impl G {
     ///
     /// The contents between the pipes will be shown in A_REVERSE.
     pub fn mvwprintw_center(w: WINDOW, y: i32, s: &str) {
-        let ts = s.trim();
+        G::mvwprintw_center_core(w, y, s, true)
+    }
+
+    /// Variant doesn't trim before centering
+    pub fn mvwprintw_center_notrim(w: WINDOW, y: i32, s: &str) {
+        G::mvwprintw_center_core(w, y, s, false)
+    }
+
+    /// Base functionality
+    fn mvwprintw_center_core(w: WINDOW, y: i32, s: &str, trim: bool) {
+        let ts;
+        
+        if trim {
+            ts = s.trim();
+        } else {
+            ts = s;
+        }
+
         let mut len = 0;
         let mut has_markup = false;
 
