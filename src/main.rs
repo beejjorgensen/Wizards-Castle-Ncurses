@@ -3,7 +3,7 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::game::Game;
-use wizardscastle::player::Race;
+use wizardscastle::player::{Race, Gender};
 
 mod win;
 
@@ -79,7 +79,7 @@ impl G {
 
     /// Choose class
     fn choose_class(&mut self) {
-        let w = G::popup(7, 45);
+        let w = G::popup(7, 48);
 
         self.wcon(w, A_TITLE);
         G::mvwprintw_center(w, 2, "All right, Bold One. You may be an:");
@@ -99,6 +99,33 @@ impl G {
                 'D' => break self.game.player_init(Race::Dwarf),
                 'M' => break self.game.player_init(Race::Human),
                 'H' => break self.game.player_init(Race::Hobbit),
+                _ => (),
+            }
+        }
+
+        G::popup_close(w);
+    }
+
+    /// Choose gender
+    fn choose_gender(&mut self) {
+        let w = G::popup(7, 36);
+
+        self.wcon(w, A_TITLE);
+        G::mvwprintw_center(w, 2, "Which sex do you prefer?");
+        self.wcoff(w, A_TITLE);
+
+        G::mvwprintw_center(w, 4, "|[F]|emale  |[M]|ale");
+
+        box_(w, 0, 0);
+
+        wrefresh(w);
+
+        loop {
+            let key = getch();
+
+            match G::norm_key(key) {
+                'F' => break self.game.player_set_gender(Gender::Female),
+                'M' => break self.game.player_set_gender(Gender::Male),
                 _ => (),
             }
         }
@@ -129,7 +156,7 @@ impl G {
             refresh();
 
             self.choose_class();
-            //self.choose_gender();
+            self.choose_gender();
 
             playing = false;
         }
