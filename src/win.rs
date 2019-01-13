@@ -40,7 +40,7 @@ impl G {
     /// Print some text in the center of a window, ignoring leading and trailing
     /// whitespace, given a `y` position.
     pub fn mvwprintw_center(w: WINDOW, y: i32, s: &str) -> i32 {
-        let x = (getmaxx(w) - s.trim_right().len() as i32) / 2;
+        let x = (getmaxx(w) - s.trim().len() as i32) / 2;
 
         mvwprintw(w, y, x, s)
     }
