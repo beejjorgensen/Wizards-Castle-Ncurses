@@ -482,4 +482,60 @@ impl G {
 
         G::popup_close(w);
     }
+
+    /// Buy flares
+    pub fn choose_flares(&mut self) {
+        let gps = self.game.player_gp();
+
+        if gps == 0 {
+            return;
+        }
+
+        let w = G::popup(9, 54);
+
+        let mut input = String::from("invalid");
+
+        let mut success = false;
+
+            self.wcon(w, G::A_TITLE());
+            G::mvwprintw_center(w, 2, &format!("Ok, {}, you have {} GPs left.", self.player_race_name(), gps));
+            self.wcoff(w, G::A_TITLE());
+
+            G::mvwprintw_center(w, 4, "Flares cost 1 GP each.");
+
+        while !success {
+            mvwprintw(w, 6, 15 + 22, "    "); // erase old input
+            mvwprintw(w, 6, 15, "How many do you want? ");
+
+            box_(w, 0, 0); // Has to be before refresh every time...??
+
+            wrefresh(w);
+
+            nocbreak();
+            echo();
+            G::show_cursor(true);
+
+            wgetnstr(w, &mut input, 2);
+
+            G::show_cursor(false);
+            noecho();
+            cbreak();
+
+            if let Ok(num) = input.parse::<u32>() {
+                if num > gps {
+                    self.popup_error(&format!("You can only afford {}!", gps));
+                } else {
+                    if let Err(err) = self.game.player_purchase_flares(num) {
+                        panic!(err);
+                    }
+                    success = true;
+                }
+            } else {
+                self.popup_error("If you don't wany any, just type 0.");
+            }
+        }
+
+
+        G::popup_close(w);
+    }
 }
