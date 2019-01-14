@@ -24,3 +24,11 @@ Ok, Bold Hobbit, you have XX gold pieces left.
             [D]agger    10 GP
             [N]othing
 ```
+
+```
+     Ok, Hobbit, you have 20 GPs left.
+
+Flares cost 1 GP each. How many do you want?
+
+      Flares to purchase: #
+```
