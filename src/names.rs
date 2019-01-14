@@ -1,5 +1,6 @@
 use crate::G;
 use wizardscastle::player::{Race, Stat};
+//use wizardscastle::armor::{Armor, ArmorType};
 
 impl G {
     pub fn player_race_name(&self) -> &str {
@@ -20,6 +21,17 @@ impl G {
     }
 
     /*
+    pub fn armor_name(a: ArmorType) -> String {
+        match a {
+            ArmorType::None => String::from("NO ARMOR"),
+            ArmorType::Leather => String::from("LEATHER"),
+            ArmorType::Chainmail => String::from("CHAINMAIL"),
+            ArmorType::Plate => String::from("PLATE"),
+        }
+    }
+    */
+
+    /*
     pub fn gender_name(g: Gender) -> String {
         match g {
             Gender::Female => String::from("FEMALE"),
@@ -28,4 +40,3 @@ impl G {
     }
     */
 }
-

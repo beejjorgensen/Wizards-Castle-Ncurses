@@ -1,7 +1,8 @@
 use crate::G;
 use ncurses::*;
 
-use wizardscastle::player::{Stat, Race, Gender};
+use wizardscastle::armor::{Armor, ArmorType};
+use wizardscastle::player::{Gender, Race, Stat};
 
 impl G {
     /// Do the intro
@@ -111,12 +112,7 @@ impl G {
     pub fn choose_stats(&mut self) {
         let w = G::popup(15, 50);
 
-
-        let stats = [
-            Stat::Strength,
-            Stat::Intelligence,
-            Stat::Dexterity,
-        ];
+        let stats = [Stat::Strength, Stat::Intelligence, Stat::Dexterity];
 
         for stat in stats.iter() {
             let additional_points = self.game.player_additional_points();
@@ -128,17 +124,62 @@ impl G {
             wclear(w);
 
             self.wcon(w, G::A_TITLE());
-            G::mvwprintw_center(w, 2, &format!("Ok, {}, you have these statistics:", self.player_race_name()));
+            G::mvwprintw_center(
+                w,
+                2,
+                &format!(
+                    "Ok, {}, you have these statistics:",
+                    self.player_race_name()
+                ),
+            );
             self.wcoff(w, G::A_TITLE());
 
-            G::mvwprintw_center_notrim(w, 4, &format!("{:>12}: {:>2}", G::stat_name(Stat::Strength), self.game.player_stat(Stat::Strength)));
-            G::mvwprintw_center_notrim(w, 5, &format!("{:>12}: {:>2}", G::stat_name(Stat::Intelligence), self.game.player_stat(Stat::Intelligence)));
-            G::mvwprintw_center_notrim(w, 6, &format!("{:>12}: {:>2}", G::stat_name(Stat::Dexterity), self.game.player_stat(Stat::Dexterity)));
+            G::mvwprintw_center_notrim(
+                w,
+                4,
+                &format!(
+                    "{:>12}: {:>2}",
+                    G::stat_name(Stat::Strength),
+                    self.game.player_stat(Stat::Strength)
+                ),
+            );
+            G::mvwprintw_center_notrim(
+                w,
+                5,
+                &format!(
+                    "{:>12}: {:>2}",
+                    G::stat_name(Stat::Intelligence),
+                    self.game.player_stat(Stat::Intelligence)
+                ),
+            );
+            G::mvwprintw_center_notrim(
+                w,
+                6,
+                &format!(
+                    "{:>12}: {:>2}",
+                    G::stat_name(Stat::Dexterity),
+                    self.game.player_stat(Stat::Dexterity)
+                ),
+            );
 
-            G::mvwprintw_center(w, 8, &format!("And {} other points to allocate as you wish.", additional_points));
+            G::mvwprintw_center(
+                w,
+                8,
+                &format!(
+                    "And {} other points to allocate as you wish.",
+                    additional_points
+                ),
+            );
 
             wattr_on(w, A_BOLD());
-            G::mvwprintw_center(w, 10, &format!("How many points do you add to {}?", G::stat_name(*stat).to_uppercase()));
+            G::mvwprintw_center(
+                w,
+                10,
+                &format!(
+                    "How many points do you add to {}?",
+                    G::stat_name(*stat).to_uppercase()
+                ),
+            );
 
             G::mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
             wattr_off(w, A_BOLD());
@@ -168,6 +209,80 @@ impl G {
                     }
                     _ => (),
                 }
+            }
+        }
+
+        G::popup_close(w);
+    }
+
+    /// Buy armor
+    pub fn choose_armor(&mut self) {
+        if self.game.player_gp() < Armor::cost(ArmorType::Leather, false) {
+            return;
+        }
+
+        let w = G::popup(12, 46);
+
+        self.wcon(w, G::A_TITLE());
+        G::mvwprintw_center(
+            w,
+            2,
+            &format!("Choose your armor, {}.", self.player_race_name()),
+        );
+        self.wcoff(w, G::A_TITLE());
+
+        G::mvwprintw_center(
+            w,
+            4,
+            &format!("You have {} gold pieces.", self.game.player_gp()),
+        );
+
+        wattr_on(w, A_BOLD());
+
+        G::mvwprintw_center_notrim(
+            w,
+            6,
+            &format!(
+                "{:<14} {:2>} GP",
+                "|[P]|late",
+                Armor::cost(ArmorType::Plate, false)
+            ),
+        );
+        G::mvwprintw_center_notrim(
+            w,
+            7,
+            &format!(
+                "{:<14} {:2>} GP",
+                "|[C]|hainmail",
+                Armor::cost(ArmorType::Chainmail, false)
+            ),
+        );
+        G::mvwprintw_center_notrim(
+            w,
+            8,
+            &format!(
+                "{:<14} {:2>} GP",
+                "|[L]|eather",
+                Armor::cost(ArmorType::Leather, false)
+            ),
+        );
+        G::mvwprintw_center_notrim(w, 9, &format!("{:<14} {:2>}   ", "|[N]|othing", "  "));
+
+        wattr_off(w, A_BOLD());
+
+        box_(w, 0, 0);
+
+        wrefresh(w);
+
+        loop {
+            let key = getch();
+
+            match G::norm_key(key) {
+                'P' => break,
+                'C' => break,
+                'L' => break,
+                'N' => break,
+                _ => (),
             }
         }
 

@@ -56,7 +56,7 @@ impl G {
     /// Base functionality
     fn mvwprintw_center_core(w: WINDOW, y: i32, s: &str, trim: bool) {
         let ts;
-        
+
         if trim {
             ts = s.trim();
         } else {

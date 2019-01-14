@@ -4,9 +4,9 @@ use std::collections::HashMap;
 
 use wizardscastle::game::Game;
 
-mod win;
-mod names;
 mod gen;
+mod names;
+mod win;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
@@ -63,6 +63,7 @@ impl G {
             self.choose_class();
             self.choose_gender();
             self.choose_stats();
+            self.choose_armor();
 
             playing = false;
         }
