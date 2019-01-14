@@ -226,7 +226,7 @@ impl G {
 
         let mut count = 0;
 
-        for a in armor.iter() { 
+        for a in armor.iter() {
             if self.armor_can_afford(*a, is_vendor) {
                 count += 1;
             }
@@ -249,12 +249,7 @@ impl G {
             ArmorType::None,
         ];
 
-        let armor_names = [
-            "|[P]|late",
-            "|[C]|hainmail",
-            "|[L]|eather",
-            "|[N]|othing",
-        ];
+        let armor_names = ["|[P]|late", "|[C]|hainmail", "|[L]|eather", "|[N]|othing"];
 
         let armor_type_count = self.armor_purchase_type_count(false);
 
@@ -285,21 +280,17 @@ impl G {
         for (i, armor_type) in armor.iter().enumerate() {
             if self.armor_can_afford(*armor_type, false) {
                 let cost_str;
-                
+
                 if *armor_type == ArmorType::None {
                     cost_str = String::from("     ");
                 } else {
-                    cost_str = String::from(format!("{:2>} GP", Armor::cost(*armor_type, false)));
+                    cost_str = format!("{:2>} GP", Armor::cost(*armor_type, false));
                 };
 
                 G::mvwprintw_center_notrim(
                     w,
                     6 + row_count,
-                    &format!(
-                        "{:<14} {}",
-                        armor_names[i],
-                        cost_str
-                    ),
+                    &format!("{:<14} {}", armor_names[i], cost_str),
                 );
 
                 row_count += 1;
@@ -325,7 +316,7 @@ impl G {
                 };
             };
 
-            if let Ok(_) = r {
+            if r.is_ok() {
                 break;
             }
         }
