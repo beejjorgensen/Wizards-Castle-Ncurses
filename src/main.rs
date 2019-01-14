@@ -64,6 +64,7 @@ impl G {
             self.choose_gender();
             self.choose_stats();
             self.choose_armor();
+            self.choose_weapon();
 
             playing = false;
         }

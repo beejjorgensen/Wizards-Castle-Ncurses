@@ -3,6 +3,7 @@ use ncurses::*;
 
 use wizardscastle::armor::{Armor, ArmorType};
 use wizardscastle::player::{Gender, Race, Stat};
+use wizardscastle::weapon::{Weapon, WeaponType};
 
 impl G {
     /// Do the intro
@@ -240,6 +241,34 @@ impl G {
         Armor::cost(armor, is_vendor) <= self.game.player_gp()
     }
 
+    /// Return the number of types of weapon the player can afford.
+    ///
+    /// This function counts "nothing" as a type of weapon, so will always return
+    /// at least 1.
+    fn weapon_purchase_type_count(&self, is_vendor: bool) -> u32 {
+        let weapon = [
+            WeaponType::Sword,
+            WeaponType::Mace,
+            WeaponType::Dagger,
+            WeaponType::None,
+        ];
+
+        let mut count = 0;
+
+        for a in weapon.iter() {
+            if self.weapon_can_afford(*a, is_vendor) {
+                count += 1;
+            }
+        }
+
+        count
+    }
+
+    /// True if the player can afford an weapon
+    fn weapon_can_afford(&self, weapon: WeaponType, is_vendor: bool) -> bool {
+        Weapon::cost(weapon, is_vendor) <= self.game.player_gp()
+    }
+
     /// Buy armor
     pub fn choose_armor(&mut self) {
         let armor = [
@@ -312,6 +341,90 @@ impl G {
                     'C' => break self.game.player_purchase_armor(ArmorType::Chainmail, false),
                     'L' => break self.game.player_purchase_armor(ArmorType::Plate, false),
                     'N' => break self.game.player_purchase_armor(ArmorType::Plate, false),
+                    _ => (),
+                };
+            };
+
+            if r.is_ok() {
+                break;
+            }
+        }
+
+        G::popup_close(w);
+    }
+
+    /// Buy weapon
+    pub fn choose_weapon(&mut self) {
+        let weapon = [
+            WeaponType::Sword,
+            WeaponType::Mace,
+            WeaponType::Dagger,
+            WeaponType::None,
+        ];
+
+        let weapon_names = ["|[S]|word", "|[M]|ace", "|[D]|agger", "|[N]|othing"];
+
+        let weapon_type_count = self.weapon_purchase_type_count(false);
+
+        if weapon_type_count < 2 {
+            return;
+        }
+
+        let w = G::popup(8 + weapon_type_count as i32, 56);
+
+        self.wcon(w, G::A_TITLE());
+        G::mvwprintw_center(w, 2, "Now select your weapon of choice.");
+        self.wcoff(w, G::A_TITLE());
+
+        G::mvwprintw_center(
+            w,
+            4,
+            &format!(
+                "Ok, Bold {}, you have {} gold pieces left.",
+                self.player_race_name(),
+                self.game.player_gp()
+            ),
+        );
+
+        wattr_on(w, A_BOLD());
+
+        let mut row_count = 0;
+
+        for (i, weapon_type) in weapon.iter().enumerate() {
+            if self.weapon_can_afford(*weapon_type, false) {
+                let cost_str;
+
+                if *weapon_type == WeaponType::None {
+                    cost_str = String::from("     ");
+                } else {
+                    cost_str = format!("{:2>} GP", Weapon::cost(*weapon_type, false));
+                };
+
+                G::mvwprintw_center_notrim(
+                    w,
+                    6 + row_count,
+                    &format!("{:<14} {}", weapon_names[i], cost_str),
+                );
+
+                row_count += 1;
+            }
+        }
+
+        wattr_off(w, A_BOLD());
+
+        box_(w, 0, 0);
+
+        wrefresh(w);
+
+        loop {
+            let r = loop {
+                let key = getch();
+
+                match G::norm_key(key) {
+                    'S' => break self.game.player_purchase_weapon(WeaponType::Sword, false),
+                    'M' => break self.game.player_purchase_weapon(WeaponType::Mace, false),
+                    'D' => break self.game.player_purchase_weapon(WeaponType::Dagger, false),
+                    'N' => break self.game.player_purchase_weapon(WeaponType::None, false),
                     _ => (),
                 };
             };
