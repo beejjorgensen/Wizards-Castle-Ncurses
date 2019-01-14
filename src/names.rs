@@ -2,6 +2,8 @@ use crate::G;
 use wizardscastle::armor::ArmorType;
 use wizardscastle::player::{Race, Stat};
 use wizardscastle::weapon::WeaponType;
+use wizardscastle::room::RoomType;
+use wizardscastle::monster::MonsterType;
 
 impl G {
     pub fn player_race_name(&self) -> &str {
@@ -36,6 +38,32 @@ impl G {
             ArmorType::Leather => String::from("LEATHER"),
             ArmorType::Chainmail => String::from("CHAINMAIL"),
             ArmorType::Plate => String::from("PLATE"),
+        }
+    }
+
+    /// Get the printable character for a room
+    pub fn room_char(room_type: &RoomType) -> char {
+        match room_type {
+            RoomType::Empty => '.',
+            RoomType::Entrance => 'E',
+            RoomType::StairsDown => 'D',
+            RoomType::StairsUp => 'U',
+            RoomType::Gold => 'G',
+            RoomType::Pool => 'P',
+            RoomType::Chest => 'C',
+            RoomType::Flares => 'F',
+            RoomType::Warp(_) => 'W',
+            RoomType::Sinkhole => 'S',
+            RoomType::CrystalOrb => 'O',
+            RoomType::Book => 'B',
+            RoomType::Monster(ref m) => {
+                if m.monster_type() == MonsterType::Vendor {
+                    'V'
+                } else {
+                    'M'
+                }
+            }
+            RoomType::Treasure(_) => 'T',
         }
     }
 

@@ -7,10 +7,12 @@ use wizardscastle::game::Game;
 mod gen;
 mod names;
 mod win;
+mod map;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
     game: Game,
+    mapwin: WINDOW,
 }
 
 impl G {
@@ -35,6 +37,7 @@ impl G {
         // Return the new struct
         G {
             color,
+            mapwin: newwin(17, 47, 0, 0),
             game: Game::new(8, 8, 8),
         }
     }
@@ -60,7 +63,7 @@ impl G {
 
         self.intro();
 
-        let mut playing = true;
+        let playing = true;
 
         while playing {
             clear();
@@ -74,7 +77,11 @@ impl G {
             self.choose_lamp();
             self.choose_flares();
 
-            playing = false;
+            let alive = true;
+
+            while alive {
+                self.update_map(false);
+            }
         }
 
         nocbreak();
