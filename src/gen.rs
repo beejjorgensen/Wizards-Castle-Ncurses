@@ -193,21 +193,18 @@ impl G {
 
                 let nkey = G::norm_key(key);
 
-                match nkey {
-                    '0'...'9' => {
-                        let v = nkey.to_digit(10).unwrap();
+                if let '0'...'9' = nkey {
+                    let v = nkey.to_digit(10).unwrap();
 
-                        if v > additional_points {
-                            continue;
-                        }
-
-                        if let Err(err) = self.game.player_allocate_points(*stat, v) {
-                            panic!(err);
-                        }
-
-                        break;
+                    if v > additional_points {
+                        continue;
                     }
-                    _ => (),
+
+                    if let Err(err) = self.game.player_allocate_points(*stat, v) {
+                        panic!(err);
+                    }
+
+                    break;
                 }
             }
         }

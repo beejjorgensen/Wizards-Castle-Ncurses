@@ -55,13 +55,7 @@ impl G {
 
     /// Base functionality
     fn mvwprintw_center_core(w: WINDOW, y: i32, s: &str, trim: bool) {
-        let ts;
-
-        if trim {
-            ts = s.trim();
-        } else {
-            ts = s;
-        }
+        let ts = if trim { s.trim() } else { s };
 
         let mut len = 0;
         let mut has_markup = false;
