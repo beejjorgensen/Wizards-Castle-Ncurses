@@ -2,12 +2,12 @@ use ncurses::*;
 use std::char;
 use std::collections::HashMap;
 
-use wizardscastle::game::Game;
+use wizardscastle::game::{Direction, Game};
 
 mod gen;
+mod map;
 mod names;
 mod win;
-mod map;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
@@ -54,6 +54,20 @@ impl G {
         v[0]
     }
 
+    /// Move a direction
+    fn move_dir(&mut self, dir: Direction) {
+        self.game.move_dir(dir);
+
+        // This is often redundant, but there's a case where we retreat from
+        // monsters and the discover room gets overlooked
+        self.game.discover_room_at_player();
+    }
+
+    /// Tell if a key was an arrow key
+    pub fn is_arrow_key(k: i32) -> bool {
+        k == KEY_UP || k == KEY_DOWN || k == KEY_LEFT || k == KEY_RIGHT
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -81,6 +95,26 @@ impl G {
 
             while alive {
                 self.update_map(false);
+
+                let key = getch();
+
+                if G::is_arrow_key(key) {
+                    match key {
+                        KEY_UP => self.move_dir(Direction::North),
+                        KEY_DOWN => self.move_dir(Direction::South),
+                        KEY_LEFT => self.move_dir(Direction::West),
+                        KEY_RIGHT => self.move_dir(Direction::East),
+                        _ => (),
+                    }
+                } else {
+                    match G::norm_key(key) {
+                        'N' => self.move_dir(Direction::North),
+                        'S' => self.move_dir(Direction::South),
+                        'W' => self.move_dir(Direction::West),
+                        'E' => self.move_dir(Direction::East),
+                        _ => (),
+                    }
+                }
             }
         }
 
@@ -96,6 +130,8 @@ fn main() {
     if has_colors() {
         start_color();
     }
+
+    keypad(stdscr(), true);
 
     refresh(); // If we don't do this first, windows don't show up
 

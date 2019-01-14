@@ -1,9 +1,9 @@
 use crate::G;
 use wizardscastle::armor::ArmorType;
-use wizardscastle::player::{Race, Stat};
-use wizardscastle::weapon::WeaponType;
-use wizardscastle::room::RoomType;
 use wizardscastle::monster::MonsterType;
+use wizardscastle::player::{Race, Stat};
+use wizardscastle::room::RoomType;
+use wizardscastle::weapon::WeaponType;
 
 impl G {
     pub fn player_race_name(&self) -> &str {
