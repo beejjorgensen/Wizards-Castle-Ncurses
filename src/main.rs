@@ -7,12 +7,14 @@ use wizardscastle::game::{Direction, Game};
 mod gen;
 mod map;
 mod names;
+mod stat;
 mod win;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
     game: Game,
     mapwin: WINDOW,
+    statwin: WINDOW,
 }
 
 impl G {
@@ -38,6 +40,7 @@ impl G {
         G {
             color,
             mapwin: newwin(17, 47, 0, 0),
+            statwin: newwin(17, 33, 0, 47),
             game: Game::new(8, 8, 8),
         }
     }
@@ -77,7 +80,7 @@ impl G {
 
         self.intro();
 
-        let playing = true;
+        let mut playing = true;
 
         while playing {
             clear();
@@ -91,10 +94,11 @@ impl G {
             self.choose_lamp();
             self.choose_flares();
 
-            let alive = true;
+            let mut alive = true;
 
             while alive {
                 self.update_map(false);
+                self.update_stat();
 
                 let key = getch();
 
@@ -112,6 +116,12 @@ impl G {
                         'S' => self.move_dir(Direction::South),
                         'W' => self.move_dir(Direction::West),
                         'E' => self.move_dir(Direction::East),
+                        'Q' => {
+                            // TODO are you sure?
+                            alive = false;
+                            // TODO play again?
+                            playing = false;
+                        }
                         _ => (),
                     }
                 }
