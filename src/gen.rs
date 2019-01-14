@@ -497,19 +497,28 @@ impl G {
 
         let mut success = false;
 
-            self.wcon(w, G::A_TITLE());
-            G::mvwprintw_center(w, 2, &format!("Ok, {}, you have {} GPs left.", self.player_race_name(), gps));
-            self.wcoff(w, G::A_TITLE());
+        self.wcon(w, G::A_TITLE());
+        G::mvwprintw_center(
+            w,
+            2,
+            &format!(
+                "Ok, {}, you have {} GPs left.",
+                self.player_race_name(),
+                gps
+            ),
+        );
+        self.wcoff(w, G::A_TITLE());
 
-            G::mvwprintw_center(w, 4, "Flares cost 1 GP each.");
+        G::mvwprintw_center(w, 4, "Flares cost 1 GP each.");
+
+        box_(w, 0, 0);
 
         while !success {
             mvwprintw(w, 6, 15 + 22, "    "); // erase old input
             mvwprintw(w, 6, 15, "How many do you want? ");
 
-            box_(w, 0, 0); // Has to be before refresh every time...??
-
             wrefresh(w);
+            redrawwin(w);
 
             nocbreak();
             echo();
@@ -534,7 +543,6 @@ impl G {
                 self.popup_error("If you don't wany any, just type 0.");
             }
         }
-
 
         G::popup_close(w);
     }
