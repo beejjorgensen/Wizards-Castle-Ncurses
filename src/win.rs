@@ -136,4 +136,34 @@ impl G {
         wborder(w, ch, ch, ch, ch, ch, ch, ch, ch);
     }
     */
+
+    pub fn popup_error(&self, s: &str) {
+        let mut width = s.len() as i32 + 10;
+
+        width += width % 2; // Force to even width
+
+        let w = G::popup(9, width);
+
+        self.wcon(w, "bold-red");
+        G::mvwprintw_center(w, 2, &format!("** SILLY {} **", self.player_race_name()));
+        self.wcoff(w, "bold-red");
+
+        G::mvwprintw_center(w, 4, s);
+
+        wattron(w, A_REVERSE());
+        G::mvwprintw_center(w, 6, " Press any key ");
+        wattroff(w, A_REVERSE());
+
+        self.wcon(w, "bold-red");
+        wattr_on(w, A_REVERSE());
+        box_(w, 0, 0);
+        wattr_off(w, A_REVERSE());
+        self.wcoff(w, "bold-red");
+
+        wrefresh(w);
+
+        getch();
+
+        G::popup_close(w);
+    }
 }

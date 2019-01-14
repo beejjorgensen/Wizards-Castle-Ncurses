@@ -21,9 +21,15 @@ impl G {
 
         if has_colors() {
             init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+            init_pair(2, COLOR_RED, COLOR_BLACK);
+
             color.insert("bold-yellow", COLOR_PAIR(1) | A_BOLD());
+            color.insert("bold-red", COLOR_PAIR(2) | A_BOLD());
+            color.insert("red", COLOR_PAIR(2));
         } else {
             color.insert("bold-yellow", A_BOLD());
+            color.insert("bold-red", 0);
+            color.insert("red", 0);
         }
 
         // Return the new struct
@@ -66,6 +72,7 @@ impl G {
             self.choose_armor();
             self.choose_weapon();
             self.choose_lamp();
+            self.choose_flares();
 
             playing = false;
         }
