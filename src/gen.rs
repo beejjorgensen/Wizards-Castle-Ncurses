@@ -212,13 +212,57 @@ impl G {
         G::popup_close(w);
     }
 
+    /// Return the number of types of armor the player can afford.
+    ///
+    /// This function counts "nothing" as a type of armor, so will always return
+    /// at least 1.
+    fn armor_purchase_type_count(&self, is_vendor: bool) -> u32 {
+        let armor = [
+            ArmorType::Plate,
+            ArmorType::Chainmail,
+            ArmorType::Leather,
+            ArmorType::None,
+        ];
+
+        let mut count = 0;
+
+        for a in armor.iter() { 
+            if self.armor_can_afford(*a, is_vendor) {
+                count += 1;
+            }
+        }
+
+        count
+    }
+
+    /// True if the player can afford an armor
+    fn armor_can_afford(&self, armor: ArmorType, is_vendor: bool) -> bool {
+        Armor::cost(armor, is_vendor) <= self.game.player_gp()
+    }
+
     /// Buy armor
     pub fn choose_armor(&mut self) {
-        if self.game.player_gp() < Armor::cost(ArmorType::Leather, false) {
+        let armor = [
+            ArmorType::Plate,
+            ArmorType::Chainmail,
+            ArmorType::Leather,
+            ArmorType::None,
+        ];
+
+        let armor_names = [
+            "|[P]|late",
+            "|[C]|hainmail",
+            "|[L]|eather",
+            "|[N]|othing",
+        ];
+
+        let armor_type_count = self.armor_purchase_type_count(false);
+
+        if armor_type_count < 2 {
             return;
         }
 
-        let w = G::popup(12, 46);
+        let w = G::popup(8 + armor_type_count as i32, 46);
 
         self.wcon(w, G::A_TITLE());
         G::mvwprintw_center(
@@ -236,34 +280,31 @@ impl G {
 
         wattr_on(w, A_BOLD());
 
-        G::mvwprintw_center_notrim(
-            w,
-            6,
-            &format!(
-                "{:<14} {:2>} GP",
-                "|[P]|late",
-                Armor::cost(ArmorType::Plate, false)
-            ),
-        );
-        G::mvwprintw_center_notrim(
-            w,
-            7,
-            &format!(
-                "{:<14} {:2>} GP",
-                "|[C]|hainmail",
-                Armor::cost(ArmorType::Chainmail, false)
-            ),
-        );
-        G::mvwprintw_center_notrim(
-            w,
-            8,
-            &format!(
-                "{:<14} {:2>} GP",
-                "|[L]|eather",
-                Armor::cost(ArmorType::Leather, false)
-            ),
-        );
-        G::mvwprintw_center_notrim(w, 9, &format!("{:<14} {:2>}   ", "|[N]|othing", "  "));
+        let mut row_count = 0;
+
+        for (i, armor_type) in armor.iter().enumerate() {
+            if self.armor_can_afford(*armor_type, false) {
+                let cost_str;
+                
+                if *armor_type == ArmorType::None {
+                    cost_str = String::from("     ");
+                } else {
+                    cost_str = String::from(format!("{:2>} GP", Armor::cost(*armor_type, false)));
+                };
+
+                G::mvwprintw_center_notrim(
+                    w,
+                    6 + row_count,
+                    &format!(
+                        "{:<14} {}",
+                        armor_names[i],
+                        cost_str
+                    ),
+                );
+
+                row_count += 1;
+            }
+        }
 
         wattr_off(w, A_BOLD());
 
@@ -272,14 +313,20 @@ impl G {
         wrefresh(w);
 
         loop {
-            let key = getch();
+            let r = loop {
+                let key = getch();
 
-            match G::norm_key(key) {
-                'P' => break,
-                'C' => break,
-                'L' => break,
-                'N' => break,
-                _ => (),
+                match G::norm_key(key) {
+                    'P' => break self.game.player_purchase_armor(ArmorType::Plate, false),
+                    'C' => break self.game.player_purchase_armor(ArmorType::Chainmail, false),
+                    'L' => break self.game.player_purchase_armor(ArmorType::Plate, false),
+                    'N' => break self.game.player_purchase_armor(ArmorType::Plate, false),
+                    _ => (),
+                };
+            };
+
+            if let Ok(_) = r {
+                break;
             }
         }
 
