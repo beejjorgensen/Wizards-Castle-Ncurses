@@ -445,4 +445,41 @@ impl G {
 
         G::popup_close(w);
     }
+
+    /// Buy lamp
+    pub fn choose_lamp(&mut self) {
+        if !self.game.player_can_purchase_lamp() {
+            return;
+        }
+
+        let w = G::popup(7, 40);
+
+        self.wcon(w, G::A_TITLE());
+        G::mvwprintw_center(w, 2, "Want to buy a lamp for 20 GPs?");
+        self.wcoff(w, G::A_TITLE());
+
+        wattr_on(w, A_BOLD());
+        G::mvwprintw_center(w, 4, "|[Y]|es  |[N]|o");
+        wattr_off(w, A_BOLD());
+
+        box_(w, 0, 0);
+
+        wrefresh(w);
+
+        let r = loop {
+            let key = getch();
+
+            match G::norm_key(key) {
+                'Y' => break self.game.player_purchase_lamp(true),
+                'N' => break self.game.player_purchase_lamp(false),
+                _ => (),
+            }
+        };
+
+        if let Err(err) = r {
+            panic!(err);
+        }
+
+        G::popup_close(w);
+    }
 }
