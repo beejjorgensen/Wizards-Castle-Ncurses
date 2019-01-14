@@ -295,15 +295,15 @@ impl G {
         G::mvwprintw_center(
             w,
             2,
-            &format!("Choose your armor, {}.", self.player_race_name()),
+            &format!(
+                "Ok, {}, you have {} gold pieces.",
+                self.player_race_name(),
+                self.game.player_gp()
+            ),
         );
         self.wcoff(w, G::A_TITLE());
 
-        G::mvwprintw_center(
-            w,
-            4,
-            &format!("You have {} gold pieces.", self.game.player_gp()),
-        );
+        G::mvwprintw_center(w, 4, &"Here is a list of armor you can buy.".to_string());
 
         wattr_on(w, A_BOLD());
 
@@ -378,18 +378,18 @@ impl G {
         let w = G::popup(8 + weapon_type_count as i32, 56);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(w, 2, "Now select your weapon of choice.");
-        self.wcoff(w, G::A_TITLE());
-
         G::mvwprintw_center(
             w,
-            4,
+            2,
             &format!(
                 "Ok, Bold {}, you have {} gold pieces left.",
                 self.player_race_name(),
                 self.game.player_gp()
             ),
         );
+        self.wcoff(w, G::A_TITLE());
+
+        G::mvwprintw_center(w, 4, "Here is a list of weapons you can buy.");
 
         wattr_on(w, A_BOLD());
 
