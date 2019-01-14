@@ -1,6 +1,7 @@
 use crate::G;
+use wizardscastle::armor::ArmorType;
 use wizardscastle::player::{Race, Stat};
-//use wizardscastle::armor::{Armor, ArmorType};
+use wizardscastle::weapon::WeaponType;
 
 impl G {
     pub fn player_race_name(&self) -> &str {
@@ -20,7 +21,15 @@ impl G {
         }
     }
 
-    /*
+    pub fn weapon_name(w: WeaponType) -> String {
+        match w {
+            WeaponType::None => String::from("NO WEAPON"),
+            WeaponType::Dagger => String::from("DAGGER"),
+            WeaponType::Mace => String::from("MACE"),
+            WeaponType::Sword => String::from("SWORD"),
+        }
+    }
+
     pub fn armor_name(a: ArmorType) -> String {
         match a {
             ArmorType::None => String::from("NO ARMOR"),
@@ -29,7 +38,6 @@ impl G {
             ArmorType::Plate => String::from("PLATE"),
         }
     }
-    */
 
     /*
     pub fn gender_name(g: Gender) -> String {

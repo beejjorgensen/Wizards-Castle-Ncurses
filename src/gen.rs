@@ -269,6 +269,11 @@ impl G {
         Weapon::cost(weapon, is_vendor) <= self.game.player_gp()
     }
 
+    /// Convert a string from the form "Foo" to the form "|[F]|oo"
+    fn name_to_menuitem(s: &str) -> String {
+        format!("|[{}]|{}", s.get(0..1).unwrap(), s.get(1..).unwrap())
+    }
+
     /// Buy armor
     pub fn choose_armor(&mut self) {
         let armor = [
@@ -277,8 +282,6 @@ impl G {
             ArmorType::Leather,
             ArmorType::None,
         ];
-
-        let armor_names = ["|[P]|late", "|[C]|hainmail", "|[L]|eather", "|[N]|othing"];
 
         let armor_type_count = self.armor_purchase_type_count(false);
 
@@ -306,7 +309,7 @@ impl G {
 
         let mut row_count = 0;
 
-        for (i, armor_type) in armor.iter().enumerate() {
+        for armor_type in armor.iter() {
             if self.armor_can_afford(*armor_type, false) {
                 let cost_str;
 
@@ -319,7 +322,11 @@ impl G {
                 G::mvwprintw_center_notrim(
                     w,
                     6 + row_count,
-                    &format!("{:<14} {}", armor_names[i], cost_str),
+                    &format!(
+                        "{:<14} {}",
+                        G::name_to_menuitem(&G::armor_name(*armor_type)),
+                        cost_str
+                    ),
                 );
 
                 row_count += 1;
@@ -362,8 +369,6 @@ impl G {
             WeaponType::None,
         ];
 
-        let weapon_names = ["|[S]|word", "|[M]|ace", "|[D]|agger", "|[N]|othing"];
-
         let weapon_type_count = self.weapon_purchase_type_count(false);
 
         if weapon_type_count < 2 {
@@ -390,7 +395,7 @@ impl G {
 
         let mut row_count = 0;
 
-        for (i, weapon_type) in weapon.iter().enumerate() {
+        for weapon_type in weapon.iter() {
             if self.weapon_can_afford(*weapon_type, false) {
                 let cost_str;
 
@@ -403,7 +408,11 @@ impl G {
                 G::mvwprintw_center_notrim(
                     w,
                     6 + row_count,
-                    &format!("{:<14} {}", weapon_names[i], cost_str),
+                    &format!(
+                        "{:<14} {}",
+                        G::name_to_menuitem(&G::weapon_name(*weapon_type)),
+                        cost_str
+                    ),
                 );
 
                 row_count += 1;
