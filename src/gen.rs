@@ -526,6 +526,8 @@ impl G {
 
             wgetnstr(w, &mut input, 2);
 
+            input = input.trim().to_string();
+
             G::show_cursor(false);
             noecho();
             cbreak();
