@@ -3,11 +3,7 @@ use crate::G;
 use ncurses::*;
 
 impl G {
-    /// Set or clear output attributes on a window.
-    ///
-    /// See `new()` for a list of attributes.
-    ///
-    /// You probably want `wcon()` or `wcoff()` instead.
+    /// Look up a color attribute by the given name
     pub fn wcget(&self, c: &str) -> u32 {
         if let Some(attr) = self.color.get(c) {
             *attr
