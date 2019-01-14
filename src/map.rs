@@ -20,6 +20,7 @@ impl G {
                 let bracket = x == self.game.player_x() && y == self.game.player_y();
 
                 if self.game.player_is_blind() {
+                    wprintw(self.mapwin, " - ");
                 } else {
                     if bracket {
                         wattr_on(self.mapwin, A_BOLD());

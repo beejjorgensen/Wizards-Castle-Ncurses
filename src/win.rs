@@ -8,15 +8,26 @@ impl G {
     /// See `new()` for a list of attributes.
     ///
     /// You probably want `wcon()` or `wcoff()` instead.
-    pub fn wcset(&self, w: WINDOW, c: &str, on: bool) {
+    pub fn wcget(&self, c: &str) -> u32 {
         if let Some(attr) = self.color.get(c) {
-            if on {
-                wattr_on(w, *attr);
-            } else {
-                wattr_off(w, *attr);
-            }
+            *attr
         } else {
             panic!("undeclared color {}", c);
+        }
+    }
+
+    /// Set or clear output attributes on a window.
+    ///
+    /// See `new()` for a list of attributes.
+    ///
+    /// You probably want `wcon()` or `wcoff()` instead.
+    pub fn wcset(&self, w: WINDOW, c: &str, on: bool) {
+        let attr = self.wcget(c);
+
+        if on {
+            wattr_on(w, attr);
+        } else {
+            wattr_off(w, attr);
         }
     }
 

@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use wizardscastle::game::{Direction, Game};
 
 mod gen;
+mod log;
 mod map;
 mod names;
 mod stat;
@@ -15,6 +16,8 @@ struct G {
     game: Game,
     mapwin: WINDOW,
     statwin: WINDOW,
+    logwin: WINDOW,
+    loginner: WINDOW,
 }
 
 impl G {
@@ -36,11 +39,18 @@ impl G {
             color.insert("red", 0);
         }
 
+        let logwin = newwin(8, 80, 17, 0);
+        let loginner = derwin(logwin, 6, 78, 1, 1);
+
+        scrollok(loginner, true);
+
         // Return the new struct
         G {
             color,
             mapwin: newwin(17, 47, 0, 0),
             statwin: newwin(17, 33, 0, 47),
+            logwin,
+            loginner,
             game: Game::new(8, 8, 8),
         }
     }
@@ -96,9 +106,18 @@ impl G {
 
             let mut alive = true;
 
+            let mut count = 0;
+
+            self.update_log_attr(
+                "You enter the castle and begin!\n",
+                self.wcget("bold-yellow"),
+            );
+
             while alive {
                 self.update_map(false);
                 self.update_stat();
+                self.update_log(&format!("test {}", count));
+                count += 1;
 
                 let key = getch();
 
