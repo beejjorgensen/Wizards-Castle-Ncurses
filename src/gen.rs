@@ -11,33 +11,33 @@ impl G {
         let w = G::popup(15, 64);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(w, 2, "* * * THE WIZARD'S CASTLE * * *\n\n");
+        self.mvwprintw_center(w, 2, "* * * THE WIZARD'S CASTLE * * *\n\n");
         self.wcoff(w, G::A_TITLE());
 
         wattron(w, A_BOLD());
-        G::wprintw_center(w, "Many cycles ago, in the Kingdom of N'DIC, the gnomic\n");
-        G::wprintw_center(w, "wizard ZOT forged his great *ORB OF POWER*. He soon\n");
-        G::wprintw_center(w, "vanished, leaving behind his vast subterranean castle\n");
-        G::wprintw_center(
+        self.wprintw_center(w, "Many cycles ago, in the Kingdom of N'DIC, the gnomic\n");
+        self.wprintw_center(w, "wizard ZOT forged his great *ORB OF POWER*. He soon\n");
+        self.wprintw_center(w, "vanished, leaving behind his vast subterranean castle\n");
+        self.wprintw_center(
             w,
             "filled with esurient monsters, fabulous treasures, and\n",
         );
-        G::wprintw_center(
+        self.wprintw_center(
             w,
             "the incredible *ORB OF ZOT*. From that time hence, many\n",
         );
-        G::wprintw_center(
+        self.wprintw_center(
             w,
             "a bold youth has ventured into the wizard's castle. As\n",
         );
-        G::wprintw_center(
+        self.wprintw_center(
             w,
             "of now, *NONE* has ever emerged victoriously! BEWARE!!\n\n",
         );
         wattroff(w, A_BOLD());
 
         wattron(w, A_REVERSE());
-        G::wprintw_center(w, " Press any key ");
+        self.wprintw_center(w, " Press any key ");
         wattroff(w, A_REVERSE());
 
         box_(w, 0, 0);
@@ -54,11 +54,11 @@ impl G {
         let w = G::popup(7, 48);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(w, 2, "All right, Bold One. You may be an:");
+        self.mvwprintw_center(w, 2, "All right, Bold One. You may be an:");
         self.wcoff(w, G::A_TITLE());
 
         wattr_on(w, A_BOLD());
-        G::mvwprintw_center(w, 4, "|[E]|lf  |[D]|warf  Hu|[m]|an  |[H]|obbit");
+        self.mvwprintw_center(w, 4, "|[E]|lf  |[D]|warf  Hu|[m]|an  |[H]|obbit");
         wattr_off(w, A_BOLD());
 
         box_(w, 0, 0);
@@ -85,11 +85,11 @@ impl G {
         let w = G::popup(7, 36);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(w, 2, "Which sex do you prefer?");
+        self.mvwprintw_center(w, 2, "Which sex do you prefer?");
         self.wcoff(w, G::A_TITLE());
 
         wattr_on(w, A_BOLD());
-        G::mvwprintw_center(w, 4, "|[F]|emale  |[M]|ale");
+        self.mvwprintw_center(w, 4, "|[F]|emale  |[M]|ale");
         wattr_off(w, A_BOLD());
 
         box_(w, 0, 0);
@@ -125,7 +125,7 @@ impl G {
             wclear(w);
 
             self.wcon(w, G::A_TITLE());
-            G::mvwprintw_center(
+            self.mvwprintw_center(
                 w,
                 2,
                 &format!(
@@ -135,7 +135,7 @@ impl G {
             );
             self.wcoff(w, G::A_TITLE());
 
-            G::mvwprintw_center_notrim(
+            self.mvwprintw_center_notrim(
                 w,
                 4,
                 &format!(
@@ -144,7 +144,7 @@ impl G {
                     self.game.player_stat(Stat::Strength)
                 ),
             );
-            G::mvwprintw_center_notrim(
+            self.mvwprintw_center_notrim(
                 w,
                 5,
                 &format!(
@@ -153,7 +153,7 @@ impl G {
                     self.game.player_stat(Stat::Intelligence)
                 ),
             );
-            G::mvwprintw_center_notrim(
+            self.mvwprintw_center_notrim(
                 w,
                 6,
                 &format!(
@@ -163,7 +163,7 @@ impl G {
                 ),
             );
 
-            G::mvwprintw_center(
+            self.mvwprintw_center(
                 w,
                 8,
                 &format!(
@@ -173,7 +173,7 @@ impl G {
             );
 
             wattr_on(w, A_BOLD());
-            G::mvwprintw_center(
+            self.mvwprintw_center(
                 w,
                 10,
                 &format!(
@@ -182,7 +182,7 @@ impl G {
                 ),
             );
 
-            G::mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
+            self.mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
             wattr_off(w, A_BOLD());
 
             box_(w, 0, 0);
@@ -292,7 +292,7 @@ impl G {
         let w = G::popup(8 + armor_type_count as i32, 46);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(
+        self.mvwprintw_center(
             w,
             2,
             &format!(
@@ -303,7 +303,7 @@ impl G {
         );
         self.wcoff(w, G::A_TITLE());
 
-        G::mvwprintw_center(w, 4, &"Here is a list of armor you can buy.".to_string());
+        self.mvwprintw_center(w, 4, &"Here is a list of armor you can buy.".to_string());
 
         wattr_on(w, A_BOLD());
 
@@ -319,7 +319,7 @@ impl G {
                     cost_str = format!("{:2>} GP", Armor::cost(*armor_type, false));
                 };
 
-                G::mvwprintw_center_notrim(
+                self.mvwprintw_center_notrim(
                     w,
                     6 + row_count,
                     &format!(
@@ -378,7 +378,7 @@ impl G {
         let w = G::popup(8 + weapon_type_count as i32, 56);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(
+        self.mvwprintw_center(
             w,
             2,
             &format!(
@@ -389,7 +389,7 @@ impl G {
         );
         self.wcoff(w, G::A_TITLE());
 
-        G::mvwprintw_center(w, 4, "Here is a list of weapons you can buy.");
+        self.mvwprintw_center(w, 4, "Here is a list of weapons you can buy.");
 
         wattr_on(w, A_BOLD());
 
@@ -405,7 +405,7 @@ impl G {
                     cost_str = format!("{:2>} GP", Weapon::cost(*weapon_type, false));
                 };
 
-                G::mvwprintw_center_notrim(
+                self.mvwprintw_center_notrim(
                     w,
                     6 + row_count,
                     &format!(
@@ -455,11 +455,11 @@ impl G {
         let w = G::popup(7, 40);
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(w, 2, "Want to buy a lamp for 20 GPs?");
+        self.mvwprintw_center(w, 2, "Want to buy a lamp for 20 GPs?");
         self.wcoff(w, G::A_TITLE());
 
         wattr_on(w, A_BOLD());
-        G::mvwprintw_center(w, 4, "|[Y]|es  |[N]|o");
+        self.mvwprintw_center(w, 4, "|[Y]|es  |[N]|o");
         wattr_off(w, A_BOLD());
 
         box_(w, 0, 0);
@@ -498,7 +498,7 @@ impl G {
         let mut success = false;
 
         self.wcon(w, G::A_TITLE());
-        G::mvwprintw_center(
+        self.mvwprintw_center(
             w,
             2,
             &format!(
@@ -509,7 +509,7 @@ impl G {
         );
         self.wcoff(w, G::A_TITLE());
 
-        G::mvwprintw_center(w, 4, "Flares cost 1 GP each.");
+        self.mvwprintw_center(w, 4, "Flares cost 1 GP each.");
 
         box_(w, 0, 0);
 

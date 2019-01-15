@@ -39,8 +39,8 @@ impl G {
 
     /// Print some text in the center of a window, ignoring leading and trailing
     /// whitespace.
-    pub fn wprintw_center(w: WINDOW, s: &str) {
-        G::mvwprintw_center(w, getcury(w), s)
+    pub fn wprintw_center(&self, w: WINDOW, s: &str) {
+        self.mvwprintw_center(w, getcury(w), s)
     }
 
     /// Print some text in the center of a window, ignoring leading and trailing
@@ -51,24 +51,24 @@ impl G {
     ///    "|Foo| bar baz |E|tc"
     ///
     /// The contents between the pipes will be shown in A_REVERSE.
-    pub fn mvwprintw_center(w: WINDOW, y: i32, s: &str) {
-        G::mvwprintw_center_core(w, y, s, true)
+    pub fn mvwprintw_center(&self, w: WINDOW, y: i32, s: &str) {
+        self.mvwprintw_center_core(w, y, s, true)
     }
 
     /// Variant doesn't trim before centering
-    pub fn mvwprintw_center_notrim(w: WINDOW, y: i32, s: &str) {
-        G::mvwprintw_center_core(w, y, s, false)
+    pub fn mvwprintw_center_notrim(&self, w: WINDOW, y: i32, s: &str) {
+        self.mvwprintw_center_core(w, y, s, false)
     }
 
     /// Base functionality
-    fn mvwprintw_center_core(w: WINDOW, y: i32, s: &str, trim: bool) {
+    fn mvwprintw_center_core(&self, w: WINDOW, y: i32, s: &str, trim: bool) {
         let ts = if trim { s.trim() } else { s };
 
         let mut len = 0;
         let mut has_markup = false;
 
         for c in ts.chars() {
-            if c != '|' {
+            if c != '|' && c != '^' {
                 len += 1;
             } else {
                 has_markup = true;
@@ -80,6 +80,7 @@ impl G {
         wmove(w, y, x);
 
         let mut reversed = false;
+        let mut red = false;
 
         if has_markup {
             wattr_off(w, A_REVERSE());
@@ -93,6 +94,17 @@ impl G {
                     wattr_on(w, A_REVERSE());
                 } else {
                     wattr_off(w, A_REVERSE());
+                }
+                continue;
+            }
+
+            if c == '^' {
+                red = !red;
+
+                if red {
+                    self.wcon(w, "bold-red");
+                } else {
+                    self.wcoff(w, "bold-red");
                 }
                 continue;
             }
@@ -152,13 +164,13 @@ impl G {
         let w = G::popup(9, width);
 
         self.wcon(w, "bold-red");
-        G::mvwprintw_center(w, 2, &format!("** SILLY {} **", self.player_race_name()));
+        self.mvwprintw_center(w, 2, &format!("** SILLY {} **", self.player_race_name()));
         self.wcoff(w, "bold-red");
 
-        G::mvwprintw_center(w, 4, s);
+        self.mvwprintw_center(w, 4, s);
 
         wattron(w, A_REVERSE());
-        G::mvwprintw_center(w, 6, " Press any key ");
+        self.mvwprintw_center(w, 6, " Press any key ");
         wattroff(w, A_REVERSE());
 
         self.wcon(w, "bold-red");

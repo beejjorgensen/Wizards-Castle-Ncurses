@@ -8,7 +8,7 @@ impl G {
         //wclear(self.statwin); // If we don't clear first, nothing redraws...??
 
         // Draw stats
-        G::mvwprintw_center(
+        self.mvwprintw_center(
             self.statwin,
             2,
             &format!(
@@ -20,7 +20,7 @@ impl G {
         );
 
         // Gold and flares
-        G::mvwprintw_center(
+        self.mvwprintw_center(
             self.statwin,
             3,
             &format!(
@@ -41,7 +41,25 @@ impl G {
             inv.push_str(", Lamp");
         }
 
-        G::mvwprintw_center(self.statwin, 4, &inv);
+        self.mvwprintw_center(self.statwin, 4, &inv);
+
+        // Print the room location
+        if self.game.player_is_blind() {
+            self.wcon(self.statwin, "red");
+            self.mvwprintw_center(self.statwin, 6, "** BLIND **");
+            self.wcoff(self.statwin, "red");
+        } else {
+            self.mvwprintw_center(
+                self.statwin,
+                6,
+                &format!(
+                    "({},{}) level {}",
+                    self.game.player_x() + 1,
+                    self.game.player_y() + 1,
+                    self.game.player_z() + 1
+                ),
+            );
+        }
 
         box_(self.statwin, 0, 0);
 
