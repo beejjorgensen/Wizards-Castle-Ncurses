@@ -48,7 +48,7 @@ impl G {
         G {
             color,
             mapwin: newwin(17, 47, 0, 0),
-            statwin: newwin(17, 33, 0, 47),
+            statwin: newwin(17, 32, 0, 48),
             logwin,
             loginner,
             game: Game::new(8, 8, 8),

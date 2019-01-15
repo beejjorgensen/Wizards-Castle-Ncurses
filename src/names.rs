@@ -25,19 +25,19 @@ impl G {
 
     pub fn weapon_name(w: WeaponType) -> String {
         match w {
-            WeaponType::None => String::from("NO WEAPON"),
-            WeaponType::Dagger => String::from("DAGGER"),
-            WeaponType::Mace => String::from("MACE"),
-            WeaponType::Sword => String::from("SWORD"),
+            WeaponType::None => String::from("No weapon"),
+            WeaponType::Dagger => String::from("Dagger"),
+            WeaponType::Mace => String::from("Mace"),
+            WeaponType::Sword => String::from("Sword"),
         }
     }
 
     pub fn armor_name(a: ArmorType) -> String {
         match a {
-            ArmorType::None => String::from("NO ARMOR"),
-            ArmorType::Leather => String::from("LEATHER"),
-            ArmorType::Chainmail => String::from("CHAINMAIL"),
-            ArmorType::Plate => String::from("PLATE"),
+            ArmorType::None => String::from("No armor"),
+            ArmorType::Leather => String::from("Leather"),
+            ArmorType::Chainmail => String::from("Chainmail"),
+            ArmorType::Plate => String::from("Plate"),
         }
     }
 
