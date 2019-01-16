@@ -81,6 +81,32 @@ impl G {
         k == KEY_UP || k == KEY_DOWN || k == KEY_LEFT || k == KEY_RIGHT
     }
 
+    /// Print a location event message, hiding the location if the player is
+    /// blind
+    fn make_loc_event_msg(
+        &self,
+        prefix: &str,
+        suffix: &str,
+        blind_suffix: &str,
+        x: u32,
+        y: u32,
+        z: u32,
+    ) -> String {
+        if self.game.player_is_blind() {
+            format!("{}{}", prefix, blind_suffix).to_string()
+        } else {
+            format!(
+                "{} at ({},{}) level {}{}",
+                prefix,
+                x + 1,
+                y + 1,
+                z + 1,
+                suffix
+            )
+            .to_string()
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -165,22 +191,22 @@ impl G {
                         ));
                     }
                     Event::Sinkhole => {
-                        self.update_log(&format!(
-                            "You fell into a sinkhole at ({},{}) level {}!",
-                            ox + 1,
-                            oy + 1,
-                            oz + 1
-                        ));
+                        let msg = self.make_loc_event_msg(
+                            "You fell into a sinkhole",
+                            "!",
+                            "!",
+                            ox,
+                            oy,
+                            oz,
+                        );
+                        self.update_log(&msg);
                         self.game.discover_room_at_player();
                         automove = true;
                     }
                     Event::Warp => {
-                        self.update_log(&format!(
-                            "You entered a warp at ({},{}) level {}!",
-                            ox + 1,
-                            oy + 1,
-                            oz + 1
-                        ));
+                        let msg =
+                            self.make_loc_event_msg("You entered a warp", "!", "!", ox, oy, oz);
+                        self.update_log(&msg);
                         self.game.discover_room_at_player();
                         automove = true;
                     }
