@@ -2,7 +2,7 @@ use ncurses::*;
 use std::char;
 use std::collections::HashMap;
 
-use wizardscastle::game::{Direction, Game, Event};
+use wizardscastle::game::{Direction, Event, Game};
 
 mod gen;
 mod log;
@@ -153,18 +153,34 @@ impl G {
 
                 match self.game.room_effect() {
                     Event::FoundGold(_) => {
-                        self.update_log(&format!("You found gold! You now have {} GPs.", self.game.player_gp()));
+                        self.update_log(&format!(
+                            "You found gold! You now have {} GPs.",
+                            self.game.player_gp()
+                        ));
                     }
                     Event::FoundFlares(_) => {
-                        self.update_log(&format!("You found flares! You now have {}.", self.game.player_flares()));
+                        self.update_log(&format!(
+                            "You found flares! You now have {}.",
+                            self.game.player_flares()
+                        ));
                     }
                     Event::Sinkhole => {
-                        self.update_log(&format!("You fell into a sinkhole at ({},{}) level {}!", ox+1, oy+1, oz+1));
+                        self.update_log(&format!(
+                            "You fell into a sinkhole at ({},{}) level {}!",
+                            ox + 1,
+                            oy + 1,
+                            oz + 1
+                        ));
                         self.game.discover_room_at_player();
                         automove = true;
                     }
                     Event::Warp => {
-                        self.update_log(&format!("You entered a warp at ({},{}) level {}!", ox+1, oy+1, oz+1));
+                        self.update_log(&format!(
+                            "You entered a warp at ({},{}) level {}!",
+                            ox + 1,
+                            oy + 1,
+                            oz + 1
+                        ));
                         self.game.discover_room_at_player();
                         automove = true;
                     }
