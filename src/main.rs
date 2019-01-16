@@ -2,7 +2,7 @@ use ncurses::*;
 use std::char;
 use std::collections::HashMap;
 
-use wizardscastle::game::{Direction, Game};
+use wizardscastle::game::{Direction, Game, Event};
 
 mod gen;
 mod log;
@@ -104,9 +104,9 @@ impl G {
             self.choose_lamp();
             self.choose_flares();
 
-            let mut alive = true;
+            let mut automove = false;
 
-            let mut count = 0;
+            let mut alive = true;
 
             self.update_log_attr(
                 "You enter the castle and begin!\n",
@@ -116,33 +116,59 @@ impl G {
             while alive {
                 self.update_map(false);
                 self.update_stat();
-                self.update_log(&format!("test {}", count));
-                count += 1;
 
-                let key = getch();
+                if !automove {
+                    let key = getch();
 
-                if G::is_arrow_key(key) {
-                    match key {
-                        KEY_UP => self.move_dir(Direction::North),
-                        KEY_DOWN => self.move_dir(Direction::South),
-                        KEY_LEFT => self.move_dir(Direction::West),
-                        KEY_RIGHT => self.move_dir(Direction::East),
-                        _ => (),
+                    if G::is_arrow_key(key) {
+                        match key {
+                            KEY_UP => self.move_dir(Direction::North),
+                            KEY_DOWN => self.move_dir(Direction::South),
+                            KEY_LEFT => self.move_dir(Direction::West),
+                            KEY_RIGHT => self.move_dir(Direction::East),
+                            _ => (),
+                        }
+                    } else {
+                        match G::norm_key(key) {
+                            'N' => self.move_dir(Direction::North),
+                            'S' => self.move_dir(Direction::South),
+                            'W' => self.move_dir(Direction::West),
+                            'E' => self.move_dir(Direction::East),
+                            'Q' => {
+                                // TODO are you sure?
+                                alive = false;
+                                // TODO play again?
+                                playing = false;
+                            }
+                            _ => (),
+                        }
                     }
                 } else {
-                    match G::norm_key(key) {
-                        'N' => self.move_dir(Direction::North),
-                        'S' => self.move_dir(Direction::South),
-                        'W' => self.move_dir(Direction::West),
-                        'E' => self.move_dir(Direction::East),
-                        'Q' => {
-                            // TODO are you sure?
-                            alive = false;
-                            // TODO play again?
-                            playing = false;
-                        }
-                        _ => (),
+                    automove = false;
+                }
+
+                let ox = self.game.player_x();
+                let oy = self.game.player_y();
+                let oz = self.game.player_z();
+
+                match self.game.room_effect() {
+                    Event::FoundGold(_) => {
+                        self.update_log(&format!("You found gold! You now have {} GPs.", self.game.player_gp()));
                     }
+                    Event::FoundFlares(_) => {
+                        self.update_log(&format!("You found flares! You now have {}.", self.game.player_flares()));
+                    }
+                    Event::Sinkhole => {
+                        self.update_log(&format!("You fell into a sinkhole at ({},{}) level {}!", ox+1, oy+1, oz+1));
+                        self.game.discover_room_at_player();
+                        automove = true;
+                    }
+                    Event::Warp => {
+                        self.update_log(&format!("You entered a warp at ({},{}) level {}!", ox+1, oy+1, oz+1));
+                        self.game.discover_room_at_player();
+                        automove = true;
+                    }
+                    _ => (),
                 }
             }
         }
