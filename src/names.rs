@@ -55,7 +55,6 @@ impl G {
         }
     }
 
-
     /// Get the printable character for a room
     pub fn room_char(room_type: &RoomType) -> char {
         match room_type {

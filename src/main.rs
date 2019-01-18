@@ -216,7 +216,10 @@ impl G {
                         automove = true;
                     }
                     Event::Treasure(t) => {
-                        let msg = &format!("Here you find the {}! It's now yours!", G::treasure_name(*t.treasure_type()));
+                        let msg = &format!(
+                            "Here you find the {}! It's now yours!",
+                            G::treasure_name(*t.treasure_type())
+                        );
                         self.update_log_attr(&msg, self.wcget(G::A_LOG_GOOD()));
                     }
                     _ => (),
