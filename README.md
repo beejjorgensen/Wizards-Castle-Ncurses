@@ -15,7 +15,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Sinkhole
   * Gold pickup
   * Flare pickup
-  * Treasure
 
 * Actions
   * Normalize arrow keys to NSWE
