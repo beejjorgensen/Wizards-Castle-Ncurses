@@ -60,6 +60,11 @@ impl G {
         "bold-yellow"
     }
 
+    #[allow(non_snake_case)]
+    fn A_LOG_GOOD() -> &'static str {
+        "bold-yellow"
+    }
+
     /// Normalize an input character from getch(), making it uppercase
     fn norm_key(key: i32) -> char {
         let v: Vec<_> = char::from_u32(key as u32).unwrap().to_uppercase().collect();
@@ -140,7 +145,7 @@ impl G {
             );
 
             while alive {
-                self.update_map(false);
+                self.update_map(true);
                 self.update_stat();
 
                 if !automove {
@@ -209,6 +214,10 @@ impl G {
                         self.update_log(&msg);
                         self.game.discover_room_at_player();
                         automove = true;
+                    }
+                    Event::Treasure(t) => {
+                        let msg = &format!("Here you find the {}! It's now yours!", G::treasure_name(*t.treasure_type()));
+                        self.update_log_attr(&msg, self.wcget(G::A_LOG_GOOD()));
                     }
                     _ => (),
                 }

@@ -3,6 +3,7 @@ use wizardscastle::armor::ArmorType;
 use wizardscastle::monster::MonsterType;
 use wizardscastle::player::{Race, Stat};
 use wizardscastle::room::RoomType;
+use wizardscastle::treasure::TreasureType;
 use wizardscastle::weapon::WeaponType;
 
 impl G {
@@ -40,6 +41,20 @@ impl G {
             ArmorType::Plate => String::from("Plate"),
         }
     }
+
+    pub fn treasure_name(t: TreasureType) -> String {
+        match t {
+            TreasureType::RubyRed => String::from("Ruby Red"),
+            TreasureType::NornStone => String::from("Norn Stone"),
+            TreasureType::PalePearl => String::from("Pale Pearl"),
+            TreasureType::OpalEye => String::from("Opal Eye"),
+            TreasureType::GreenGem => String::from("Green Gem"),
+            TreasureType::BlueFlame => String::from("Blue Flame"),
+            TreasureType::Palantir => String::from("Palantir"),
+            TreasureType::Silmaril => String::from("Silmaril"),
+        }
+    }
+
 
     /// Get the printable character for a room
     pub fn room_char(room_type: &RoomType) -> char {
