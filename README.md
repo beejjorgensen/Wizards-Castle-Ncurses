@@ -10,12 +10,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 ## TODO
 
-* Room effects
-  * Warp
-  * Sinkhole
-  * Gold pickup
-  * Flare pickup
-
 * Actions
   * Normalize arrow keys to NSWE
   * Drink
