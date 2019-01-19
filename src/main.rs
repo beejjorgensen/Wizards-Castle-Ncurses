@@ -12,6 +12,7 @@ mod gen;
 mod log;
 mod map;
 mod names;
+mod quit;
 mod stat;
 mod win;
 
@@ -417,10 +418,11 @@ impl G {
                         'G' => self.gaze(),
                         'O' => self.open(),
                         'Q' => {
-                            // TODO are you sure?
-                            alive = false;
-                            // TODO play again?
-                            playing = false;
+                            if self.verify_quit(false) {
+                                alive = false;
+                                // TODO play again?
+                                playing = false;
+                            }
                         }
                         _ => (),
                     }

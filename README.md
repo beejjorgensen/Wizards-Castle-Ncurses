@@ -12,7 +12,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 * Actions
   * Teleport
-  * Quit
   * Help
 
 * Combat
