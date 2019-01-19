@@ -5,7 +5,7 @@ use wizardscastle::player::Stat;
 
 impl G {
     pub fn update_stat(&self) {
-        //wclear(self.statwin); // If we don't clear first, nothing redraws...??
+        wclear(self.statwin);
 
         // Draw stats
         self.mvwprintw_center(
@@ -60,6 +60,10 @@ impl G {
                 ),
             );
         }
+
+        // Print the room contents
+        let room = self.game.room_at_player();
+        self.mvwprintw_center(self.statwin, 8, &G::room_name(room.room_type()));
 
         box_(self.statwin, 0, 0);
 

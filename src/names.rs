@@ -42,6 +42,24 @@ impl G {
         }
     }
 
+    pub fn monster_name(m: MonsterType) -> String {
+        match m {
+            MonsterType::Kobold => String::from("kobold"),
+            MonsterType::Orc => String::from("orc"),
+            MonsterType::Wolf => String::from("wolf"),
+            MonsterType::Goblin => String::from("goblin"),
+            MonsterType::Ogre => String::from("ogre"),
+            MonsterType::Troll => String::from("troll"),
+            MonsterType::Bear => String::from("bear"),
+            MonsterType::Minotaur => String::from("minotaur"),
+            MonsterType::Gargoyle => String::from("gargoyle"),
+            MonsterType::Chimera => String::from("chimera"),
+            MonsterType::Balrog => String::from("balrog"),
+            MonsterType::Dragon => String::from("dragon"),
+            MonsterType::Vendor => String::from("vendor"),
+        }
+    }
+
     pub fn treasure_name(t: TreasureType) -> String {
         match t {
             TreasureType::RubyRed => String::from("Ruby Red"),
@@ -81,6 +99,28 @@ impl G {
         }
     }
 
+    pub fn room_name(r: &RoomType) -> String {
+        match r {
+            RoomType::Empty => String::from("An empty room"),
+            RoomType::Entrance => String::from("The entrance"),
+            RoomType::StairsDown => String::from("Stairs going down"),
+            RoomType::StairsUp => String::from("Stairs going up"),
+            RoomType::Gold => String::from("Gold pieces"),
+            RoomType::Pool => String::from("A pool"),
+            RoomType::Chest => String::from("A chest"),
+            RoomType::Flares => String::from("Flares"),
+            RoomType::Warp(_) => String::from("A warp"),
+            RoomType::Sinkhole => String::from("A sinkhole"),
+            RoomType::CrystalOrb => String::from("A crystal orb"),
+            RoomType::Book => String::from("A book"),
+            RoomType::Monster(m) => {
+                let mon_str = G::monster_name(m.monster_type());
+                format!("{} {}", G::get_article(&mon_str), mon_str)
+            }
+            RoomType::Treasure(t) => G::treasure_name(*t.treasure_type()).to_string(),
+        }
+    }
+
     /*
     pub fn gender_name(g: Gender) -> String {
         match g {
@@ -89,4 +129,20 @@ impl G {
         }
     }
     */
+
+    fn starts_with_vowel(s: &str) -> bool {
+        if let Some(c) = String::from(s).to_uppercase().chars().next() {
+            return c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U';
+        }
+
+        false
+    }
+
+    pub fn get_article(s: &str) -> String {
+        if G::starts_with_vowel(s) {
+            return String::from("An");
+        }
+
+        String::from("A")
+    }
 }
