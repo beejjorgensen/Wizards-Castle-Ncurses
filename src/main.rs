@@ -3,7 +3,7 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::error::Error;
-use wizardscastle::game::{Direction, DrinkEvent, Event, OrbEvent, Game, Stairs};
+use wizardscastle::game::{Direction, DrinkEvent, Event, Game, OrbEvent, Stairs};
 use wizardscastle::room::RoomType;
 
 mod gen;
@@ -255,41 +255,44 @@ impl G {
 
     /// Gaze into an Orb
     pub fn gaze(&mut self) {
-
         let s;
         let mut error = false;
 
         match self.game.gaze() {
-            Ok(event) => {
-                match event {
-                    OrbEvent::BloodyHeap => s = String::from("yourself in a bloody heap!"),
-                    OrbEvent::Polymorph(m) => {
-                        let mon_str = G::monster_name(m);
-                        s = format!(
-                            "yourself drinking from a pool and becoming {} {}.",
-                            G::get_article(&mon_str),
-                            mon_str
-                        );
-                    }
-                    OrbEvent::GazeBack(m) => {
-                        let mon_str = G::monster_name(m);
-                        s = format!(
-                            "{} {} gazing back at you.",
-                            G::get_article(&mon_str),
-                            mon_str
-                        );
-                    }
-                    OrbEvent::Item(room_type, x, y, z) => {
-                        s = format!("{} at ({},{}) level {}", G::room_name(&room_type), x + 1, y + 1, z + 1);
-                    }
-                    OrbEvent::OrbOfZot(x, y, z) => {
-                        s = format!("THE ORB OF ZOT at ({},{}) level {}!", x + 1, y + 1, z + 1);
-                    }
-                    OrbEvent::SoapOpera => {
-                        s = String::from("a soap opera rerun.");
-                    }
+            Ok(event) => match event {
+                OrbEvent::BloodyHeap => s = String::from("yourself in a bloody heap!"),
+                OrbEvent::Polymorph(m) => {
+                    let mon_str = G::monster_name(m);
+                    s = format!(
+                        "yourself drinking from a pool and becoming {} {}.",
+                        G::get_article(&mon_str),
+                        mon_str
+                    );
                 }
-            }
+                OrbEvent::GazeBack(m) => {
+                    let mon_str = G::monster_name(m);
+                    s = format!(
+                        "{} {} gazing back at you.",
+                        G::get_article(&mon_str),
+                        mon_str
+                    );
+                }
+                OrbEvent::Item(room_type, x, y, z) => {
+                    s = format!(
+                        "{} at ({},{}) level {}",
+                        G::room_name(&room_type),
+                        x + 1,
+                        y + 1,
+                        z + 1
+                    );
+                }
+                OrbEvent::OrbOfZot(x, y, z) => {
+                    s = format!("THE ORB OF ZOT at ({},{}) level {}!", x + 1, y + 1, z + 1);
+                }
+                OrbEvent::SoapOpera => {
+                    s = String::from("a soap opera rerun.");
+                }
+            },
             Err(Error::Blind) => {
                 s = format!("** You can't see anything, dumb {}", self.race_name());
                 error = true;
