@@ -92,6 +92,18 @@ impl G {
 
     /// Move a direction
     fn move_dir(&mut self, dir: Direction) {
+        // Ask if player is sure they want to leave
+        let roomtype = self.game.room_at_player().roomtype.clone();
+
+        if roomtype == RoomType::Entrance
+            && dir == Direction::North
+            && !self.game.player_has_orb_of_zot()
+        {
+            if !self.verify_quit(true) {
+                return;
+            }
+        }
+
         self.game.move_dir(dir);
 
         // This is often redundant, but there's a case where we retreat from
