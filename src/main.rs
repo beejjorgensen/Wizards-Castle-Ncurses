@@ -9,6 +9,7 @@ use wizardscastle::game::{
 use wizardscastle::room::RoomType;
 
 mod gen;
+mod help;
 mod log;
 mod map;
 mod names;
@@ -428,6 +429,7 @@ impl G {
                         'L' => self.lamp(),
                         'G' => self.gaze(),
                         'O' => self.open(),
+                        'H' | '?' => self.help(),
                         'Q' => {
                             if self.verify_quit(false) {
                                 alive = false;
