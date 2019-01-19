@@ -157,6 +157,10 @@ impl G {
     }
 
     pub fn initial_upper(s: &str) -> String {
-        format!("{}{}", s.get(0..1).unwrap().to_uppercase(), s.get(1..).unwrap())
+        format!(
+            "{}{}",
+            s.get(0..1).unwrap().to_uppercase(),
+            s.get(1..).unwrap()
+        )
     }
 }

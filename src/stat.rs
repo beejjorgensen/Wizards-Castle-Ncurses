@@ -78,7 +78,7 @@ impl G {
         self.mvwprintw_center(
             self.statwin,
             8,
-            &format!("{}", G::initial_upper(&G::room_name(room.room_type()))),
+            &G::initial_upper(&G::room_name(room.room_type())).to_string(),
         );
 
         // Additional status info
