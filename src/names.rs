@@ -101,18 +101,18 @@ impl G {
 
     pub fn room_name(r: &RoomType) -> String {
         match r {
-            RoomType::Empty => String::from("An empty room"),
-            RoomType::Entrance => String::from("The entrance"),
-            RoomType::StairsDown => String::from("Stairs going down"),
-            RoomType::StairsUp => String::from("Stairs going up"),
-            RoomType::Gold => String::from("Gold pieces"),
-            RoomType::Pool => String::from("A pool"),
-            RoomType::Chest => String::from("A chest"),
-            RoomType::Flares => String::from("Flares"),
-            RoomType::Warp(_) => String::from("A warp"),
-            RoomType::Sinkhole => String::from("A sinkhole"),
-            RoomType::CrystalOrb => String::from("A crystal orb"),
-            RoomType::Book => String::from("A book"),
+            RoomType::Empty => String::from("an empty room"),
+            RoomType::Entrance => String::from("the entrance"),
+            RoomType::StairsDown => String::from("stairs going down"),
+            RoomType::StairsUp => String::from("stairs going up"),
+            RoomType::Gold => String::from("gold pieces"),
+            RoomType::Pool => String::from("a pool"),
+            RoomType::Chest => String::from("a chest"),
+            RoomType::Flares => String::from("flares"),
+            RoomType::Warp(_) => String::from("a warp"),
+            RoomType::Sinkhole => String::from("a sinkhole"),
+            RoomType::CrystalOrb => String::from("a crystal orb"),
+            RoomType::Book => String::from("a book"),
             RoomType::Monster(m) => {
                 let mon_str = G::monster_name(m.monster_type());
                 format!("{} {}", G::get_article(&mon_str), mon_str)
@@ -150,9 +150,9 @@ impl G {
 
     pub fn get_article(s: &str) -> String {
         if G::starts_with_vowel(s) {
-            return String::from("An");
+            return String::from("an");
         }
 
-        String::from("A")
+        String::from("a")
     }
 }
