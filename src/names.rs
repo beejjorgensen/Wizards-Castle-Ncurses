@@ -1,7 +1,7 @@
 use crate::G;
 use wizardscastle::armor::ArmorType;
 use wizardscastle::monster::MonsterType;
-use wizardscastle::player::{Race, Stat};
+use wizardscastle::player::{Gender, Race, Stat};
 use wizardscastle::room::RoomType;
 use wizardscastle::treasure::TreasureType;
 use wizardscastle::weapon::WeaponType;
@@ -130,13 +130,21 @@ impl G {
     }
     */
 
-    // Return player race
+    /// Return player race
     pub fn race_name(&self) -> &str {
         match self.game.player_race() {
             Race::Hobbit => "Hobbit",
             Race::Elf => "Elf",
             Race::Human => "Human",
             Race::Dwarf => "Dwarf",
+        }
+    }
+
+    /// Return player gender
+    pub fn gender_name(g: Gender) -> String {
+        match g {
+            Gender::Female => String::from("female"),
+            Gender::Male => String::from("male"),
         }
     }
 

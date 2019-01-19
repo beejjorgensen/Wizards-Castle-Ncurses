@@ -3,7 +3,8 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::error::Error;
-use wizardscastle::game::{Direction, Event, Game};
+use wizardscastle::game::{Direction, DrinkEvent, Event, Game};
+use wizardscastle::room::RoomType;
 
 mod gen;
 mod log;
@@ -185,6 +186,60 @@ impl G {
         self.set_statmode(StatMode::None);
     }
 
+    // Drink from a pool
+    fn drink(&mut self) {
+        let s;
+
+        match self.game.drink() {
+            Ok(DrinkEvent::Stronger) => {
+                s = String::from("feel stronger!");
+            }
+            Ok(DrinkEvent::Weaker) => {
+                s = String::from("feel weaker.");
+            }
+            Ok(DrinkEvent::Smarter) => {
+                s = String::from("feel smarter!");
+            }
+            Ok(DrinkEvent::Dumber) => {
+                s = String::from("feel dumber.");
+            }
+            Ok(DrinkEvent::Nimbler) => {
+                s = String::from("feel nimbler!");
+            }
+            Ok(DrinkEvent::Clumsier) => {
+                s = String::from("feel clumsier.");
+            }
+            Ok(DrinkEvent::ChangeRace) => {
+                s = format!("turn into a {}!", self.race_name());
+            }
+            Ok(DrinkEvent::ChangeGender) => {
+                s = format!(
+                    "turn into a {} {}!",
+                    G::gender_name(*self.game.player_gender()),
+                    self.race_name()
+                );
+            }
+            Err(err) => panic!("{:#?}", err),
+        }
+
+        self.update_log(&format!("You take a drink and {}", s));
+    }
+
+    /// Drink or Down
+    fn drink_down(&mut self) {
+        match self.game.room_at_player().room_type() {
+            RoomType::StairsDown => (),
+            RoomType::Pool => self.drink(),
+            _ => {
+                self.update_log_error(&format!(
+                    "** Oh {}, no stairs going down in here.",
+                    self.race_name()
+                ));
+                self.update_log_error("** If you want a drink, find a pool.");
+            }
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -229,6 +284,7 @@ impl G {
                         'S' => self.move_dir(Direction::South),
                         'W' => self.move_dir(Direction::West),
                         'E' => self.move_dir(Direction::East),
+                        'D' => self.drink_down(),
                         'Q' => {
                             // TODO are you sure?
                             alive = false;
