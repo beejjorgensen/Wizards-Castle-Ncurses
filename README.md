@@ -14,7 +14,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Normalize arrow keys to NSWE
   * Drink
   * Gaze
-  * Flare
   * Down
   * Up
   * Lamp
