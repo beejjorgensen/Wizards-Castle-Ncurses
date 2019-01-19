@@ -12,8 +12,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 * Actions
   * Teleport
-  * Open book
-  * Open chest
   * Quit
   * Help
 

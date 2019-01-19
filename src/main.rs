@@ -3,7 +3,9 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::error::Error;
-use wizardscastle::game::{Direction, DrinkEvent, Event, Game, OrbEvent, Stairs};
+use wizardscastle::game::{
+    BookEvent, ChestEvent, Direction, DrinkEvent, Event, Game, OrbEvent, Stairs,
+};
 use wizardscastle::room::RoomType;
 
 mod gen;
@@ -311,6 +313,59 @@ impl G {
         }
     }
 
+    /// Open a chest
+    fn open_chest(&mut self) {
+        match self.game.open_chest() {
+            Ok(event) => match event {
+                ChestEvent::Explode => self.update_log("KABOOM! It explodes!"),
+                ChestEvent::Gas => self.update_log("Gas! You stagger from the room."),
+                ChestEvent::Treasure(amount) => {
+                    self.update_log(&format!("You find {} gold pieces!", amount))
+                }
+            },
+
+            Err(err) => panic!(err),
+        }
+
+        println!();
+    }
+
+    /// Open a book
+    fn open_book(&mut self) {
+        match self.game.open_book() {
+            Ok(event) => match event {
+                BookEvent::Blind => self.update_log(&format!(
+                    "FLASH! Oh no! You are now a blind {}",
+                    self.race_name()
+                )),
+                BookEvent::Poetry => {
+                    self.update_log("it's another volume of Zot's poetry! - Yeech!")
+                }
+                BookEvent::PlayMonster(m) => {
+                    self.update_log(&format!("It's an old copy of play{}", G::monster_name(m)))
+                }
+                BookEvent::Dexterity => self.update_log("It's a manual of dexterity!"),
+                BookEvent::Strength => self.update_log("It's a manual of strength!"),
+                BookEvent::Sticky => self
+                    .update_log("The book sticks to your hands--now you can't draw your weapon!"),
+            },
+            Err(err) => panic!(err),
+        }
+    }
+
+    /// Open a book or chest
+    pub fn open(&mut self) {
+        let room_type = self.game.room_at_player().room_type().clone();
+
+        match room_type {
+            RoomType::Chest => self.open_chest(),
+            RoomType::Book => self.open_book(),
+            _ => {
+                self.update_log_error("** The only thing you opened was your big mouth");
+            }
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -344,7 +399,7 @@ impl G {
             );
 
             while alive {
-                self.update_map(false);
+                self.update_map(true);
                 self.update_stat();
 
                 if !automove {
@@ -357,15 +412,16 @@ impl G {
                         'E' => self.move_dir(Direction::East),
                         'D' => self.drink_down(),
                         'U' => self.move_stairs(Stairs::Up),
+                        'F' => self.flare(),
+                        'L' => self.lamp(),
+                        'G' => self.gaze(),
+                        'O' => self.open(),
                         'Q' => {
                             // TODO are you sure?
                             alive = false;
                             // TODO play again?
                             playing = false;
                         }
-                        'F' => self.flare(),
-                        'L' => self.lamp(),
-                        'G' => self.gaze(),
                         _ => (),
                     }
                 } else {
