@@ -1,5 +1,7 @@
 use crate::G;
+
 use wizardscastle::armor::ArmorType;
+use wizardscastle::game::Stairs;
 use wizardscastle::monster::MonsterType;
 use wizardscastle::player::{Gender, Race, Stat};
 use wizardscastle::room::RoomType;
@@ -137,6 +139,14 @@ impl G {
             Race::Elf => "Elf",
             Race::Human => "Human",
             Race::Dwarf => "Dwarf",
+        }
+    }
+
+    /// Return stair name
+    pub fn stair_name(s: Stairs) -> String {
+        match s {
+            Stairs::Up => String::from("up"),
+            Stairs::Down => String::from("down"),
         }
     }
 

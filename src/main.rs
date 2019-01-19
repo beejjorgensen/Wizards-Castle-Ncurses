@@ -3,7 +3,7 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::error::Error;
-use wizardscastle::game::{Direction, DrinkEvent, Event, Game};
+use wizardscastle::game::{Direction, DrinkEvent, Event, Game, Stairs};
 use wizardscastle::room::RoomType;
 
 mod gen;
@@ -225,16 +225,29 @@ impl G {
         self.update_log(&format!("You take a drink and {}", s));
     }
 
+    /// Print a no-stairs error
+    fn print_no_stairs_error(&self, s: Stairs) {
+        self.update_log_error(&format!(
+            "** Oh {}, no stairs going {} in here.",
+            self.race_name(),
+            G::stair_name(s)
+        ));
+    }
+
+    /// Take some stairs
+    fn move_stairs(&mut self, stairs: Stairs) {
+        if self.game.move_stairs(stairs).is_err() {
+            self.print_no_stairs_error(stairs);
+        }
+    }
+
     /// Drink or Down
     fn drink_down(&mut self) {
         match self.game.room_at_player().room_type() {
-            RoomType::StairsDown => (),
+            RoomType::StairsDown => self.move_stairs(Stairs::Down),
             RoomType::Pool => self.drink(),
             _ => {
-                self.update_log_error(&format!(
-                    "** Oh {}, no stairs going down in here.",
-                    self.race_name()
-                ));
+                self.print_no_stairs_error(Stairs::Down);
                 self.update_log_error("** If you want a drink, find a pool.");
             }
         }
@@ -285,6 +298,7 @@ impl G {
                         'W' => self.move_dir(Direction::West),
                         'E' => self.move_dir(Direction::East),
                         'D' => self.drink_down(),
+                        'U' => self.move_stairs(Stairs::Up),
                         'Q' => {
                             // TODO are you sure?
                             alive = false;
