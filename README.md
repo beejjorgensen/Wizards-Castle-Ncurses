@@ -11,7 +11,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 ## TODO
 
 * Actions
-  * Gaze
   * Teleport
   * Open book
   * Open chest
