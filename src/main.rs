@@ -98,10 +98,9 @@ impl G {
         if roomtype == RoomType::Entrance
             && dir == Direction::North
             && !self.game.player_has_orb_of_zot()
+            && !self.verify_quit(true)
         {
-            if !self.verify_quit(true) {
-                return;
-            }
+            return;
         }
 
         self.game.move_dir(dir);
