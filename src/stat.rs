@@ -75,7 +75,11 @@ impl G {
 
         // Print the room contents
         let room = self.game.room_at_player();
-        self.mvwprintw_center(self.statwin, 8, &format!("{}", &G::room_name(room.room_type())));
+        self.mvwprintw_center(
+            self.statwin,
+            8,
+            &format!("{}", G::initial_upper(&G::room_name(room.room_type()))),
+        );
 
         // Additional status info
         self.update_stat_additional();
