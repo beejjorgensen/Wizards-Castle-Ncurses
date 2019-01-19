@@ -130,6 +130,16 @@ impl G {
     }
     */
 
+    // Return player race
+    pub fn race_name(&self) -> &str {
+        match self.game.player_race() {
+            Race::Hobbit => "Hobbit",
+            Race::Elf => "Elf",
+            Race::Human => "Human",
+            Race::Dwarf => "Dwarf",
+        }
+    }
+
     fn starts_with_vowel(s: &str) -> bool {
         if let Some(c) = String::from(s).to_uppercase().chars().next() {
             return c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U';

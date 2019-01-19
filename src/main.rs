@@ -3,6 +3,7 @@ use std::char;
 use std::collections::HashMap;
 
 use wizardscastle::game::{Direction, Event, Game};
+use wizardscastle::error::Error;
 
 mod gen;
 mod log;
@@ -60,11 +61,6 @@ impl G {
         "bold-yellow"
     }
 
-    #[allow(non_snake_case)]
-    fn A_LOG_GOOD() -> &'static str {
-        "bold-yellow"
-    }
-
     /// Normalize an input character from getch(), making it uppercase
     fn norm_key(key: i32) -> char {
         let v: Vec<_> = char::from_u32(key as u32).unwrap().to_uppercase().collect();
@@ -112,6 +108,17 @@ impl G {
         }
     }
 
+    /// Set off a flare
+    fn flare(&mut self) {
+        if let Err(err) = self.game.flare() {
+            match err {
+                Error::CantGo => self.update_log_error("** Hey bright one, you're out of flares"),
+                Error::Blind => self.update_log_error(&format!("** You can see anything, dumb {}", self.race_name())),
+                any => panic!("{:#?}", any),
+            }
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -145,7 +152,7 @@ impl G {
             );
 
             while alive {
-                self.update_map(true);
+                self.update_map(false);
                 self.update_stat();
 
                 if !automove {
@@ -171,6 +178,7 @@ impl G {
                                 // TODO play again?
                                 playing = false;
                             }
+                            'F' => self.flare(),
                             _ => (),
                         }
                     }
@@ -220,7 +228,7 @@ impl G {
                             "Here you find the {}! It's now yours!",
                             G::treasure_name(*t.treasure_type())
                         );
-                        self.update_log_attr(&msg, self.wcget(G::A_LOG_GOOD()));
+                        self.update_log_good(&msg);
                     }
                     _ => (),
                 }
