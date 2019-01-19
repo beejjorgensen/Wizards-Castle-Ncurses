@@ -11,12 +11,10 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 ## TODO
 
 * Actions
-  * Normalize arrow keys to NSWE
   * Drink
   * Gaze
   * Down
   * Up
-  * Lamp
   * Teleport
   * Open book
   * Open chest
