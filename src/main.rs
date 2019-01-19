@@ -12,6 +12,8 @@ mod names;
 mod stat;
 mod win;
 
+use crate::stat::StatMode;
+
 struct G {
     color: HashMap<&'static str, attr_t>,
     game: Game,
@@ -19,6 +21,7 @@ struct G {
     statwin: WINDOW,
     logwin: WINDOW,
     loginner: WINDOW,
+    statmode: StatMode,
 }
 
 impl G {
@@ -53,6 +56,7 @@ impl G {
             logwin,
             loginner,
             game: Game::new(8, 8, 8),
+            statmode: StatMode::None,
         }
     }
 
@@ -63,7 +67,21 @@ impl G {
 
     /// Normalize an input character from getch(), making it uppercase
     fn norm_key(key: i32) -> char {
-        let v: Vec<_> = char::from_u32(key as u32).unwrap().to_uppercase().collect();
+        let mut ch = ' ';
+
+        if G::is_arrow_key(key) {
+            match key {
+                KEY_UP => ch = 'n',
+                KEY_DOWN => ch = 's',
+                KEY_LEFT => ch = 'w',
+                KEY_RIGHT => ch = 'e',
+                _ => (),
+            }
+        } else {
+            ch = char::from_u32(key as u32).unwrap()
+        }
+
+        let v: Vec<_> = ch.to_uppercase().collect();
 
         v[0]
     }
@@ -122,6 +140,51 @@ impl G {
         }
     }
 
+    /// Shine the lamp
+    fn lamp(&mut self) {
+        if !self.game.player_has_lamp() {
+            self.update_log_error("** You don't have a lamp");
+        }
+
+        if self.game.player_is_blind() {
+            self.update_log_error(&format!(
+                "** You can see anything, dumb {}",
+                self.race_name()
+            ));
+        }
+
+        self.set_statmode(StatMode::Lamp);
+
+        let key = getch();
+
+        let dir;
+
+        match G::norm_key(key) {
+            'N' => dir = Some(Direction::North),
+            'S' => dir = Some(Direction::South),
+            'W' => dir = Some(Direction::West),
+            'E' => dir = Some(Direction::East),
+            _ => dir = None,
+        }
+
+        if let Some(d) = dir {
+            match self.game.shine_lamp(d) {
+                Ok((x, y, z, room_type)) => {
+                    self.update_log(&format!(
+                        "The lamp shines into ({},{}) level {}. There you'll find {}.",
+                        x + 1,
+                        y + 1,
+                        z + 1,
+                        G::room_name(&room_type)
+                    ));
+                }
+                Err(err) => panic!(err),
+            }
+        }
+
+        self.set_statmode(StatMode::None);
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -161,29 +224,20 @@ impl G {
                 if !automove {
                     let key = getch();
 
-                    if G::is_arrow_key(key) {
-                        match key {
-                            KEY_UP => self.move_dir(Direction::North),
-                            KEY_DOWN => self.move_dir(Direction::South),
-                            KEY_LEFT => self.move_dir(Direction::West),
-                            KEY_RIGHT => self.move_dir(Direction::East),
-                            _ => (),
+                    match G::norm_key(key) {
+                        'N' => self.move_dir(Direction::North),
+                        'S' => self.move_dir(Direction::South),
+                        'W' => self.move_dir(Direction::West),
+                        'E' => self.move_dir(Direction::East),
+                        'Q' => {
+                            // TODO are you sure?
+                            alive = false;
+                            // TODO play again?
+                            playing = false;
                         }
-                    } else {
-                        match G::norm_key(key) {
-                            'N' => self.move_dir(Direction::North),
-                            'S' => self.move_dir(Direction::South),
-                            'W' => self.move_dir(Direction::West),
-                            'E' => self.move_dir(Direction::East),
-                            'Q' => {
-                                // TODO are you sure?
-                                alive = false;
-                                // TODO play again?
-                                playing = false;
-                            }
-                            'F' => self.flare(),
-                            _ => (),
-                        }
+                        'F' => self.flare(),
+                        'L' => self.lamp(),
+                        _ => (),
                     }
                 } else {
                     automove = false;

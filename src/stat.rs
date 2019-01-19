@@ -3,7 +3,19 @@ use ncurses::*;
 
 use wizardscastle::player::Stat;
 
+#[derive(Debug, Clone, Copy)]
+pub enum StatMode {
+    None,
+    Lamp,
+}
+
 impl G {
+    pub fn set_statmode(&mut self, mode: StatMode) {
+        self.statmode = mode;
+
+        self.update_stat();
+    }
+
     pub fn update_stat(&self) {
         wclear(self.statwin);
 
@@ -65,8 +77,24 @@ impl G {
         let room = self.game.room_at_player();
         self.mvwprintw_center(self.statwin, 8, &G::room_name(room.room_type()));
 
+        // Additional status info
+        self.update_stat_additional();
+
         box_(self.statwin, 0, 0);
 
         wrefresh(self.statwin);
+    }
+
+    /// Update additional status info
+    fn update_stat_additional(&self) {
+        match self.statmode {
+            StatMode::None => (),
+            StatMode::Lamp => {
+                self.mvwprintw_center(self.statwin, 10, "Shine lamp which way?");
+                self.mvwprintw_center(self.statwin, 12, "|[N]|");
+                self.mvwprintw_center(self.statwin, 13, "|[W]|   |[E]|");
+                self.mvwprintw_center(self.statwin, 14, "|[S]|");
+            }
+        }
     }
 }
