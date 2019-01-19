@@ -2,8 +2,8 @@ use ncurses::*;
 use std::char;
 use std::collections::HashMap;
 
-use wizardscastle::game::{Direction, Event, Game};
 use wizardscastle::error::Error;
+use wizardscastle::game::{Direction, Event, Game};
 
 mod gen;
 mod log;
@@ -113,7 +113,10 @@ impl G {
         if let Err(err) = self.game.flare() {
             match err {
                 Error::CantGo => self.update_log_error("** Hey bright one, you're out of flares"),
-                Error::Blind => self.update_log_error(&format!("** You can see anything, dumb {}", self.race_name())),
+                Error::Blind => self.update_log_error(&format!(
+                    "** You can see anything, dumb {}",
+                    self.race_name()
+                )),
                 any => panic!("{:#?}", any),
             }
         }
