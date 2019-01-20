@@ -1,7 +1,9 @@
 use crate::G;
 use ncurses::*;
 
+use wizardscastle::monster::MonsterType;
 use wizardscastle::player::Stat;
+use wizardscastle::room::RoomType;
 
 #[derive(Debug, Clone, Copy)]
 pub enum StatMode {
@@ -83,11 +85,33 @@ impl G {
 
         // Print the room contents
         let room = self.game.room_at_player();
-        self.mvwprintw_center(
-            self.statwin,
-            8,
-            &G::initial_upper(&G::room_name(room.room_type())).to_string(),
-        );
+
+        let combat_room_desc = if let RoomType::Monster(m) = room.room_type() {
+            // "You're facing A MONSTER"
+            (m.monster_type() == MonsterType::Vendor && self.game.vendors_angry())
+                || m.monster_type() != MonsterType::Vendor
+        } else {
+            // Just a regular room
+            false
+        };
+
+        if combat_room_desc {
+            self.mvwprintw_center(
+                self.statwin,
+                8,
+                &format!(
+                    "You're facing {}!",
+                    G::room_name(room.room_type()).to_uppercase()
+                ),
+            );
+        } else {
+            self.mvwprintw_center(
+                self.statwin,
+                8,
+                //&G::initial_upper(&G::room_name(room.room_type())).to_string(),
+                &format!("You find {}", G::room_name(room.room_type())),
+            );
+        }
 
         // Additional status info
         self.update_stat_additional();
