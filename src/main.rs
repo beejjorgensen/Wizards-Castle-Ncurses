@@ -385,7 +385,9 @@ impl G {
 
         self.game.curse_effects();
 
-        self.game.curse_check();
+        if self.game.curse_check() {
+            self.update_log_bad("You feel a chill in your bones.");
+        }
 
         //self.rand_message();
 
