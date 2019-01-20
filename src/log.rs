@@ -20,6 +20,10 @@ impl G {
         self.update_log_attr(&s, self.wcget(G::A_LOG_GOOD()));
     }
 
+    pub fn update_log_bad(&self, s: &str) {
+        self.update_log_error(s)
+    }
+
     pub fn update_log_error(&self, s: &str) {
         self.update_log_attr(&s, self.wcget(G::A_LOG_ERROR()));
     }
