@@ -1,6 +1,7 @@
 use ncurses::*;
 use std::char;
 use std::collections::HashMap;
+use std::env;
 
 use wizardscastle::error::Error;
 use wizardscastle::game::{
@@ -28,11 +29,13 @@ struct G {
     logwin: WINDOW,
     loginner: WINDOW,
     statmode: StatMode,
+
+    discover_all: bool, // map cheat
 }
 
 impl G {
     /// Build a new global game struct
-    fn new() -> G {
+    fn new(discover_all: bool) -> G {
         // Build out the known color schemes for color and non-color terminals
         let mut color = HashMap::new();
 
@@ -63,6 +66,8 @@ impl G {
             loginner,
             game: Game::new(8, 8, 8),
             statmode: StatMode::None,
+
+            discover_all,
         }
     }
 
@@ -450,7 +455,7 @@ impl G {
             while alive {
                 self.at_turn_start();
 
-                self.update_map(false);
+                self.update_map(self.discover_all);
                 self.update_stat();
 
                 if !automove {
@@ -556,7 +561,11 @@ fn main() {
 
     refresh(); // If we don't do this first, windows don't show up
 
-    let mut g = G::new();
+    let args: Vec<String> = env::args().collect();
+
+    let discover_all = args.len() == 2 && args[1] == "-d";
+
+    let mut g = G::new(discover_all);
 
     g.run();
 
