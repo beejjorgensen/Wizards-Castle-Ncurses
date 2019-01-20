@@ -402,6 +402,18 @@ impl G {
         }
     }
 
+    fn set_statmode_display(&mut self) {
+        match self.game.room_at_player().room_type() {
+            RoomType::Pool => self.set_statmode(StatMode::Pool),
+            RoomType::Book => self.set_statmode(StatMode::Book),
+            RoomType::Chest => self.set_statmode(StatMode::Chest),
+            RoomType::StairsUp => self.set_statmode(StatMode::StairsUp),
+            RoomType::StairsDown => self.set_statmode(StatMode::StairsDown),
+            RoomType::CrystalOrb => self.set_statmode(StatMode::CrystalOrb),
+            _ => self.set_statmode(StatMode::None),
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -472,6 +484,8 @@ impl G {
                 let oy = self.game.player_y();
                 let oz = self.game.player_z();
 
+                self.set_statmode_display();
+
                 match self.game.room_effect() {
                     Event::FoundGold(_) => {
                         self.update_log(&format!(
@@ -511,6 +525,12 @@ impl G {
                             G::treasure_name(*t.treasure_type())
                         );
                         self.update_log_good(&msg);
+                    }
+                    Event::Combat(_) => {
+                        self.set_statmode(StatMode::Combat);
+                    }
+                    Event::Vendor => {
+                        self.set_statmode(StatMode::Vendor);
                     }
                     _ => (),
                 }

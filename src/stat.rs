@@ -7,6 +7,14 @@ use wizardscastle::player::Stat;
 pub enum StatMode {
     None,
     Lamp,
+    Vendor,
+    Pool,
+    Book,
+    Chest,
+    StairsUp,
+    StairsDown,
+    CrystalOrb,
+    Combat,
 }
 
 impl G {
@@ -98,6 +106,34 @@ impl G {
                 self.mvwprintw_center(self.statwin, 12, "|[N]|");
                 self.mvwprintw_center(self.statwin, 13, "|[W]|   |[E]|");
                 self.mvwprintw_center(self.statwin, 14, "|[S]|");
+            }
+            StatMode::Vendor => {
+                self.mvwprintw_center(self.statwin, 10, "|[T]|rade\n");
+                self.wprintw_center(self.statwin, "|[A]|ttack");
+            }
+            StatMode::Combat => {
+                self.mvwprintw_center(self.statwin, 10, "|[A]|ttack\n");
+                if self.game.bribe_possible() {
+                    self.wprintw_center(self.statwin, "|[B]|ribe");
+                }
+                if self.game.spell_possible() {
+                    self.wprintw_center(self.statwin, "|[C]|ast spell");
+                }
+            }
+            StatMode::Pool => {
+                self.mvwprintw_center(self.statwin, 10, "|[D]|rink");
+            }
+            StatMode::StairsUp => {
+                self.mvwprintw_center(self.statwin, 10, "|[U]|p");
+            }
+            StatMode::StairsDown => {
+                self.mvwprintw_center(self.statwin, 10, "|[D]|own");
+            }
+            StatMode::Book | StatMode::Chest => {
+                self.mvwprintw_center(self.statwin, 10, "|[O]|pen");
+            }
+            StatMode::CrystalOrb => {
+                self.mvwprintw_center(self.statwin, 10, "|[G]|aze");
             }
         }
     }
