@@ -10,6 +10,7 @@ use wizardscastle::room::RoomType;
 
 mod gen;
 mod help;
+mod inv;
 mod log;
 mod map;
 mod names;
@@ -466,6 +467,7 @@ impl G {
                         'L' => self.lamp(),
                         'G' => self.gaze(),
                         'O' => self.open(),
+                        'I' => self.show_inventory(),
                         'H' | '?' => self.help(),
                         'Q' => {
                             if self.verify_quit(false) {

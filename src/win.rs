@@ -37,10 +37,15 @@ impl G {
         self.wcset(w, c, false);
     }
 
-    /// Print some text in the center of a window, ignoring leading and trailing
-    /// whitespace.
+    /// Print some text in the center of a window
     pub fn wprintw_center(&self, w: WINDOW, s: &str) {
         self.mvwprintw_center(w, getcury(w), s)
+    }
+
+    /// Print some text in the center of a window, ignoring leading and trailing
+    /// whitespace.
+    pub fn wprintw_center_notrim(&self, w: WINDOW, s: &str) {
+        self.mvwprintw_center_notrim(w, getcury(w), s)
     }
 
     /// Print some text in the center of a window, ignoring leading and trailing

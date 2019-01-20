@@ -11,9 +11,9 @@ impl G {
         let strs = [
             "[N]orth      [D]own        [D]rink",
             "[S]outh      [T]eleport    [O]pen ",
-            "[W]est       [L]amp        [H]elp ",
-            "[E]ast       [F]lare       [Q]uit ",
-            "[U]p         [G]aze               ",
+            "[W]est       [L]amp        [G]aze ",
+            "[E]ast       [F]lare       [H]elp ",
+            "[U]p         [I]nventory   [Q]uit ",
         ];
 
         self.wcon(w, G::A_TITLE());
@@ -25,7 +25,7 @@ impl G {
         }
 
         wattron(w, A_REVERSE());
-        self.mvwprintw_center(w, 10, " Press any key ");
+        self.mvwprintw_center_notrim(w, 10, " Press any key ");
         wattroff(w, A_REVERSE());
 
         box_(w, 0, 0);
