@@ -9,11 +9,11 @@ impl G {
         let w = G::popup(13, 44);
 
         let strs = [
-            "[N]orth      [D]own        [G]aze ",
-            "[S]outh      [T]eleport    [D]rink",
-            "[W]est       [M]ap         [O]pen ",
-            "[E]ast       [L]amp        [H]elp ",
-            "[U]p         [F]lare       [Q]uit ",
+            "[N]orth      [D]own        [D]rink",
+            "[S]outh      [T]eleport    [O]pen ",
+            "[W]est       [L]amp        [H]elp ",
+            "[E]ast       [F]lare       [Q]uit ",
+            "[U]p         [G]aze               ",
         ];
 
         self.wcon(w, G::A_TITLE());
@@ -21,7 +21,7 @@ impl G {
         self.wcoff(w, G::A_TITLE());
 
         for (i, s) in strs.iter().enumerate() {
-            self.mvwprintw_center(w, i as i32 + 4, s);
+            self.mvwprintw_center_notrim(w, i as i32 + 4, s);
         }
 
         wattron(w, A_REVERSE());
