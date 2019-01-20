@@ -12,7 +12,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 * Actions
   * Teleport
-  * Help
 
 * Combat
   * Attack
@@ -26,10 +25,7 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Buy lamp
   * Buy flares
 
-* Curses
-  * Lethargy
-  * The Leech
-  * Forgetfulness
+* Random messages
 
 * Game over screen
 

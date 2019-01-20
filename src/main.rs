@@ -367,7 +367,7 @@ impl G {
     }
 
     /// Open a book or chest
-    pub fn open(&mut self) {
+    fn open(&mut self) {
         let room_type = self.game.room_at_player().room_type().clone();
 
         match room_type {
@@ -376,6 +376,27 @@ impl G {
             _ => {
                 self.update_log_error("** The only thing you opened was your big mouth");
             }
+        }
+    }
+
+    /// Things to do at the start of the turn
+    fn at_turn_start(&mut self) {
+        self.game.add_turn(1);
+
+        self.game.curse_effects();
+
+        self.game.curse_check();
+
+        //self.rand_message();
+
+        // Cure blindness
+        if self.game.cure_blindness() {
+            self.update_log_good("The Opal Eye cures your blindness!");
+        }
+
+        // Cure book stuck to hands
+        if self.game.cure_book() {
+            self.update_log_good("The Blue Flame dissolves the book!");
         }
     }
 
@@ -412,6 +433,8 @@ impl G {
             );
 
             while alive {
+                self.at_turn_start();
+
                 self.update_map(false);
                 self.update_stat();
 
