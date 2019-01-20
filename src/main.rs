@@ -412,7 +412,7 @@ impl G {
             );
 
             while alive {
-                self.update_map(true);
+                self.update_map(false);
                 self.update_stat();
 
                 if !automove {
