@@ -18,12 +18,10 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Retreat
 
 * Trading
-  * Sell treasures
   * Buy armor
   * Buy weapons
   * Buy potions
   * Buy lamp
-  * Buy flares
 
 * Random messages
 
