@@ -387,7 +387,7 @@ impl G {
             RoomType::Chest => self.open_chest(),
             RoomType::Book => self.open_book(),
             _ => {
-                self.update_log_error("** The only thing you opened was your big mouth");
+                self.update_log_error("** The only thing you opened was your big mouth!");
             }
         }
     }
