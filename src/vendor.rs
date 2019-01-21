@@ -106,6 +106,14 @@ impl G {
         if self.vendor_trade_treasure() {
             return;
         }
+
+        if self.game.player_gp() < 1000 {
+            self.update_log_error(&format!(
+                "** You're too poor to trade, {}.",
+                self.race_name()
+            ));
+            return;
+        }
         //self.trade_equipment();
         //self.trade_potions();
     }
