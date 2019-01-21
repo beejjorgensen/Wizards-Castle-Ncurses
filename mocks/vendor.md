@@ -28,6 +28,8 @@ What equipment would you like to buy?
     [M]ace
     [S]word
 
+    L[A]mp
+
             [N]othing
 ```
 

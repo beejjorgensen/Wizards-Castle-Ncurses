@@ -7,6 +7,7 @@ use wizardscastle::error::Error;
 use wizardscastle::game::{
     BookEvent, ChestEvent, Direction, DrinkEvent, Event, Game, OrbEvent, Stairs,
 };
+use wizardscastle::monster::MonsterType;
 use wizardscastle::room::RoomType;
 
 mod gen;
@@ -17,6 +18,7 @@ mod map;
 mod names;
 mod quit;
 mod stat;
+mod vendor;
 mod win;
 
 use crate::stat::StatMode;
@@ -42,14 +44,19 @@ impl G {
         if has_colors() {
             init_pair(1, COLOR_YELLOW, COLOR_BLACK);
             init_pair(2, COLOR_RED, COLOR_BLACK);
+            init_pair(3, COLOR_GREEN, COLOR_BLACK);
 
             color.insert("bold-yellow", COLOR_PAIR(1) | A_BOLD());
             color.insert("bold-red", COLOR_PAIR(2) | A_BOLD());
             color.insert("red", COLOR_PAIR(2));
+            color.insert("dim-yellow", COLOR_PAIR(1) | A_DIM());
+            color.insert("dim-green", COLOR_PAIR(3) | A_DIM());
         } else {
             color.insert("bold-yellow", A_BOLD());
             color.insert("bold-red", 0);
             color.insert("red", 0);
+            color.insert("dim-yellow", A_DIM());
+            color.insert("dim-green", A_DIM());
         }
 
         let logwin = newwin(8, 80, 17, 0);
@@ -408,6 +415,7 @@ impl G {
         }
     }
 
+    /// Set the status window display based on the room
     fn set_statmode_display(&mut self) {
         match self.game.room_at_player().room_type() {
             RoomType::Pool => self.set_statmode(StatMode::Pool),
@@ -417,6 +425,27 @@ impl G {
             RoomType::StairsDown => self.set_statmode(StatMode::StairsDown),
             RoomType::CrystalOrb => self.set_statmode(StatMode::CrystalOrb),
             _ => self.set_statmode(StatMode::None),
+        }
+    }
+
+    fn trade(&mut self) {
+        let find_vendor = || {
+            self.update_log_error("** If you want to trade, find a vendor.");
+        };
+
+        match self.game.room_at_player().room_type() {
+            RoomType::Monster(m) => {
+                if m.monster_type() == MonsterType::Vendor {
+                    if self.game.vendors_angry() {
+                        self.update_log_error("** The vendor's in no mood to trade!");
+                    } else {
+                        self.vendor_trade();
+                    }
+                } else {
+                    find_vendor();
+                }
+            }
+            _ => find_vendor(),
         }
     }
 
@@ -473,6 +502,7 @@ impl G {
                         'G' => self.gaze(),
                         'O' => self.open(),
                         'I' => self.show_inventory(),
+                        'T' => self.trade(),
                         'H' | '?' => self.help(),
                         'Q' => {
                             if self.verify_quit(false) {
@@ -558,6 +588,8 @@ fn main() {
     }
 
     keypad(stdscr(), true);
+
+    set_escdelay(100);
 
     refresh(); // If we don't do this first, windows don't show up
 
