@@ -377,8 +377,9 @@ impl G {
                 }
                 BookEvent::Dexterity => self.update_log_good("It's a manual of dexterity!"),
                 BookEvent::Strength => self.update_log_good("It's a manual of strength!"),
-                BookEvent::Sticky => self
-                    .update_log_bad("The book sticks to your hands--now you can't draw your weapon!"),
+                BookEvent::Sticky => self.update_log_bad(
+                    "The book sticks to your hands--now you can't draw your weapon!",
+                ),
             },
             Err(err) => panic!(err),
         }
