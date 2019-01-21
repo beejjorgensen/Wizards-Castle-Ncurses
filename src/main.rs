@@ -343,8 +343,8 @@ impl G {
     fn open_chest(&mut self) {
         match self.game.open_chest() {
             Ok(event) => match event {
-                ChestEvent::Explode => self.update_log("KABOOM! It explodes!"),
-                ChestEvent::Gas => self.update_log("Gas! You stagger from the room."),
+                ChestEvent::Explode => self.update_log_bad("KABOOM! It explodes!"),
+                ChestEvent::Gas => self.update_log_bad("Gas! You stagger from the room."),
                 ChestEvent::Treasure(amount) => {
                     self.update_log(&format!("You find {} gold pieces!", amount))
                 }
