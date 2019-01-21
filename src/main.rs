@@ -285,10 +285,14 @@ impl G {
     pub fn gaze(&mut self) {
         let s;
         let mut error = false;
+        let mut logf: fn(&G, &str) = G::update_log;
 
         match self.game.gaze() {
             Ok(event) => match event {
-                OrbEvent::BloodyHeap => s = String::from("yourself in a bloody heap!"),
+                OrbEvent::BloodyHeap => {
+                    s = String::from("yourself in a bloody heap!");
+                    logf = G::update_log_bad;
+                }
                 OrbEvent::Polymorph(m) => {
                     let mon_str = G::monster_name(m);
                     s = format!(
@@ -316,6 +320,7 @@ impl G {
                 }
                 OrbEvent::OrbOfZot(x, y, z) => {
                     s = format!("THE ORB OF ZOT at ({},{}) level {}!", x + 1, y + 1, z + 1);
+                    logf = G::update_log_good;
                 }
                 OrbEvent::SoapOpera => {
                     s = String::from("a soap opera rerun.");
@@ -335,7 +340,7 @@ impl G {
         if error {
             self.update_log_error(&s);
         } else {
-            self.update_log(&format!("You see {}", s));
+            logf(&self, &format!("You see {}", s));
         }
     }
 
@@ -360,7 +365,7 @@ impl G {
     fn open_book(&mut self) {
         match self.game.open_book() {
             Ok(event) => match event {
-                BookEvent::Blind => self.update_log(&format!(
+                BookEvent::Blind => self.update_log_bad(&format!(
                     "FLASH! Oh no! You are now a blind {}",
                     self.race_name()
                 )),
@@ -370,10 +375,10 @@ impl G {
                 BookEvent::PlayMonster(m) => {
                     self.update_log(&format!("It's an old copy of play{}", G::monster_name(m)))
                 }
-                BookEvent::Dexterity => self.update_log("It's a manual of dexterity!"),
-                BookEvent::Strength => self.update_log("It's a manual of strength!"),
+                BookEvent::Dexterity => self.update_log_good("It's a manual of dexterity!"),
+                BookEvent::Strength => self.update_log_good("It's a manual of strength!"),
                 BookEvent::Sticky => self
-                    .update_log("The book sticks to your hands--now you can't draw your weapon!"),
+                    .update_log_bad("The book sticks to your hands--now you can't draw your weapon!"),
             },
             Err(err) => panic!(err),
         }
