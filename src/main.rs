@@ -581,9 +581,23 @@ impl G {
 
 /// Main
 fn main() {
+    let all_args: Vec<String> = env::args().collect();
+    let args = &all_args[1..];
+
+    let mut discover_all = false;
+    let mut force_bw = false;
+
+    for a in args {
+        match a.as_ref() {
+            "-d" => discover_all = true,
+            "-b" => force_bw = true,
+            any => panic!("unknown command arg: {}", any),
+        }
+    }
+
     initscr();
 
-    if has_colors() {
+    if !force_bw && has_colors() {
         start_color();
     }
 
@@ -592,10 +606,6 @@ fn main() {
     set_escdelay(100);
 
     refresh(); // If we don't do this first, windows don't show up
-
-    let args: Vec<String> = env::args().collect();
-
-    let discover_all = args.len() == 2 && args[1] == "-d";
 
     let mut g = G::new(discover_all);
 
