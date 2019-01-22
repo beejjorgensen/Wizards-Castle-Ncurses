@@ -20,7 +20,7 @@ What equipment would you like to buy?
 
       You have XXXXX GPs.
 
-    [L]eather      1250 GP
+    [L]eather       1250 GP
     [C]hainmail
     [P]late
 
@@ -28,7 +28,7 @@ What equipment would you like to buy?
     [M]ace
     [S]word
 
-    L[A]mp
+    L[a]mp
 
             [N]othing
 ```

@@ -583,6 +583,16 @@ impl G {
         nocbreak();
         echo();
     }
+
+    /// Redraw the main screen windows
+    fn redraw_underwins(&self) {
+        redrawwin(self.logwin);
+        wrefresh(self.logwin);
+        redrawwin(self.statwin);
+        wrefresh(self.statwin);
+        redrawwin(self.mapwin);
+        wrefresh(self.mapwin);
+    }
 }
 
 /// Main

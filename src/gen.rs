@@ -346,8 +346,8 @@ impl G {
                 match G::norm_key(key) {
                     'P' => break self.game.player_purchase_armor(ArmorType::Plate, false),
                     'C' => break self.game.player_purchase_armor(ArmorType::Chainmail, false),
-                    'L' => break self.game.player_purchase_armor(ArmorType::Plate, false),
-                    'N' => break self.game.player_purchase_armor(ArmorType::Plate, false),
+                    'L' => break self.game.player_purchase_armor(ArmorType::Leather, false),
+                    'N' => break self.game.player_purchase_armor(ArmorType::None, false),
                     _ => (),
                 };
             };
