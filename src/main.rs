@@ -373,14 +373,14 @@ impl G {
         match self.game.open_book() {
             Ok(event) => match event {
                 BookEvent::Blind => self.update_log_bad(&format!(
-                    "FLASH! Oh no! You are now a blind {}",
+                    "FLASH! Oh no! You are now a blind {}!",
                     self.race_name()
                 )),
                 BookEvent::Poetry => {
                     self.update_log("it's another volume of Zot's poetry! - Yeech!")
                 }
                 BookEvent::PlayMonster(m) => {
-                    self.update_log(&format!("It's an old copy of play{}", G::monster_name(m)))
+                    self.update_log(&format!("It's an old copy of play{}.", G::monster_name(m)))
                 }
                 BookEvent::Dexterity => self.update_log_good("It's a manual of dexterity!"),
                 BookEvent::Strength => self.update_log_good("It's a manual of strength!"),
