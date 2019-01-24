@@ -51,12 +51,14 @@ impl G {
             color.insert("red", COLOR_PAIR(2));
             color.insert("dim-yellow", COLOR_PAIR(1) | A_DIM());
             color.insert("dim-green", COLOR_PAIR(3) | A_DIM());
+            color.insert("dim-red", COLOR_PAIR(2) | A_DIM());
         } else {
             color.insert("bold-yellow", A_BOLD());
             color.insert("bold-red", 0);
             color.insert("red", 0);
             color.insert("dim-yellow", A_DIM());
             color.insert("dim-green", A_DIM());
+            color.insert("dim-red", A_DIM());
         }
 
         let logwin = newwin(8, 80, 17, 0);
@@ -81,6 +83,11 @@ impl G {
     #[allow(non_snake_case)]
     fn A_TITLE() -> &'static str {
         "bold-yellow"
+    }
+
+    #[allow(non_snake_case)]
+    fn A_WARN_TITLE() -> &'static str {
+        "bold-red"
     }
 
     /// Normalize an input character from getch(), making it uppercase

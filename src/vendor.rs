@@ -106,146 +106,219 @@ impl G {
         bailout
     }
 
-    /// Get a list of weapons you can purchase
-    fn purchasable_weapons(&self) -> Option<Vec<WeaponType>> {
-        let weapon_list = [WeaponType::Dagger, WeaponType::Mace, WeaponType::Sword];
+    /// Print armor name and price
+    fn print_armor_prompt(&self, w: WINDOW, armor_type: ArmorType) {
+        let name;
 
-        let mut weapons = Vec::new();
-
-        for w in weapon_list.iter() {
-            if self.game.vendor_can_afford_weapon_type(*w)
-                && !self.game.player_has_at_least_weapon(*w)
-            {
-                weapons.push(*w);
-            }
+        match armor_type {
+            ArmorType::Leather => name = "|[L]|eather",
+            ArmorType::Chainmail => name = "|[C]|hainmail",
+            ArmorType::Plate => name = "|[P]|late",
+            t => panic!("invalid armor type {:#?}", t),
         }
 
-        if weapons.is_empty() {
-            None
-        } else {
-            Some(weapons)
+        let costgp = Armor::cost(armor_type, true);
+
+        let cost = format!("{} GP", costgp);
+
+        if costgp > self.game.player_gp() {
+            wattr_on(w, self.wcget("dim-red"));
         }
+
+        self.wprintw_center(w, &format!("{:<16}{:>8}", name, cost));
+
+        wattr_off(w, self.wcget("dim-red"));
+
+        wprintw(w, "\n");
     }
 
-    /// Get a list of armor you can purchase
-    fn purchasable_armor(&self) -> Option<Vec<ArmorType>> {
-        let armor_list = [ArmorType::Leather, ArmorType::Chainmail, ArmorType::Plate];
+    /// Print weapon name and price
+    fn print_weapon_prompt(&self, w: WINDOW, weapon_type: WeaponType) {
+        let name;
 
-        let mut armor = Vec::new();
-
-        for a in armor_list.iter() {
-            if self.game.vendor_can_afford_armor_type(*a)
-                && !self.game.player_has_at_least_armor(*a)
-            {
-                armor.push(*a);
-            }
+        match weapon_type {
+            WeaponType::Dagger => name = "|[D]|agger",
+            WeaponType::Mace => name = "|[M]|ace",
+            WeaponType::Sword => name = "|[S]|word",
+            t => panic!("invalid weapon type {:#?}", t),
         }
 
-        if armor.is_empty() {
-            None
-        } else {
-            Some(armor)
+        let costgp = Weapon::cost(weapon_type, true);
+
+        let cost = format!("{} GP", costgp);
+
+        if costgp > self.game.player_gp() {
+            wattr_on(w, self.wcget("dim-red"));
         }
+
+        self.wprintw_center(w, &format!("{:<16}{:>8}", name, cost));
+
+        wattr_off(w, self.wcget("dim-red"));
+
+        wprintw(w, "\n");
     }
 
-    /// Trade equipment
-    pub fn trade_equipment(&mut self) -> bool {
-        let /*mut*/ bailout = false;
+    /// Warn the user that they're about to purchase something they already have
+    fn warn_purchase(&self, purchase_type: &str, downgrade: bool) -> bool {
+        let or_better_msg = if downgrade { " or better" } else { "" };
+        let title = format!("You already have {}{}!", purchase_type, or_better_msg);
+        let width = if downgrade { title.len() + 10 } else { 45 };
 
-        let weapon_count;
-        let armor_count;
+        let w = G::popup(9, width as i32);
 
-        let pur_weapons = self.purchasable_weapons();
-        let pur_armor = self.purchasable_armor();
+        self.wcon(w, G::A_WARN_TITLE());
+        self.mvwprintw_center(w, 2, &title);
+        self.wcoff(w, G::A_WARN_TITLE());
 
-        if let Some(ref pw) = pur_weapons {
-            weapon_count = pw.len() as i32;
+        wprintw(w, "\n\n");
+
+        if downgrade {
+            self.wprintw_center(w, "Are you sure you want to buy this?");
         } else {
-            weapon_count = 0i32;
+            self.wprintw_center(w, "Do you really want to buy it again?");
         }
 
-        if let Some(ref pa) = pur_armor {
-            armor_count = pa.len() as i32;
-        } else {
-            armor_count = 0i32;
-        }
+        wprintw(w, "\n\n");
 
-        let lamp_count = if self.game.vendor_can_afford_lamp() && !self.game.player_has_lamp() {
-            1
-        } else {
-            0
-        };
-
-        // Check and see if we can buy anything
-        if lamp_count == 0 && armor_count == 0 && weapon_count == 0 {
-            return false;
-        }
-
-        let mut height = 7 + armor_count + weapon_count + lamp_count;
-
-        if armor_count > 0 {
-            height += 1; // room for newline
-        }
-
-        if weapon_count > 0 {
-            height += 1; // room for newline
-        }
-
-        if lamp_count > 0 {
-            height += 1; // room for newline
-        }
-
-        let w = G::popup(height, 47);
-
-        self.wcon(w, G::A_TITLE());
-        self.mvwprintw_center(w, 2, "What equipment would you like to buy?\n");
-        self.wcoff(w, G::A_TITLE());
-
-        if let Some(ref pa) = pur_armor {
-            wprintw(w, "\n");
-            for a in pa {
-                let name = match a {
-                    ArmorType::Leather => "|[L]|eather",
-                    ArmorType::Chainmail => "|[C]|hainmail",
-                    ArmorType::Plate => "|[P]|late",
-                    _ => panic!("armor shouldn't be None here"),
-                };
-                let cost = format!("{} GP", Armor::cost(*a, true));
-
-                self.wprintw_center(w, &format!("{:<16}{:>8}\n", name, cost));
-            }
-        }
-
-        if let Some(ref pw) = pur_weapons {
-            wprintw(w, "\n");
-            for weap in pw {
-                let name = match weap {
-                    WeaponType::Dagger => "|[D]|agger",
-                    WeaponType::Mace => "|[M]|ace",
-                    WeaponType::Sword => "|[S]|word",
-                    _ => panic!("weapon shouldn't be None here"),
-                };
-                let cost = format!("{} GP", Weapon::cost(*weap, true));
-
-                self.wprintw_center(w, &format!("{:<16}{:>8}\n", name, cost));
-            }
-        }
-
-        if lamp_count > 0 {
-            let name = "L|[a]|mp";
-            let cost = format!("{} GP", Game::vendor_lamp_cost());
-
-            wprintw(w, "\n");
-
-            self.wprintw_center(w, &format!("{:<16}{:>8}\n", name, cost));
-        }
-
-        self.mvwprintw_center(w, height - 3, "|[N]|othing");
+        self.wprintw_center(w, "|[Y]|es   |[N]|o");
 
         box_(w, 0, 0);
         wrefresh(w);
 
-        getch();
+        let yes = G::norm_key(getch()) == 'Y';
+
+        G::popup_close(w);
+
+        yes
+    }
+
+    /// Purchase armor
+    fn purchase_armor(&mut self, armor_type: ArmorType) {
+        if !self.game.vendor_can_afford_armor_type(armor_type) {
+            return;
+        }
+
+        if self.game.player_has_at_least_armor(armor_type)
+            && !self.warn_purchase("that armor", true)
+        {
+            return;
+        }
+
+        if self.game.player_purchase_armor(armor_type, true).is_err() { /* do nothing */ }
+    }
+
+    /// Purchase weapon
+    fn purchase_weapon(&mut self, weapon_type: WeaponType) {
+        if !self.game.vendor_can_afford_weapon_type(weapon_type) {
+            return;
+        }
+
+        if self.game.player_has_at_least_weapon(weapon_type)
+            && !self.warn_purchase("that weapon", true)
+        {
+            return;
+        }
+
+        if self.game.player_purchase_weapon(weapon_type, true).is_err() { /* do nothing */ }
+    }
+
+    /// Purchase lamp
+    fn purchase_lamp(&mut self) {
+        if !self.game.vendor_can_afford_lamp() {
+            return;
+        }
+
+        if self.game.player_has_lamp() && !self.warn_purchase("a lamp", false) {
+            return;
+        }
+
+        if self.game.vendor_buy_lamp().is_err() { /* do nothing */ }
+    }
+
+    /// Trade equipment
+    fn trade_equipment(&mut self) -> bool {
+        let mut bailout = false;
+
+        let height = 20;
+
+        let w = G::popup(height, 47);
+
+        let mut done = false;
+
+        while !done {
+            wclear(w);
+
+            self.wcon(w, G::A_TITLE());
+            self.mvwprintw_center(w, 2, "What equipment would you like to buy?\n\n");
+            self.wcoff(w, G::A_TITLE());
+
+            let mut cur_equip = format!(
+                "You have: {}, {}",
+                G::armor_name(self.game.player_armor_type()),
+                G::weapon_name(self.game.player_weapon_type())
+            );
+
+            if self.game.player_has_lamp() {
+                cur_equip = format!("{}, Lamp", cur_equip);
+            }
+
+            self.wprintw_center(w, &cur_equip);
+            wprintw(w, "\n");
+            self.wprintw_center(w, &format!("and {} GPs", self.game.player_gp()));
+
+            wprintw(w, "\n\n");
+
+            self.print_armor_prompt(w, ArmorType::Leather);
+            self.print_armor_prompt(w, ArmorType::Chainmail);
+            self.print_armor_prompt(w, ArmorType::Plate);
+
+            wprintw(w, "\n");
+
+            self.print_weapon_prompt(w, WeaponType::Dagger);
+            self.print_weapon_prompt(w, WeaponType::Mace);
+            self.print_weapon_prompt(w, WeaponType::Sword);
+
+            wprintw(w, "\n");
+
+            {
+                let name = "L|[a]|mp";
+                let cost = format!("{} GP", Game::vendor_lamp_cost());
+
+                if !self.game.vendor_can_afford_lamp() {}
+
+                if !self.game.vendor_can_afford_lamp() {
+                    wattr_on(w, self.wcget("dim-red"));
+                }
+
+                self.wprintw_center(w, &format!("{:<16}{:>8}\n", name, cost));
+
+                wattr_off(w, self.wcget("dim-red"));
+            }
+
+            self.mvwprintw_center(w, height - 3, "|[N]|othing");
+
+            box_(w, 0, 0);
+            wrefresh(w);
+
+            let ch = getch();
+
+            if ch == 27 {
+                done = true;
+                bailout = true;
+            }
+
+            match G::norm_key(ch) {
+                'N' => done = true,
+                'L' => self.purchase_armor(ArmorType::Leather),
+                'C' => self.purchase_armor(ArmorType::Chainmail),
+                'P' => self.purchase_armor(ArmorType::Plate),
+                'D' => self.purchase_weapon(WeaponType::Dagger),
+                'M' => self.purchase_weapon(WeaponType::Mace),
+                'S' => self.purchase_weapon(WeaponType::Sword),
+                'A' => self.purchase_lamp(),
+                _ => (),
+            }
+        }
 
         G::popup_close(w);
 
