@@ -16,10 +16,14 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 * Combat
   * Attack
   * Retreat
+  * Bribe
+  * Spell
 
 * Random messages
 
 * Game over screen
+
+* Colors on map
 
 * Remove all discover_room_at_player
 
