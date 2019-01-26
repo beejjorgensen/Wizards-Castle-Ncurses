@@ -138,10 +138,10 @@ impl G {
             StatMode::Combat => {
                 self.mvwprintw_center(self.statwin, 10, "|[A]|ttack\n");
                 if self.game.bribe_possible() {
-                    self.wprintw_center(self.statwin, "|[B]|ribe");
+                    self.wprintw_center(self.statwin, "|[B]|ribe\n");
                 }
                 if self.game.spell_possible() {
-                    self.wprintw_center(self.statwin, "|[C]|ast spell");
+                    self.wprintw_center(self.statwin, "|[C]|ast spell\n");
                 }
             }
             StatMode::Pool => {
