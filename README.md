@@ -17,12 +17,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Attack
   * Retreat
 
-* Trading
-  * Buy armor
-  * Buy weapons
-  * Buy potions
-  * Buy lamp
-
 * Random messages
 
 * Game over screen
