@@ -3,6 +3,7 @@ use ncurses::*;
 
 use wizardscastle::armor::{Armor, ArmorType};
 use wizardscastle::game::Game;
+use wizardscastle::player::Stat;
 use wizardscastle::treasure::TreasureType;
 use wizardscastle::weapon::{Weapon, WeaponType};
 
@@ -327,6 +328,95 @@ impl G {
         bailout
     }
 
+    /// Helper function to buy stat
+    fn buy_stat(&mut self, stat: Stat) {
+        if self.game.player_stat_maxed(stat) {
+            return;
+        }
+
+        if self.game.vendor_buy_stat(stat).is_err() {
+            // ignore errors
+        }
+    }
+
+    /// Print out a stat
+    fn print_stat_prompt(&self, w: WINDOW, stat: Stat) {
+        if !self.game.vendor_can_afford_stat() {
+            wattr_on(w, self.wcget("dim-red"));
+        } else if self.game.player_stat_maxed(stat) {
+            wattr_on(w, self.wcget("dim-green"));
+        };
+
+        let prompt = match stat {
+            Stat::Strength => "|[S]|trength",
+            Stat::Intelligence => "|[I]|ntelligence",
+            Stat::Dexterity => "|[D]|exterity",
+        };
+
+        let cost = format!("{} GP", Game::vendor_stat_cost());
+
+        self.wprintw_center(w, &format!("{:<17}  {}\n", prompt, cost));
+
+        wattr_off(w, self.wcget("dim-red"));
+        wattr_off(w, self.wcget("dim-green"));
+    }
+
+    /// Trade for potions
+    pub fn trade_potions(&mut self) {
+        if !self.game.vendor_can_afford_stat() || self.game.player_all_stats_maxed() {
+            return;
+        }
+
+        let height = 14;
+
+        let w = G::popup(height, 41);
+
+        let mut done = false;
+
+        while !done {
+            wclear(w);
+
+            self.wcon(w, G::A_TITLE());
+            self.mvwprintw_center(w, 2, "Would you like to buy some potions?\n\n");
+            self.wcoff(w, G::A_TITLE());
+
+            self.wprintw_center(
+                w,
+                &format!(
+                    "ST={}  IQ={}  DX={}\n",
+                    self.game.player_stat(Stat::Strength),
+                    self.game.player_stat(Stat::Intelligence),
+                    self.game.player_stat(Stat::Dexterity)
+                ),
+            );
+
+            self.wprintw_center(w, &format!("You have {} GPs\n\n", self.game.player_gp()));
+
+            self.print_stat_prompt(w, Stat::Strength);
+            self.print_stat_prompt(w, Stat::Intelligence);
+            self.print_stat_prompt(w, Stat::Dexterity);
+
+            self.mvwprintw_center(w, height - 3, "|[N]|othing");
+
+            box_(w, 0, 0);
+            wrefresh(w);
+
+            let ch = getch();
+
+            if ch == 27 {
+                done = true;
+            }
+
+            match G::norm_key(ch) {
+                'S' => self.buy_stat(Stat::Strength),
+                'I' => self.buy_stat(Stat::Intelligence),
+                'D' => self.buy_stat(Stat::Dexterity),
+                'N' => done = true,
+                _ => (),
+            }
+        }
+    }
+
     /// Trade with a Vendor
     pub fn vendor_trade(&mut self) {
         if self.vendor_trade_treasure() {
@@ -349,6 +439,6 @@ impl G {
             return;
         }
 
-        //self.trade_potions();
+        self.trade_potions();
     }
 }
