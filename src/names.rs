@@ -174,7 +174,6 @@ impl G {
         String::from("a")
     }
 
-    /*
     pub fn initial_upper(s: &str) -> String {
         format!(
             "{}{}",
@@ -182,5 +181,4 @@ impl G {
             s.get(1..).unwrap()
         )
     }
-    */
 }

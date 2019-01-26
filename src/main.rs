@@ -3,9 +3,14 @@ use std::char;
 use std::collections::HashMap;
 use std::env;
 
+use rand::rngs::ThreadRng;
+use rand::thread_rng;
+use rand::Rng;
+
 use wizardscastle::error::Error;
 use wizardscastle::game::{
-    BookEvent, ChestEvent, Direction, DrinkEvent, Event, Game, OrbEvent, Stairs,
+    BookEvent, ChestEvent, CombatEvent, Direction, DrinkEvent, Event, Game, GameState, HitResult,
+    OrbEvent, Stairs,
 };
 use wizardscastle::monster::MonsterType;
 use wizardscastle::room::RoomType;
@@ -31,6 +36,10 @@ struct G {
     logwin: WINDOW,
     loginner: WINDOW,
     statmode: StatMode,
+
+    rng: ThreadRng,
+
+    currently_fighting: Option<MonsterType>,
 
     discover_all: bool, // map cheat
 }
@@ -76,6 +85,10 @@ impl G {
             game: Game::new(8, 8, 8),
             statmode: StatMode::None,
 
+            rng: thread_rng(),
+
+            currently_fighting: None,
+
             discover_all,
         }
     }
@@ -113,6 +126,9 @@ impl G {
 
     /// Move a direction
     fn move_dir(&mut self, dir: Direction) {
+        // TODO check for retreating
+        self.currently_fighting = None;
+
         // Ask if player is sure they want to leave
         let roomtype = self.game.room_at_player().roomtype.clone();
 
@@ -462,6 +478,102 @@ impl G {
         }
     }
 
+    /// Print messaging when monster defeated by melee or magic
+    fn monster_defeated_message(&mut self, result: HitResult, mon_art: &str, m_str: &str) {
+        if result.defeated {
+            self.update_log_good(&format!(
+                "{} {} lies dead at your feet!",
+                G::initial_upper(mon_art),
+                m_str
+            ));
+
+            if self.game.rand_recipe() {
+                let suffix = [
+                    "wich", " stew", " soup", " burger", " roast", " munchy", " taco", " pie",
+                ];
+
+                let i = self.rng.gen_range(0, suffix.len());
+
+                self.update_log(&format!("You spend an hour eating {}{}", m_str, suffix[i]));
+            }
+
+            if result.killed_vendor {
+                self.update_log_good(
+                    "You get all his wares: plate armor, a sword, a strength potion,",
+                );
+
+                let mut s = String::from("an intelligence potion, ");
+
+                if result.got_lamp {
+                    s.push_str("a dexterity potion, and a lamp.");
+                } else {
+                    s.push_str("and a dexterity potion.");
+                }
+
+                self.update_log_good(&s);
+            } else {
+                if result.got_runestaff {
+                    self.update_log_good("** GREAT ZOT! YOU'VE FOUND THE RUNESTAFF! **");
+                }
+
+                self.update_log(&format!("You now get his hoard of {} GPs", result.treasure));
+            }
+        }
+    }
+
+    /// Attack a thing
+    fn attack(&mut self) {
+        let weapon_type = self.game.player_weapon_type();
+
+        match self.game.state() {
+            GameState::Vendor => {
+                self.update_log_bad("** You'll be sorry you did that!");
+                self.game.vendor_attack();
+            }
+
+            GameState::PlayerAttack => {
+                let monster_type = self.currently_fighting.unwrap();
+                let mon_str = G::monster_name(monster_type);
+                let mon_art = G::get_article(&mon_str);
+
+                match self.game.attack() {
+                    Ok(CombatEvent::NoWeapon) => {
+                        self.update_log_bad(&format!(
+                            "** Pounding on {} {} won't hurt it!",
+                            mon_art, mon_str
+                        ));
+                    }
+
+                    Ok(CombatEvent::BookHands) => {
+                        self.update_log_bad("** You can't beat it to death with a book!");
+                    }
+
+                    Ok(CombatEvent::Hit(result)) => {
+                        self.update_log_good(&format!("You hit the lousy {}!", mon_str));
+
+                        if result.broke_weapon {
+                            self.update_log_bad(&format!(
+                                "Oh no! Your {} broke!",
+                                G::weapon_name(weapon_type)
+                            ));
+                        }
+
+                        self.monster_defeated_message(result, &mon_art, &mon_str);
+                    }
+
+                    Ok(CombatEvent::Miss) => {
+                        println!("\n  DRAT! MISSED");
+                    }
+
+                    Ok(any) => panic!("unexpected combat event {:#?}", any),
+
+                    Err(err) => panic!("error in combat {:#?}", err),
+                }
+            }
+            _ => self.update_log_error("** There's nothing to attack here!"),
+        }
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -504,6 +616,7 @@ impl G {
                     let key = getch();
 
                     match G::norm_key(key) {
+                        'A' => self.attack(),
                         'N' => self.move_dir(Direction::North),
                         'S' => self.move_dir(Direction::South),
                         'W' => self.move_dir(Direction::West),
@@ -576,8 +689,9 @@ impl G {
                         );
                         self.update_log_good(&msg);
                     }
-                    Event::Combat(_) => {
+                    Event::Combat(monster_type) => {
                         self.set_statmode(StatMode::Combat);
+                        self.currently_fighting = Some(monster_type);
                     }
                     Event::Vendor => {
                         self.set_statmode(StatMode::Vendor);
