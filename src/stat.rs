@@ -143,6 +143,7 @@ impl G {
                 if self.game.spell_possible() {
                     self.wprintw_center(self.statwin, "|[C]|ast spell\n");
                 }
+                self.wprintw_center(self.statwin, "|[N]||[S]||[W]||[E]| to retreat\n");
             }
             StatMode::Pool => {
                 self.mvwprintw_center(self.statwin, 10, "|[D]|rink");
