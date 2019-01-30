@@ -14,8 +14,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
   * Teleport
 
 * Combat
-  * Attack
-  * Retreat
   * Bribe
   * Spell
 

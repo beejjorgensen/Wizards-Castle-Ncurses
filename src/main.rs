@@ -39,7 +39,7 @@ struct G {
 
     rng: ThreadRng,
 
-    currently_fighting: Option<MonsterType>,
+    retreat_direction: Option<Direction>,
 
     discover_all: bool, // map cheat
 }
@@ -85,9 +85,9 @@ impl G {
             game: Game::new(8, 8, 8),
             statmode: StatMode::None,
 
-            rng: thread_rng(),
+            retreat_direction: None,
 
-            currently_fighting: None,
+            rng: thread_rng(),
 
             discover_all,
         }
@@ -126,9 +126,6 @@ impl G {
 
     /// Move a direction
     fn move_dir(&mut self, dir: Direction) {
-        // TODO check for retreating
-        self.currently_fighting = None;
-
         // Ask if player is sure they want to leave
         let roomtype = self.game.room_at_player().roomtype.clone();
 
@@ -480,98 +477,192 @@ impl G {
 
     /// Print messaging when monster defeated by melee or magic
     fn monster_defeated_message(&mut self, result: HitResult, mon_art: &str, m_str: &str) {
-        if result.defeated {
-            self.update_log_good(&format!(
-                "{} {} lies dead at your feet!",
-                G::initial_upper(mon_art),
-                m_str
-            ));
+        self.update_log_good(&format!(
+            "{} {} lies dead at your feet!",
+            G::initial_upper(mon_art),
+            m_str
+        ));
 
-            if self.game.rand_recipe() {
-                let suffix = [
-                    "wich", " stew", " soup", " burger", " roast", " munchy", " taco", " pie",
-                ];
+        if self.game.rand_recipe() {
+            let suffix = [
+                "wich", " stew", " soup", " burger", " roast", " munchy", " taco", " pie",
+            ];
 
-                let i = self.rng.gen_range(0, suffix.len());
+            let i = self.rng.gen_range(0, suffix.len());
 
-                self.update_log(&format!("You spend an hour eating {}{}", m_str, suffix[i]));
-            }
+            self.update_log(&format!("You spend an hour eating {}{}", m_str, suffix[i]));
+        }
 
-            if result.killed_vendor {
-                self.update_log_good(
-                    "You get all his wares: plate armor, a sword, a strength potion,",
-                );
+        if result.killed_vendor {
+            self.update_log_good("You get all his wares: plate armor, a sword, a strength potion,");
 
-                let mut s = String::from("an intelligence potion, ");
+            let mut s = String::from("an intelligence potion, ");
 
-                if result.got_lamp {
-                    s.push_str("a dexterity potion, and a lamp.");
-                } else {
-                    s.push_str("and a dexterity potion.");
-                }
-
-                self.update_log_good(&s);
+            if result.got_lamp {
+                s.push_str("a dexterity potion, and a lamp.");
             } else {
-                if result.got_runestaff {
-                    self.update_log_good("** GREAT ZOT! YOU'VE FOUND THE RUNESTAFF! **");
-                }
-
-                self.update_log(&format!("You now get his hoard of {} GPs", result.treasure));
+                s.push_str("and a dexterity potion.");
             }
+
+            self.update_log_good(&s);
+        } else {
+            if result.got_runestaff {
+                self.update_log_good("** GREAT ZOT! YOU'VE FOUND THE RUNESTAFF! **");
+            }
+
+            self.update_log(&format!("You now get his hoard of {} GPs", result.treasure));
         }
     }
 
     /// Attack a thing
     fn attack(&mut self) {
+        if self.game.state() == GameState::Vendor {
+            self.update_log_bad("** You'll be sorry you did that!");
+            self.game.vendor_attack();
+        }
+    }
+
+    /// Combat: player attack melee
+    fn combat_player_attack_melee(&mut self, mon_str: &str, mon_art: &str) -> bool {
         let weapon_type = self.game.player_weapon_type();
 
-        match self.game.state() {
-            GameState::Vendor => {
-                self.update_log_bad("** You'll be sorry you did that!");
-                self.game.vendor_attack();
+        match self.game.attack() {
+            Ok(CombatEvent::NoWeapon) => {
+                self.update_log_bad(&format!(
+                    "** Pounding on {} {} won't hurt it!",
+                    mon_art, mon_str
+                ));
             }
 
-            GameState::PlayerAttack => {
-                let monster_type = self.currently_fighting.unwrap();
-                let mon_str = G::monster_name(monster_type);
-                let mon_art = G::get_article(&mon_str);
+            Ok(CombatEvent::BookHands) => {
+                self.update_log_bad("** You can't beat it to death with a book!");
+            }
 
-                match self.game.attack() {
-                    Ok(CombatEvent::NoWeapon) => {
-                        self.update_log_bad(&format!(
-                            "** Pounding on {} {} won't hurt it!",
-                            mon_art, mon_str
-                        ));
-                    }
+            Ok(CombatEvent::Hit(result)) => {
+                self.update_log_good(&format!("You hit the lousy {}!", mon_str));
 
-                    Ok(CombatEvent::BookHands) => {
-                        self.update_log_bad("** You can't beat it to death with a book!");
-                    }
+                if result.broke_weapon {
+                    self.update_log_bad(&format!(
+                        "Oh no! Your {} broke!",
+                        G::weapon_name(weapon_type)
+                    ));
+                }
 
-                    Ok(CombatEvent::Hit(result)) => {
-                        self.update_log_good(&format!("You hit the lousy {}!", mon_str));
-
-                        if result.broke_weapon {
-                            self.update_log_bad(&format!(
-                                "Oh no! Your {} broke!",
-                                G::weapon_name(weapon_type)
-                            ));
-                        }
-
-                        self.monster_defeated_message(result, &mon_art, &mon_str);
-                    }
-
-                    Ok(CombatEvent::Miss) => {
-                        println!("\n  DRAT! MISSED");
-                    }
-
-                    Ok(any) => panic!("unexpected combat event {:#?}", any),
-
-                    Err(err) => panic!("error in combat {:#?}", err),
+                if result.defeated {
+                    self.monster_defeated_message(result, &mon_art, &mon_str);
+                    return true;
                 }
             }
-            _ => self.update_log_error("** There's nothing to attack here!"),
+
+            Ok(CombatEvent::Miss) => {
+                self.update_log_bad("Drat! Missed!");
+            }
+
+            Ok(any) => panic!("unexpected combat event {:#?}", any),
+
+            Err(err) => panic!("error in combat {:#?}", err),
         }
+
+        false
+    }
+
+    /// Start a retreat
+    fn combat_retreat(&mut self, dir: Direction) {
+        self.retreat_direction = Some(dir);
+
+        match self.game.retreat() {
+            Ok(_) => (),
+            Err(err) => panic!("error retreating {:#?}", err),
+        };
+    }
+
+    /// Combat: player attacks
+    fn combat_player_attack(&mut self, monster_type: MonsterType) -> bool {
+        let mon_str = G::monster_name(monster_type);
+        let mon_art = G::get_article(&mon_str);
+
+        let mut done = false;
+
+        match G::norm_key(getch()) {
+            'A' => done = self.combat_player_attack_melee(&mon_str, &mon_art),
+            'N' => self.combat_retreat(Direction::North),
+            'S' => self.combat_retreat(Direction::South),
+            'W' => self.combat_retreat(Direction::West),
+            'E' => self.combat_retreat(Direction::East),
+            _ => (),
+        }
+
+        done
+    }
+
+    /// Be attacked by a monster
+    fn combat_monster_attack(&mut self, monster_type: MonsterType) {
+        let mon_str = G::monster_name(monster_type);
+
+        match self.game.be_attacked() {
+            Ok(CombatEvent::MonsterWebbed) => {
+                self.update_log_good(&format!("The {} is stuck and can't attack!", mon_str));
+            }
+
+            Ok(CombatEvent::MonsterHit(_damage, _defeated, armor_destroyed, web_broke)) => {
+                if web_broke {
+                    self.update_log_bad("The web just broke!");
+                }
+
+                self.update_log(&format!("The {} attacks!", mon_str));
+
+                self.update_log_bad("OUCH! He hit you!");
+
+                if armor_destroyed {
+                    self.update_log_bad("Your armor is destroyed--good luck!");
+                }
+            }
+
+            Ok(CombatEvent::MonsterMiss) => {
+                self.update_log(&format!("The {} attacks!", mon_str));
+
+                self.update_log("Hah! He missed you!");
+            }
+
+            Ok(any) => panic!("unexpected event while being attacked {:#?}", any),
+
+            Err(err) => panic!("error in combat being attacked {:#?}", err),
+        }
+    }
+
+    /// Combat
+    fn combat(&mut self, monster_type: MonsterType) -> bool {
+        let mut done = false;
+        let mut retreated = false;
+
+        self.retreat_direction = None;
+
+        self.update_map(self.discover_all); // update player position
+        self.set_statmode(StatMode::Combat);
+
+        let mon_str = G::monster_name(monster_type);
+        let mon = format!("{} {}", G::get_article(&mon_str), mon_str).to_uppercase();
+
+        self.update_log_bad(&format!("You're facing {}!", mon));
+
+        while !done {
+            match self.game.state() {
+                GameState::PlayerAttack => done = self.combat_player_attack(monster_type),
+                GameState::MonsterAttack => self.combat_monster_attack(monster_type),
+                GameState::Dead => done = true,
+                GameState::Retreat => {
+                    self.game.retreat_dir(self.retreat_direction.unwrap());
+                    self.update_log("You have escaped.");
+                    retreated = true;
+                    done = true;
+                }
+                any => panic!("Unexpected game state: {:#?}", any),
+            }
+        } // while !done
+
+        self.set_statmode(StatMode::None);
+
+        retreated
     }
 
     /// Main game loop
@@ -689,10 +780,7 @@ impl G {
                         );
                         self.update_log_good(&msg);
                     }
-                    Event::Combat(monster_type) => {
-                        self.set_statmode(StatMode::Combat);
-                        self.currently_fighting = Some(monster_type);
-                    }
+                    Event::Combat(monster_type) => automove = self.combat(monster_type),
                     Event::Vendor => {
                         self.set_statmode(StatMode::Vendor);
                     }
