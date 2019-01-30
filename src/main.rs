@@ -490,11 +490,11 @@ impl G {
 
             let i = self.rng.gen_range(0, suffix.len());
 
-            self.update_log(&format!("You spend an hour eating {}{}", m_str, suffix[i]));
+            self.update_log(&format!("You spend an hour eating {}{}.", m_str, suffix[i]));
         }
 
         if result.killed_vendor {
-            self.update_log_good("You get all his wares: plate armor, a sword, a strength potion,");
+            self.update_log("You get all his wares: plate armor, a sword, a strength potion,");
 
             let mut s = String::from("an intelligence potion, ");
 
@@ -504,7 +504,7 @@ impl G {
                 s.push_str("and a dexterity potion.");
             }
 
-            self.update_log_good(&s);
+            self.update_log(&s);
         } else {
             if result.got_runestaff {
                 self.update_log_good("** GREAT ZOT! YOU'VE FOUND THE RUNESTAFF! **");
