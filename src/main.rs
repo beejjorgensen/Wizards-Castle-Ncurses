@@ -15,6 +15,7 @@ use wizardscastle::game::{
 use wizardscastle::monster::MonsterType;
 use wizardscastle::room::RoomType;
 
+mod bribe;
 mod gen;
 mod help;
 mod inv;
@@ -193,6 +194,7 @@ impl G {
     fn lamp(&mut self) {
         if !self.game.player_has_lamp() {
             self.update_log_error("** You don't have a lamp");
+            return;
         }
 
         if self.game.player_is_blind() {
@@ -200,6 +202,7 @@ impl G {
                 "** You can see anything, dumb {}",
                 self.race_name()
             ));
+            return;
         }
 
         self.set_statmode(StatMode::Lamp);
@@ -577,14 +580,23 @@ impl G {
     }
 
     /// Combat: player attacks
-    fn combat_player_attack(&mut self, monster_type: MonsterType) -> bool {
+    fn combat_player_attack(&mut self, monster_type: MonsterType, bribed: &mut bool) -> bool {
         let mon_str = G::monster_name(monster_type);
         let mon_art = G::get_article(&mon_str);
 
         let mut done = false;
+        *bribed = false;
+
+        self.update_stat(); // might not be able to bribe or cast spells anymore
 
         match G::norm_key(getch()) {
             'A' => done = self.combat_player_attack_melee(&mon_str, &mon_art),
+            'B' => {
+                if self.game.bribe_possible() && self.game.player_has_any_treasure() {
+                    done = self.combat_bribe();
+                    *bribed = done;
+                }
+            }
             'N' => self.combat_retreat(Direction::North),
             'S' => self.combat_retreat(Direction::South),
             'W' => self.combat_retreat(Direction::West),
@@ -634,6 +646,7 @@ impl G {
     fn combat(&mut self, monster_type: MonsterType) -> bool {
         let mut done = false;
         let mut retreated = false;
+        let mut bribed = false;
 
         self.retreat_direction = None;
 
@@ -646,8 +659,11 @@ impl G {
         self.update_log_bad(&format!("You're facing {}!", mon));
 
         while !done {
+            self.update_log(&format!(">> {:#?}", self.game.state()));
             match self.game.state() {
-                GameState::PlayerAttack => done = self.combat_player_attack(monster_type),
+                GameState::PlayerAttack => {
+                    done = self.combat_player_attack(monster_type, &mut bribed)
+                }
                 GameState::MonsterAttack => self.combat_monster_attack(monster_type),
                 GameState::Dead => done = true,
                 GameState::Retreat => {
@@ -661,6 +677,13 @@ impl G {
         } // while !done
 
         self.set_statmode(StatMode::None);
+
+        if bribed {
+            self.update_log(&format!(
+                "The {} is happy with your bribe... for now.",
+                &mon_str
+            ));
+        }
 
         retreated
     }

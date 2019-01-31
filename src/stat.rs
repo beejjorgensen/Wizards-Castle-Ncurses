@@ -95,7 +95,7 @@ impl G {
             false
         };
 
-        if combat_room_desc {
+        if combat_room_desc && !self.game.player_bribed_this_monster() {
             self.mvwprintw_center(
                 self.statwin,
                 8,
@@ -137,7 +137,7 @@ impl G {
             }
             StatMode::Combat => {
                 self.mvwprintw_center(self.statwin, 10, "|[A]|ttack\n");
-                if self.game.bribe_possible() {
+                if self.game.bribe_possible() && self.game.player_has_any_treasure() {
                     self.wprintw_center(self.statwin, "|[B]|ribe\n");
                 }
                 if self.game.spell_possible() {
