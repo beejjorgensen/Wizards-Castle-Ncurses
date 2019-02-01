@@ -579,6 +579,66 @@ impl G {
         };
     }
 
+    /// Combat: player spell
+    fn combat_player_attack_spell(&mut self, mon_str: &str, mon_art: &str) -> bool {
+        let mut valid = false;
+        let mut done = false;
+
+        self.set_statmode(StatMode::Spell);
+
+        while !valid {
+            let ch = G::norm_key(getch());
+
+            match ch {
+                'W' => match self.game.spell_web() {
+                    Ok(CombatEvent::Hit(_)) => (),
+                    Ok(CombatEvent::Died) => (),
+                    Ok(any) => panic!("Unexpected: {:#?}", any),
+                    Err(err) => panic!("{:#?}", err),
+                },
+
+                'F' => match self.game.spell_fireball() {
+                    Ok(CombatEvent::Hit(hr)) => {
+                        self.update_log_good(&format!(
+                            "The fireball does {} points of damage!",
+                            hr.damage
+                        ));
+                        if hr.defeated {
+                            self.monster_defeated_message(hr, mon_art, mon_str);
+                            done = true;
+                        }
+                    }
+                    Ok(CombatEvent::Died) => (),
+                    Ok(any) => panic!("Unexpected: {:#?}", any),
+                    Err(err) => panic!("{:#?}", err),
+                },
+
+                'D' => match self.game.spell_deathspell() {
+                    Ok(CombatEvent::Hit(hr)) => {
+                        self.update_log_good("Death... his!");
+                        self.monster_defeated_message(hr, mon_art, mon_str);
+                        done = true;
+                    }
+                    Ok(CombatEvent::Died) => {
+                        self.update_log_bad("Death... YOURS!");
+                    }
+                    Ok(any) => panic!("Unexpected: {:#?}", any),
+                    Err(err) => panic!("{:#?}", err),
+                },
+
+                _ => (),
+            }
+
+            if ch == 'W' || ch == 'F' || ch == 'D' || ch == 'N' {
+                valid = true;
+            }
+        }
+
+        self.set_statmode(StatMode::Combat);
+
+        done
+    }
+
     /// Combat: player attacks
     fn combat_player_attack(&mut self, monster_type: MonsterType, bribed: &mut bool) -> bool {
         let mon_str = G::monster_name(monster_type);
@@ -597,6 +657,7 @@ impl G {
                     *bribed = done;
                 }
             }
+            'C' => done = self.combat_player_attack_spell(&mon_str, &mon_art),
             'N' => self.combat_retreat(Direction::North),
             'S' => self.combat_retreat(Direction::South),
             'W' => self.combat_retreat(Direction::West),
@@ -659,7 +720,7 @@ impl G {
         self.update_log_bad(&format!("You're facing {}!", mon));
 
         while !done {
-            self.update_log(&format!(">> {:#?}", self.game.state()));
+            //self.update_log(&format!(">> {:#?}", self.game.state()));
             match self.game.state() {
                 GameState::PlayerAttack => {
                     done = self.combat_player_attack(monster_type, &mut bribed)

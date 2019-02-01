@@ -13,12 +13,13 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 * Actions
   * Teleport
 
-* Combat
-  * Spell
-
 * Random messages
 
 * Game over screen
+
+* Update help screen
+
+* Show orb of zot and runestaff in inventory
 
 * Colors on map
 

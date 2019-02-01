@@ -17,6 +17,7 @@ pub enum StatMode {
     StairsDown,
     CrystalOrb,
     Combat,
+    Spell,
 }
 
 impl G {
@@ -144,6 +145,12 @@ impl G {
                     self.wprintw_center(self.statwin, "|[C]|ast spell\n");
                 }
                 self.wprintw_center(self.statwin, "|[N]||[S]||[W]||[E]| to retreat\n");
+            }
+            StatMode::Spell => {
+                self.mvwprintw_center(self.statwin, 10, "|[W]|eb\n");
+                self.wprintw_center(self.statwin, "|[F]|ireball\n");
+                self.wprintw_center(self.statwin, "|[D]|eathspell\n\n");
+                self.wprintw_center(self.statwin, "|[N]|othing\n\n");
             }
             StatMode::Pool => {
                 self.mvwprintw_center(self.statwin, 10, "|[D]|rink");
