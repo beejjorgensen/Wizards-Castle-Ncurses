@@ -18,6 +18,7 @@ use wizardscastle::room::RoomType;
 use crate::stat::StatMode;
 
 mod bribe;
+mod gameover;
 mod gen;
 mod help;
 mod inv;
@@ -29,7 +30,6 @@ mod stat;
 mod teleport;
 mod vendor;
 mod win;
-mod gameover;
 
 struct Opts {
     discover_all: bool,
@@ -780,8 +780,14 @@ impl G {
         let mut playing = true;
 
         if self.options.locations {
-            self.update_log(&format!(">>> Orb of Zot: {}", self.game.debug_orb_of_zot_location()));
-            self.update_log(&format!(">>> Runestaff: {}", self.game.debug_runestaff_location()));
+            self.update_log(&format!(
+                ">>> Orb of Zot: {}",
+                self.game.debug_orb_of_zot_location()
+            ));
+            self.update_log(&format!(
+                ">>> Runestaff: {}",
+                self.game.debug_runestaff_location()
+            ));
         }
 
         while playing {
@@ -911,7 +917,6 @@ impl G {
             if playing {
                 playing = self.game_summary();
             }
-
         } // while playing
 
         nocbreak();

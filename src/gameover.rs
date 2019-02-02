@@ -1,21 +1,27 @@
 use crate::G;
 use ncurses::*;
 
-use wizardscastle::player::Stat;
-use wizardscastle::game::GameState;
-use wizardscastle::weapon::WeaponType;
 use wizardscastle::armor::ArmorType;
+use wizardscastle::game::GameState;
+use wizardscastle::player::Stat;
+use wizardscastle::weapon::WeaponType;
 
 use std::cmp;
 
 impl G {
-
     /// Initial screen if dead
     fn dead1(&self) {
         let w = G::popup(9, 52);
 
         self.wcon(w, G::A_TITLE());
-        self.mvwprintw_center(w, 2, &format!("A noble effort, oh formerly-living {}\n\n", self.race_name()));
+        self.mvwprintw_center(
+            w,
+            2,
+            &format!(
+                "A noble effort, oh formerly-living {}\n\n",
+                self.race_name()
+            ),
+        );
         self.wcoff(w, G::A_TITLE());
 
         let mut cod = String::from("You died due to lack of ");
@@ -109,7 +115,7 @@ impl G {
         }
 
         for (i, s) in strs.iter().enumerate() {
-            let last = if i == strs.len() - 1 { true } else { false };
+            let last = i == strs.len() - 1;
 
             if first {
                 final_str.push_str(&G::initial_upper(&s.to_lowercase()));
@@ -153,8 +159,12 @@ impl G {
         let mut height = 10;
         let mut add_height = 0;
 
-        if !dead { add_height += 1; }
-        if has_outfit { add_height += 1; }
+        if !dead {
+            add_height += 1;
+        }
+        if has_outfit {
+            add_height += 1;
+        }
 
         if self.game.player_has_runestaff() || self.game.player_has_orb_of_zot() {
             add_height += 1;
@@ -273,8 +283,6 @@ impl G {
             any => panic!("unexpected game state at end {:#?}", any),
         }
 
-        let play_again = self.final_inventory(dead);
-
-        play_again
+        self.final_inventory(dead)
     }
 }
