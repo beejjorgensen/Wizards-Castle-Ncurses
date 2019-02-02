@@ -29,6 +29,7 @@ mod stat;
 mod teleport;
 mod vendor;
 mod win;
+mod gameover;
 
 struct Opts {
     discover_all: bool,
@@ -771,7 +772,6 @@ impl G {
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
-
         cbreak();
         noecho();
 
@@ -806,6 +806,11 @@ impl G {
             );
 
             while alive {
+                if self.game.state() == GameState::Dead {
+                    alive = false;
+                    continue;
+                }
+
                 self.at_turn_start();
 
                 self.update_map(self.options.discover_all);
@@ -835,12 +840,18 @@ impl G {
                                 alive = false;
                                 // TODO play again?
                                 playing = false;
+                                continue;
                             }
                         }
                         _ => (),
                     }
                 } else {
                     automove = false;
+                }
+
+                if self.game.state() == GameState::Dead || self.game.state() == GameState::Exit {
+                    alive = false;
+                    continue;
                 }
 
                 let ox = self.game.player_x();
@@ -895,11 +906,17 @@ impl G {
                     }
                     _ => (),
                 }
+            } // while alive
+
+            if playing {
+                playing = self.game_summary();
             }
-        }
+
+        } // while playing
 
         nocbreak();
         echo();
+        G::show_cursor(true);
     }
 
     /// Redraw the main screen windows
