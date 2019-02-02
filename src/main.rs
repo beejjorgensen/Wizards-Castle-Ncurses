@@ -82,22 +82,14 @@ impl G {
         }
 
         let logwin = newwin(8, 80, 17, 0);
-        let loginner = derwin(logwin, 6, 78, 1, 1);
+        let loginner = derwin(logwin, 7, 78, 0, 1);
 
         scrollok(loginner, true);
 
-        let mut game = Game::new(8, 8, 8);
-
-        if options.give_orb_of_zot {
-            game.debug_give_orb_of_zot();
-        }
-
-        if options.give_runestaff {
-            game.debug_give_runestaff();
-        }
+        let game = Game::new(8, 8, 8);
 
         // Return the new struct
-        G {
+        let mut g = G {
             color,
             mapwin: newwin(17, 47, 0, 0),
             statwin: newwin(17, 32, 0, 48),
@@ -111,7 +103,29 @@ impl G {
             rng: thread_rng(),
 
             options,
+        };
+
+        g.restart(false);
+
+        g
+    }
+
+    /// Restore the game to a clean slate for restarting
+    fn restart(&mut self, new_game: bool) {
+        if new_game {
+            self.game = Game::new(8, 8, 8);
         }
+
+        if self.options.give_orb_of_zot {
+            self.game.debug_give_orb_of_zot();
+        }
+
+        if self.options.give_runestaff {
+            self.game.debug_give_runestaff();
+        }
+
+        wclear(self.loginner);
+        wmove(self.loginner, 0, 0);
     }
 
     #[allow(non_snake_case)]
@@ -769,6 +783,11 @@ impl G {
         retreated
     }
 
+    /// Death message on log
+    fn death_message(&self) {
+        self.update_log_bad("** You have died! **");
+    }
+
     /// Main game loop
     fn run(&mut self) {
         G::show_cursor(false);
@@ -779,20 +798,11 @@ impl G {
 
         let mut playing = true;
 
-        if self.options.locations {
-            self.update_log(&format!(
-                ">>> Orb of Zot: {}",
-                self.game.debug_orb_of_zot_location()
-            ));
-            self.update_log(&format!(
-                ">>> Runestaff: {}",
-                self.game.debug_runestaff_location()
-            ));
-        }
-
         while playing {
             clear();
             refresh();
+
+            self.restart(true);
 
             self.choose_class();
             self.choose_gender();
@@ -811,8 +821,20 @@ impl G {
                 self.wcget("bold-yellow"),
             );
 
+            if self.options.locations {
+                self.update_log(&format!(
+                    ">>> Orb of Zot: {}",
+                    self.game.debug_orb_of_zot_location()
+                ));
+                self.update_log(&format!(
+                    ">>> Runestaff: {}",
+                    self.game.debug_runestaff_location()
+                ));
+            }
+
             while alive {
                 if self.game.state() == GameState::Dead {
+                    self.death_message();
                     alive = false;
                     continue;
                 }
@@ -855,7 +877,14 @@ impl G {
                     automove = false;
                 }
 
-                if self.game.state() == GameState::Dead || self.game.state() == GameState::Exit {
+                if self.game.state() == GameState::Dead {
+                    self.death_message();
+                    alive = false;
+                    continue;
+                }
+
+                if self.game.state() == GameState::Exit {
+                    self.update_log("You have exited the castle.");
                     alive = false;
                     continue;
                 }

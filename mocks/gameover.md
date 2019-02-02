@@ -75,7 +75,7 @@ __________________________
 ```
 Some hobbits never learn!
 
-[ Press any key to start ]
+ Press any key to start 
 ```
 
 ```

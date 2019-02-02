@@ -190,7 +190,6 @@ impl G {
             add_height += 1;
         }
 
-        self.update_log(&format!(">>> {} {}", height, add_height));
         height += add_height;
 
         let w = G::popup(height as i32, width as i32);
@@ -258,6 +257,47 @@ impl G {
         play_again
     }
 
+    /// Show the restart screen
+    fn restart_screen(&self, play_again: bool) {
+        let width = if play_again { 35 } else { 50 };
+
+        let w = G::popup(7, width);
+
+        self.wcon(w, G::A_TITLE());
+
+        if play_again {
+            self.mvwprintw_center(w, 2, &format!("Some {}s never learn!", self.race_name()));
+        } else {
+            self.mvwprintw_center(
+                w,
+                2,
+                &format!("Maybe dumb {} not so dumb after all!", self.race_name()),
+            );
+        }
+
+        self.wcoff(w, G::A_TITLE());
+
+        wattr_on(w, A_REVERSE());
+
+        if play_again {
+            self.mvwprintw_center_notrim(w, 4, " Press any key to start ");
+        } else {
+            self.mvwprintw_center_notrim(w, 4, " Press any key to exit ");
+        }
+
+        wattr_off(w, A_REVERSE());
+
+        box_(w, 0, 0);
+
+        wrefresh(w);
+
+        getch();
+
+        G::popup_close(w);
+
+        self.redraw_underwins();
+    }
+
     /// Show gameover summary
     pub fn game_summary(&self) -> bool {
         let dead;
@@ -283,6 +323,10 @@ impl G {
             any => panic!("unexpected game state at end {:#?}", any),
         }
 
-        self.final_inventory(dead)
+        let play_again = self.final_inventory(dead);
+
+        self.restart_screen(play_again);
+
+        play_again
     }
 }
