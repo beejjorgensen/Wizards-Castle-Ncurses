@@ -15,6 +15,8 @@ use wizardscastle::game::{
 use wizardscastle::monster::MonsterType;
 use wizardscastle::room::RoomType;
 
+use crate::stat::StatMode;
+
 mod bribe;
 mod gen;
 mod help;
@@ -26,8 +28,7 @@ mod quit;
 mod stat;
 mod vendor;
 mod win;
-
-use crate::stat::StatMode;
+mod teleport;
 
 struct G {
     color: HashMap<&'static str, attr_t>,
@@ -804,6 +805,7 @@ impl G {
                         'O' => self.open(),
                         'I' => self.show_inventory(),
                         'T' => self.trade(),
+                        'P' => self.teleport(),
                         'H' | '?' => self.help(),
                         'Q' => {
                             if self.verify_quit(false) {

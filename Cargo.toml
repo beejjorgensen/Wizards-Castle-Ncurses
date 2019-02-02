@@ -6,5 +6,6 @@ edition = "2018"
 
 [dependencies]
 wizardscastle = { git = "https://github.com/beejjorgensen/Wizards-Castle-Rust" }
+#wizardscastle = { path = "../Wizards-Castle-Rust/" }
 ncurses = "5.98.0"
 rand = "0.6"

@@ -10,9 +10,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 ## TODO
 
-* Actions
-  * Teleport
-
 * Random messages
 
 * Game over screen
@@ -20,6 +17,10 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 * Update help screen
 
 * Show orb of zot and runestaff in inventory
+
+* Turn counter
+
+* orb/runestaff on stat?
 
 * Colors on map
 
