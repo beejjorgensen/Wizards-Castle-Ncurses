@@ -74,5 +74,4 @@ impl G {
 
         self.redraw_underwins();
     }
-
 }

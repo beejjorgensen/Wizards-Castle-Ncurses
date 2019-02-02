@@ -202,7 +202,7 @@ dependencies = [
 [[package]]
 name = "wizardscastle"
 version = "0.1.0"
-source = "git+https://github.com/beejjorgensen/Wizards-Castle-Rust#1afeda1121bbd0bfebf47085347fdead7b5fac4c"
+source = "git+https://github.com/beejjorgensen/Wizards-Castle-Rust#8b97e1bd90a48384b13b6812f00a3345fbc7504d"
 dependencies = [
  "rand 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

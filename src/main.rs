@@ -26,9 +26,17 @@ mod map;
 mod names;
 mod quit;
 mod stat;
+mod teleport;
 mod vendor;
 mod win;
-mod teleport;
+
+struct Opts {
+    discover_all: bool,
+    force_bw: bool,
+    give_orb_of_zot: bool,
+    give_runestaff: bool,
+    locations: bool,
+}
 
 struct G {
     color: HashMap<&'static str, attr_t>,
@@ -43,12 +51,12 @@ struct G {
 
     retreat_direction: Option<Direction>,
 
-    discover_all: bool, // map cheat
+    options: Opts,
 }
 
 impl G {
     /// Build a new global game struct
-    fn new(discover_all: bool) -> G {
+    fn new(options: Opts) -> G {
         // Build out the known color schemes for color and non-color terminals
         let mut color = HashMap::new();
 
@@ -77,6 +85,16 @@ impl G {
 
         scrollok(loginner, true);
 
+        let mut game = Game::new(8, 8, 8);
+
+        if options.give_orb_of_zot {
+            game.debug_give_orb_of_zot();
+        }
+
+        if options.give_runestaff {
+            game.debug_give_runestaff();
+        }
+
         // Return the new struct
         G {
             color,
@@ -84,14 +102,14 @@ impl G {
             statwin: newwin(17, 32, 0, 48),
             logwin,
             loginner,
-            game: Game::new(8, 8, 8),
+            game,
             statmode: StatMode::None,
 
             retreat_direction: None,
 
             rng: thread_rng(),
 
-            discover_all,
+            options,
         }
     }
 
@@ -712,7 +730,7 @@ impl G {
 
         self.retreat_direction = None;
 
-        self.update_map(self.discover_all); // update player position
+        self.update_map(self.options.discover_all); // update player position
         self.set_statmode(StatMode::Combat);
 
         let mon_str = G::monster_name(monster_type);
@@ -761,6 +779,11 @@ impl G {
 
         let mut playing = true;
 
+        if self.options.locations {
+            self.update_log(&format!(">>> Orb of Zot: {}", self.game.debug_orb_of_zot_location()));
+            self.update_log(&format!(">>> Runestaff: {}", self.game.debug_runestaff_location()));
+        }
+
         while playing {
             clear();
             refresh();
@@ -785,7 +808,7 @@ impl G {
             while alive {
                 self.at_turn_start();
 
-                self.update_map(self.discover_all);
+                self.update_map(self.options.discover_all);
                 self.update_stat();
 
                 if !automove {
@@ -890,25 +913,46 @@ impl G {
     }
 }
 
-/// Main
-fn main() {
+/// Gather command line options
+fn gather_options() -> Opts {
     let all_args: Vec<String> = env::args().collect();
     let args = &all_args[1..];
 
     let mut discover_all = false;
     let mut force_bw = false;
+    let mut give_orb_of_zot = false;
+    let mut give_runestaff = false;
+    let mut locations = false;
 
-    for a in args {
-        match a.as_ref() {
-            "-d" => discover_all = true,
-            "-b" => force_bw = true,
-            any => panic!("unknown command arg: {}", any),
+    if cfg!(feature = "cheat") {
+        for a in args {
+            match a.as_ref() {
+                "-d" => discover_all = true,
+                "-b" => force_bw = true,
+                "-z" => give_orb_of_zot = true,
+                "-r" => give_runestaff = true,
+                "-l" => locations = true,
+                any => panic!("unknown command arg: {}", any),
+            }
         }
     }
 
+    Opts {
+        discover_all,
+        force_bw,
+        give_orb_of_zot,
+        give_runestaff,
+        locations,
+    }
+}
+
+/// Main
+fn main() {
+    let options = gather_options();
+
     initscr();
 
-    if !force_bw && has_colors() {
+    if !options.force_bw && has_colors() {
         start_color();
     }
 
@@ -918,7 +962,7 @@ fn main() {
 
     refresh(); // If we don't do this first, windows don't show up
 
-    let mut g = G::new(discover_all);
+    let mut g = G::new(options);
 
     g.run();
 
