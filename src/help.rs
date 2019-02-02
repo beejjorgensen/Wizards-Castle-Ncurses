@@ -34,5 +34,7 @@ impl G {
         getch();
 
         G::popup_close(w);
+
+        self.redraw_underwins();
     }
 }
