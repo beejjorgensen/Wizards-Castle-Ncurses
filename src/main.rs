@@ -21,6 +21,7 @@ mod bribe;
 mod gameover;
 mod gen;
 mod help;
+mod info;
 mod inv;
 mod log;
 mod map;
@@ -952,6 +953,7 @@ impl G {
                         'T' => self.trade_teleport(),
                         'P' => self.teleport(),
                         'H' | '?' => self.help(),
+                        'C' => self.info(),
                         'Q' => {
                             if self.verify_quit(false) {
                                 alive = false;

@@ -2,11 +2,9 @@ use crate::G;
 use ncurses::*;
 
 impl G {
-    /// Verify the player wants to quit
-    ///
-    /// Returns true if they really do
+    /// Show help
     pub fn help(&self) {
-        let w = G::popup(14, 44);
+        let w = G::popup(15, 44);
 
         let strs = [
             "[N]orth     [T]rade       [R]ead ",
@@ -15,6 +13,7 @@ impl G {
             "[E]ast      [F]lare       [G]aze ",
             "[U]p        [I]nventory   [H]elp ",
             "[D]own      [T]ele[p]ort  [Q]uit ",
+            "            [C]opyright          ",
         ];
 
         self.wcon(w, G::A_TITLE());
@@ -26,7 +25,7 @@ impl G {
         }
 
         wattron(w, A_REVERSE());
-        self.mvwprintw_center_notrim(w, 11, " Press any key ");
+        self.mvwprintw_center_notrim(w, 12, " Press any key ");
         wattroff(w, A_REVERSE());
 
         box_(w, 0, 0);
