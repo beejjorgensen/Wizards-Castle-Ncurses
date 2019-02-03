@@ -414,6 +414,10 @@ impl G {
                 'N' => done = true,
                 _ => (),
             }
+
+            G::popup_close(w);
+
+            self.redraw_underwins();
         }
     }
 
