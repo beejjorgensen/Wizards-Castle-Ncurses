@@ -8,6 +8,8 @@ use wizardscastle::room::RoomType;
 use wizardscastle::treasure::TreasureType;
 use wizardscastle::weapon::WeaponType;
 
+use rand::Rng;
+
 impl G {
     pub fn player_race_name(&self) -> &str {
         match self.game.player_race() {
@@ -42,6 +44,27 @@ impl G {
             ArmorType::Chainmail => String::from("Chainmail"),
             ArmorType::Plate => String::from("Plate"),
         }
+    }
+
+    pub fn rand_monster_name(&mut self) -> String {
+        let monster = [
+            MonsterType::Kobold,
+            MonsterType::Orc,
+            MonsterType::Wolf,
+            MonsterType::Goblin,
+            MonsterType::Ogre,
+            MonsterType::Troll,
+            MonsterType::Bear,
+            MonsterType::Minotaur,
+            MonsterType::Gargoyle,
+            MonsterType::Chimera,
+            MonsterType::Balrog,
+            MonsterType::Dragon,
+        ];
+
+        let i = self.rng.gen_range(0, monster.len());
+
+        G::monster_name(monster[i])
     }
 
     pub fn monster_name(m: MonsterType) -> String {

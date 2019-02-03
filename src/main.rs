@@ -10,7 +10,7 @@ use rand::Rng;
 use wizardscastle::error::Error;
 use wizardscastle::game::{
     BookEvent, ChestEvent, CombatEvent, Direction, DrinkEvent, Event, Game, GameState, HitResult,
-    OrbEvent, Stairs,
+    OrbEvent, RandomMessage, Stairs,
 };
 use wizardscastle::monster::MonsterType;
 use wizardscastle::room::RoomType;
@@ -455,6 +455,29 @@ impl G {
         }
     }
 
+    /// Display a random message
+    fn rand_message(&mut self) {
+        match self.game.rand_message() {
+            RandomMessage::SeeBat => self.update_log("You see a bat fly by."),
+            RandomMessage::HearSound => {
+                let sounds = ["a scream!", "footsteps.", "a wumpus.", "thunder."];
+
+                let i = self.rng.gen_range(0, sounds.len());
+
+                self.update_log(&format!("You hear {}", sounds[i]));
+            }
+            RandomMessage::Sneeze => self.update_log("You sneezed!"),
+            RandomMessage::StepFrog => self.update_log("You stepped on a frog."),
+            RandomMessage::MonsterFrying => {
+                let mon_name = self.rand_monster_name();
+                self.update_log(&format!("You smell {} frying.", mon_name));
+            }
+            RandomMessage::Watched => self.update_log("You feel like you're being watched."),
+            RandomMessage::Playing => self.update_log("You are playing Wizard's Castle."),
+            RandomMessage::None => (),
+        }
+    }
+
     /// Things to do at the start of the turn
     fn at_turn_start(&mut self) {
         self.game.add_turn(1);
@@ -465,7 +488,7 @@ impl G {
             self.update_log_bad("You feel a chill in your bones.");
         }
 
-        //self.rand_message();
+        self.rand_message();
 
         // Cure blindness
         if self.game.cure_blindness() {
