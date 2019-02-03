@@ -455,6 +455,17 @@ impl G {
         }
     }
 
+    /// Read a book
+    fn read(&mut self) {
+        let room_type = self.game.room_at_player().room_type().clone();
+
+        if room_type == RoomType::Book {
+            self.open_book();
+        } else {
+            self.update_log_error("** If you want to read, find a book!");
+        }
+    }
+
     /// Display a random message
     fn rand_message(&mut self) {
         match self.game.rand_message() {
@@ -514,11 +525,13 @@ impl G {
         }
     }
 
-    fn trade(&mut self) {
-        let find_vendor = || {
-            self.update_log_error("** If you want to trade, find a vendor.");
-        };
+    /// Print a message to find a vendor
+    fn find_vendor_error(&self) {
+        self.update_log_error("** If you want to trade, find a vendor.");
+    }
 
+    /// Trade with a vendor
+    fn trade(&mut self) {
         match self.game.room_at_player().room_type() {
             RoomType::Monster(m) => {
                 if m.monster_type() == MonsterType::Vendor {
@@ -528,10 +541,31 @@ impl G {
                         self.vendor_trade();
                     }
                 } else {
-                    find_vendor();
+                    self.find_vendor_error();
                 }
             }
-            _ => find_vendor(),
+            _ => self.find_vendor_error(),
+        }
+    }
+
+    /// Trade or teleport
+    fn trade_teleport(&mut self) {
+        let mut is_vendor = false;
+        let can_teleport = self.game.player_has_runestaff();
+
+        if let RoomType::Monster(m) = self.game.room_at_player().room_type() {
+            if m.monster_type() == MonsterType::Vendor {
+                is_vendor = true; 
+            }
+        }
+
+        if is_vendor {
+            self.trade();
+        } else if can_teleport {
+            self.teleport();
+        } else {
+            self.find_vendor_error();
+            self.teleport_error();
         }
     }
 
@@ -882,8 +916,9 @@ impl G {
                         'L' => self.lamp(),
                         'G' => self.gaze(),
                         'O' => self.open(),
+                        'R' => self.read(),
                         'I' => self.show_inventory(),
-                        'T' => self.trade(),
+                        'T' => self.trade_teleport(),
                         'P' => self.teleport(),
                         'H' | '?' => self.help(),
                         'Q' => {

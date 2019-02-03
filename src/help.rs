@@ -6,14 +6,15 @@ impl G {
     ///
     /// Returns true if they really do
     pub fn help(&self) {
-        let w = G::popup(13, 44);
+        let w = G::popup(14, 44);
 
         let strs = [
-            "[N]orth      [D]own        [D]rink",
-            "[S]outh      [T]eleport    [O]pen ",
-            "[W]est       [L]amp        [G]aze ",
-            "[E]ast       [F]lare       [H]elp ",
-            "[U]p         [I]nventory   [Q]uit ",
+            "[N]orth     [T]rade       [R]ead ",
+            "[S]outh     [A]ttack      [D]rink",
+            "[W]est      [L]amp        [O]pen ",
+            "[E]ast      [F]lare       [G]aze ",
+            "[U]p        [I]nventory   [H]elp ",
+            "[D]own      [T]ele[p]ort  [Q]uit "
         ];
 
         self.wcon(w, G::A_TITLE());
@@ -25,7 +26,7 @@ impl G {
         }
 
         wattron(w, A_REVERSE());
-        self.mvwprintw_center_notrim(w, 10, " Press any key ");
+        self.mvwprintw_center_notrim(w, 11, " Press any key ");
         wattroff(w, A_REVERSE());
 
         box_(w, 0, 0);

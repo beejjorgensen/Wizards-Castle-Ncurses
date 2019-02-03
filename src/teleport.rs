@@ -2,10 +2,15 @@ use crate::G;
 use ncurses::*;
 
 impl G {
+    /// Print a teleport error message
+    pub fn teleport_error(&self) {
+        self.update_log_error("** You can't teleport without the Runestaff!");
+    }
+
     /// Teleport
     pub fn teleport(&mut self) {
         if !self.game.can_teleport() {
-            self.update_log_error("** You can't teleport without the Runestaff!");
+            self.teleport_error();
             return;
         }
 

@@ -8,8 +8,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 ## TODO
 
-* Update help screen
-
 * Show orb of zot and runestaff in inventory
 
 * Turn counter
