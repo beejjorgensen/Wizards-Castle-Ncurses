@@ -2,7 +2,7 @@
 
 .\" Yes, this is hand-coded.
 
-.TH WIZCAS 6 "2019-02-03"
+.TH WIZCAS 6 "2019-02-03" "Games Manual" "Games Manual"
 
 .SH NAME
 Wizard's Castle
@@ -41,38 +41,38 @@ Display the locations of the Runestaff and Orb of Zot
 
 .SH DESCRIPTION
 
-Wizard's Castle was written in the late 1970s by Joseph R. Power. It was
-published in Recreational Computing Magazine in July 1980 for the Exidy
-Sorceror, and was rapidly ported to a variety of different plaforms.
+This dungeon-crawl of an adventure leads you through a random castle full of
+creatures, gold, treasure, and many other mysterious rooms, both good and bad.
 
-This is a recreation from the original sources, written in Rust.
+If you're skilled (and lucky!) you might escape the dungeon with the
+long-sought-after
+.IR "Orb of Zot" !
 
-.SS The Game
+.SS Winning
 
-This adventure leads you through a random 8x8x8 dungeon full of creatures, gold,
-treasure, and other things, good and bad.
-
-The goal is to find and kill the monster that is carrying
-.IR "The Runestaff" .
-
-Once the Runestaff is obtained, the player can use it to teleport into the Warp
-that contains the legendary
-.IR "Orb of Zot" .
-When the Orb of Zot is obtained, the Runestaff will disappear and the player
-must make their way back out to the entrance and head north to exit the castle
-to victory.
-
-
-.SS Gameplay Overview
+To win:
 
 .IP 1. 4n
-Character Generation
+Find and kill the monster that is carrying the Runestaff.
 
 .IP 2. 4n
-Play until you win or die
+Find the warp that is the Orb of Zot in disguise.
 
 .IP 3. 4n
-Repeat
+Teleport directly into that warp using the Runestaff.
+
+.IP 4. 4n
+Head back to the entrance, and walk north to exit to victory!
+
+.PP
+
+
+.SS Losing and Dying
+
+If you walk north from the entrance, you exit the dungeon. If you do this
+without the Orb of Zot, you lose... but at least you survived!
+
+If any of your stats (strength, intelligence, dexterity) falls to zero, you die.
 
 
 .SS Character generation
@@ -292,7 +292,7 @@ you will drop to the top level!
 
 .TP
 .B O
-A crystal Orb. If you gaze into this orb, you will see a varity of different
+A crystal Orb. If you gaze into this orb, you will see a variety of different
 things. You might even see where the Orb of Zot is located--if the orb isn't
 misleading you. If you see yourself in a bloody heap, your strength will suffer
 and the orb will disintegrate.
@@ -304,8 +304,12 @@ the
 
 .TP
 .B B
-A book. Reading the book might help your stats. It might also make you blind, or
+A book. Reading the book might help your stats. Or it might make you blind, or
 stick to your hands preventing you from fighting with your weapon.
+
+The Blue Flame will dissolve books stuck to your hands.
+
+The Opal Eye will cure blindness.
 
 .TP
 .B M
@@ -338,11 +342,67 @@ pretty.
 
 .SS Curses
 
-WIP
+Some of the empty rooms in the dungeon are cursed, and you catch the curse by
+stepping into the room.
+
+Once you have a curse, you can never be rid of it. However, possessing certain
+treasures wards off the effects.
+
+.TP
+.B Lethargy
+Monsters get the first attack. Your turn counter increases at double speed.
+
+This curse is warded by The Ruby Red.
+
+.TP
+.B The Leech
+Causes you to lose gold pieces each turn.
+
+This curse is warded by The Pale Pearl.
+
+.TP
+.B Forgetfulness
+Slowly returns the map to being unexplored.
+
+This curse is warded by The Green Gem.
+
 
 .SS Treasures
 
-WIP
+.TP
+.B The Ruby Red
+Protects against the curse of Lethargy
+
+.TP
+.B The Norn Stone
+No special power
+
+.TP
+.B The Pale Pearl
+Protects against the curse of The Leech
+
+.TP
+.B The Opal Eye
+Cures blindness
+
+.TP
+.B The Green Gem
+Protects against the curse of Forgetfulness
+
+.TP
+.B The Blue Flame
+Dissolves books stuck to your hands
+
+.TP
+.B The Palintir
+No special power
+
+.TP
+.B The Silmaril
+No special power
+
+.PP
+
 
 .SS Changes from the original game
 
@@ -368,4 +428,50 @@ as a synonym for
 .BR [R] ead
 as a synonym for
 .BR [O] "pening a book"
+.in
+
+.SH BUGS
+
+Resizing the terminal window does bad things, up to and including a panic.
+
+Probably doesn't build on Windows outside of Cygwin or WSL.
+
+.SH AUTHOR
+
+Wizard's Castle was written in the late 1970s by Joseph R. Power. It was
+published in Recreational Computing Magazine in July 1980 for the Exidy
+Sorceror, and was rapidly ported to a variety of different platforms.
+
+This is a recreation from the original sources, written in Rust.
+
+.SH COPYRIGHT
+
+The source code for this Rust version of Wizard's Castle is Copyright \[co] 2019 Brian
+"Beej Jorgensen" Hall <beej@beej.us>
+
+It is distributed under the terms of the
+.UR https://opensource.org/licenses/MIT
+MIT License.
+.UE
+
+.SH SEE ALSO
+
+Information about Wizard's Castle:
+
+.in +4n
+https://github.com/beejjorgensen/Wizards-Castle-Info
+.in
+
+A Rust library to run the game, plus a command line version staying true to the
+original UI:
+
+.in +4n
+https://github.com/beejjorgensen/Wizards-Castle-Rust
+.in
+
+Source for this version plus a command line version staying true to the original
+UI:
+
+.in +4n
+https://github.com/beejjorgensen/Wizards-Castle-Ncurses
 .in
