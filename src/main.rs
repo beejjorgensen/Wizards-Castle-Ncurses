@@ -208,10 +208,6 @@ impl G {
         }
 
         self.game.move_dir(dir);
-
-        // This is often redundant, but there's a case where we retreat from
-        // monsters and the discover room gets overlooked
-        self.game.discover_room_at_player();
     }
 
     /// Tell if a key was an arrow key
@@ -1011,14 +1007,12 @@ impl G {
                             oz,
                         );
                         self.update_log(&msg);
-                        self.game.discover_room_at_player();
                         automove = true;
                     }
                     Event::Warp => {
                         let msg =
                             self.make_loc_event_msg("You entered a warp", "!", "!", ox, oy, oz);
                         self.update_log(&msg);
-                        self.game.discover_room_at_player();
                         automove = true;
                     }
                     Event::Treasure(t) => {

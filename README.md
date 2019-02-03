@@ -14,8 +14,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 * orb/runestaff on stat?
 
-* Remove all discover_room_at_player
-
 * Bold on all key prompts
 
 * `refresh()` instead of `wrefresh()` to cure some repaint ills?
