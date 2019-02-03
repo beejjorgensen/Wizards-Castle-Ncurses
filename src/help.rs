@@ -14,7 +14,7 @@ impl G {
             "[W]est      [L]amp        [O]pen ",
             "[E]ast      [F]lare       [G]aze ",
             "[U]p        [I]nventory   [H]elp ",
-            "[D]own      [T]ele[p]ort  [Q]uit "
+            "[D]own      [T]ele[p]ort  [Q]uit ",
         ];
 
         self.wcon(w, G::A_TITLE());

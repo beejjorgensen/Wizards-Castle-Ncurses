@@ -555,7 +555,7 @@ impl G {
 
         if let RoomType::Monster(m) = self.game.room_at_player().room_type() {
             if m.monster_type() == MonsterType::Vendor {
-                is_vendor = true; 
+                is_vendor = true;
             }
         }
 
