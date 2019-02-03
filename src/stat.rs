@@ -58,9 +58,10 @@ impl G {
             self.statwin,
             3,
             &format!(
-                "GP:{:<}   Flares:{:<}",
+                "GP:{:<}  FL:{:<}  T:{:<}",
                 self.game.player_gp(),
-                self.game.player_flares()
+                self.game.player_flares(),
+                self.game.turn()
             ),
         );
 

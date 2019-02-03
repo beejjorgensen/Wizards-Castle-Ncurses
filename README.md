@@ -8,8 +8,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 ## TODO
 
-* Turn counter
-
 * Bold on all key prompts
 
 * `refresh()` instead of `wrefresh()` to cure some repaint ills?
