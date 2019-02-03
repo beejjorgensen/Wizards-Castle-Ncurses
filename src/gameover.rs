@@ -107,7 +107,13 @@ impl G {
         }
 
         if armor != ArmorType::None {
-            strs.push(format!("{} armor", G::armor_name(armor)));
+            let mut armor_str = G::armor_name(armor);
+
+            if armor != ArmorType::Chainmail {
+                armor_str.push_str(" armor");
+            }
+
+            strs.push(armor_str);
         }
 
         if lamp {
