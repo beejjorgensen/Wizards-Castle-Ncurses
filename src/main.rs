@@ -65,6 +65,9 @@ impl G {
             init_pair(1, COLOR_YELLOW, COLOR_BLACK);
             init_pair(2, COLOR_RED, COLOR_BLACK);
             init_pair(3, COLOR_GREEN, COLOR_BLACK);
+            init_pair(4, COLOR_BLUE, COLOR_BLACK);
+            init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+            init_pair(6, COLOR_CYAN, COLOR_BLACK);
 
             color.insert("bold-yellow", COLOR_PAIR(1) | A_BOLD());
             color.insert("bold-red", COLOR_PAIR(2) | A_BOLD());
@@ -72,6 +75,22 @@ impl G {
             color.insert("dim-yellow", COLOR_PAIR(1) | A_DIM());
             color.insert("dim-green", COLOR_PAIR(3) | A_DIM());
             color.insert("dim-red", COLOR_PAIR(2) | A_DIM());
+
+            color.insert("room-.", A_DIM()); // Empis [sic]
+            color.insert("room-E", 0);
+            color.insert("room-D", 0);
+            color.insert("room-U", 0);
+            color.insert("room-G", COLOR_PAIR(1) | A_BOLD());
+            color.insert("room-P", COLOR_PAIR(4) | A_BOLD());
+            color.insert("room-C", 0);
+            color.insert("room-F", A_BOLD());
+            color.insert("room-W", 0);
+            color.insert("room-S", 0);
+            color.insert("room-O", COLOR_PAIR(6));
+            color.insert("room-B", 0);
+            color.insert("room-V", 0);
+            color.insert("room-M", COLOR_PAIR(2) | A_BOLD());
+            color.insert("room-T", COLOR_PAIR(1) | A_BOLD());
         } else {
             color.insert("bold-yellow", A_BOLD());
             color.insert("bold-red", 0);
@@ -79,6 +98,22 @@ impl G {
             color.insert("dim-yellow", A_DIM());
             color.insert("dim-green", A_DIM());
             color.insert("dim-red", A_DIM());
+
+            color.insert("room-.", A_DIM()); // Empis [sic]
+            color.insert("room-E", 0);
+            color.insert("room-D", 0);
+            color.insert("room-U", 0);
+            color.insert("room-G", A_BOLD());
+            color.insert("room-P", 0);
+            color.insert("room-C", 0);
+            color.insert("room-F", A_BOLD());
+            color.insert("room-W", 0);
+            color.insert("room-S", 0);
+            color.insert("room-O", 0);
+            color.insert("room-B", 0);
+            color.insert("room-V", 0);
+            color.insert("room-M", 0);
+            color.insert("room-T", A_BOLD());
         }
 
         let logwin = newwin(8, 80, 17, 0);

@@ -31,7 +31,12 @@ impl G {
                     }
 
                     if r.discovered || show_all {
-                        wprintw(self.mapwin, &format!("{}", G::room_char(&r.roomtype)));
+                        let room_ch = G::room_char(&r.roomtype);
+                        let attr_str = format!("room-{}", room_ch);
+
+                        self.wcon(self.mapwin, &attr_str);
+                        wprintw(self.mapwin, &format!("{}", room_ch));
+                        self.wcoff(self.mapwin, &attr_str);
                     } else {
                         wattr_on(self.mapwin, A_DIM());
                         wprintw(self.mapwin, "?");
