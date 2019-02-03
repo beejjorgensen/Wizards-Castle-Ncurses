@@ -11,14 +11,27 @@ impl G {
 
         inv.sort_unstable();
 
-        let count = inv.len();
+        let player_has_runestaff = self.game.player_has_runestaff();
+        let player_has_orb_of_zot = self.game.player_has_orb_of_zot();
+        let player_has_magic_item = player_has_runestaff || player_has_orb_of_zot;
 
-        let width = if count == 0 { 42 } else { 43 };
+        let mut magic_item = "";
+
+        if player_has_runestaff {
+            magic_item = "Runestaff";
+        } else if player_has_orb_of_zot {
+            magic_item = "Orb of Zot!";
+        };
+
+        let count = inv.len() + if player_has_magic_item { 1 } else { 0 };
+
+        let width = if count == 0 { 42 } else { 39 };
         let height = if count == 0 { 7 } else { (8 + count) as i32 };
-        let title = if count == 0 {
+
+        let title = if count == 0 && !player_has_magic_item {
             "You don't yet have any treasure."
         } else {
-            "You have the following treasures:"
+            "You have the following items:"
         };
 
         let w = G::popup(height, width);
@@ -28,7 +41,15 @@ impl G {
         self.wcoff(w, G::A_TITLE());
 
         for i in inv {
-            self.wprintw_center_notrim(w, &format!("The {:<10}\n", i));
+            self.wprintw_center_notrim(w, &format!("The {:<11}", i));
+            wprintw(w, "\n");
+        }
+
+        if player_has_magic_item {
+            wattr_on(w, A_BOLD());
+            self.wprintw_center_notrim(w, &format!("The {:<11}", magic_item));
+            wprintw(w, "\n");
+            wattr_off(w, A_BOLD());
         }
 
         wattron(w, A_REVERSE());

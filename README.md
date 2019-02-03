@@ -8,8 +8,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 ## TODO
 
-* Show orb of zot and runestaff in inventory
-
 * Turn counter
 
 * orb/runestaff on stat?
