@@ -29,18 +29,29 @@ impl G {
 
     pub fn update_stat(&self) {
         wclear(self.statwin);
+        let player_has_runestaff = self.game.player_has_runestaff();
+        let player_has_orb_of_zot = self.game.player_has_orb_of_zot();
+        let player_has_magic_item = player_has_runestaff || player_has_orb_of_zot;
+        let spacing = if player_has_magic_item { "  " } else { "   " };
 
         // Draw stats
-        self.mvwprintw_center(
-            self.statwin,
-            2,
-            &format!(
-                "ST:{:<}   IQ:{:<}   DX:{:<}",
-                self.game.player_stat(Stat::Strength),
-                self.game.player_stat(Stat::Intelligence),
-                self.game.player_stat(Stat::Dexterity)
-            ),
+        let mut stat_str = format!(
+            "ST:{:<}{}IQ:{:<}{}DX:{:<}",
+            self.game.player_stat(Stat::Strength),
+            spacing,
+            self.game.player_stat(Stat::Intelligence),
+            spacing,
+            self.game.player_stat(Stat::Dexterity)
         );
+
+        if self.game.player_has_runestaff() {
+            stat_str.push_str("  |R|");
+        }
+        if self.game.player_has_orb_of_zot() {
+            stat_str.push_str("  |Z|");
+        }
+
+        self.mvwprintw_center(self.statwin, 2, &stat_str);
 
         // Gold and flares
         self.mvwprintw_center(
