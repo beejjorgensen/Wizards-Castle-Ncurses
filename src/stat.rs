@@ -45,10 +45,10 @@ impl G {
         );
 
         if self.game.player_has_runestaff() {
-            stat_str.push_str("  |R|");
+            stat_str.push_str("  %YR%Y");
         }
         if self.game.player_has_orb_of_zot() {
-            stat_str.push_str("  |Z|");
+            stat_str.push_str("  %YZ%Y");
         }
 
         self.mvwprintw_center(self.statwin, 2, &stat_str);

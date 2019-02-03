@@ -10,8 +10,6 @@ backend](https://github.com/beejjorgensen/Wizards-Castle-Rust) I wrote earlier.
 
 * Turn counter
 
-* orb/runestaff on stat?
-
 * Bold on all key prompts
 
 * `refresh()` instead of `wrefresh()` to cure some repaint ills?

@@ -2,6 +2,8 @@
 use crate::G;
 use ncurses::*;
 
+use std::collections::HashMap;
+
 impl G {
     /// Look up a color attribute by the given name
     pub fn wcget(&self, c: &str) -> u32 {
@@ -56,6 +58,13 @@ impl G {
     ///    "|Foo| bar baz |E|tc"
     ///
     /// The contents between the pipes will be shown in A_REVERSE.
+    ///
+    /// Certain formatting specifiers are also respected:
+    ///
+    ///   %r  toggle reverse
+    ///   %b  toggle bold
+    ///   %D  toggle bold-red
+    ///   %Y  toggle bold-yellow
     pub fn mvwprintw_center(&self, w: WINDOW, y: i32, s: &str) {
         self.mvwprintw_center_core(w, y, s, true)
     }
@@ -65,51 +74,113 @@ impl G {
         self.mvwprintw_center_core(w, y, s, false)
     }
 
+    /// Invert the state of the current highligting
+    fn invert_state(state_map: &mut HashMap<char, bool>, c: char) -> bool {
+        let cur;
+
+        match state_map.get(&c) {
+            Some(v) => {
+                cur = !v;
+                state_map.insert(c, cur);
+            }
+            None => panic!("can't find format specifier '{}' in hashmap", c),
+        }
+
+        cur
+    }
+
     /// Base functionality
     fn mvwprintw_center_core(&self, w: WINDOW, y: i32, s: &str, trim: bool) {
+        let mut state_map = HashMap::new();
+
+        state_map.insert('r', false); // reverse
+        state_map.insert('b', false); // bold
+        state_map.insert('D', false); // bright red
+        state_map.insert('Y', false); // bright yellow
+
         let ts = if trim { s.trim() } else { s };
 
+        // First we have to get the length of the string after all control
+        // characters have been removed.
         let mut len = 0;
-        let mut has_markup = false;
+
+        let mut check_next = false;
 
         for c in ts.chars() {
-            if c != '|' && c != '^' {
-                len += 1;
-            } else {
-                has_markup = true;
+            if check_next {
+                check_next = false;
+                if c != '%' {
+                    // handle %%
+                    continue;
+                }
+            } else if c == '%' {
+                // handle %[whatever]
+                check_next = true;
+                continue;
+            } else if c == '|' {
+                // handle |
+                continue;
             }
+
+            len += 1;
         }
 
         let x = (getmaxx(w) - len) / 2;
 
         wmove(w, y, x);
 
-        let mut reversed = false;
-        let mut red = false;
-
-        if has_markup {
-            wattr_off(w, A_REVERSE());
-        }
+        check_next = false;
 
         for c in s.chars() {
-            if c == '|' {
-                reversed = !reversed;
+            if check_next {
+                if c != '%' {
+                    let on = G::invert_state(&mut state_map, c);
+
+                    match c {
+                        'r' => {
+                            if on {
+                                wattr_on(w, A_REVERSE());
+                            } else {
+                                wattr_off(w, A_REVERSE());
+                            }
+                        }
+                        'b' => {
+                            if on {
+                                wattr_on(w, A_BOLD());
+                            } else {
+                                wattr_off(w, A_BOLD());
+                            }
+                        }
+                        'D' => {
+                            if on {
+                                self.wcon(w, "bold-red");
+                            } else {
+                                self.wcoff(w, "bold-red");
+                            }
+                        }
+                        'Y' => {
+                            if on {
+                                self.wcon(w, "bold-yellow");
+                            } else {
+                                self.wcoff(w, "bold-yellow");
+                            }
+                        }
+                        any => panic!("Unknown format specifier %{}", any),
+                    }
+                }
+
+                check_next = false;
+                continue;
+            } else if c == '%' {
+                check_next = true;
+                continue;
+            } else if c == '|' {
+                let reversed = G::invert_state(&mut state_map, 'r');
 
                 if reversed {
                     wattr_on(w, A_REVERSE());
                 } else {
                     wattr_off(w, A_REVERSE());
-                }
-                continue;
-            }
-
-            if c == '^' {
-                red = !red;
-
-                if red {
-                    self.wcon(w, "bold-red");
-                } else {
-                    self.wcoff(w, "bold-red");
                 }
                 continue;
             }
