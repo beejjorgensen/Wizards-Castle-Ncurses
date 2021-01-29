@@ -1,5 +1,6 @@
 use crate::G;
 use ncurses::*;
+use std::cmp::Ordering;
 
 impl G {
     /// Print a teleport error message
@@ -30,13 +31,17 @@ impl G {
             mvwprintw(w, 6, 9, "Z coord:");
 
             for i in 0..3 {
-                if i < state {
-                    wattroff(w, A_REVERSE());
-                    mvwprintw(w, 4 + i, 18, &format!("{}", coord[i as usize] + 1));
-                } else if state == i {
-                    wattron(w, A_REVERSE());
-                    mvwprintw(w, 4 + i, 18, " ");
-                    wattroff(w, A_REVERSE());
+                match i.cmp(&state) {
+                    Ordering::Less => {
+                        wattroff(w, A_REVERSE());
+                        mvwprintw(w, 4 + i, 18, &format!("{}", coord[i as usize] + 1));
+                    },
+                    Ordering::Equal => {
+                        wattron(w, A_REVERSE());
+                        mvwprintw(w, 4 + i, 18, " ");
+                        wattroff(w, A_REVERSE());
+                    }
+                    _ => (),
                 }
             }
 

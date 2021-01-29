@@ -62,7 +62,7 @@ impl G {
             MonsterType::Dragon,
         ];
 
-        let i = self.rng.gen_range(0, monster.len());
+        let i = self.rng.gen_range(0..monster.len());
 
         G::monster_name(monster[i])
     }
@@ -142,7 +142,7 @@ impl G {
                 let mon_str = G::monster_name(m.monster_type());
                 format!("{} {}", G::get_article(&mon_str), mon_str)
             }
-            RoomType::Treasure(t) => G::treasure_name(*t.treasure_type()).to_string(),
+            RoomType::Treasure(t) => G::treasure_name(*t.treasure_type()),
         }
     }
 

@@ -144,7 +144,7 @@ impl G {
 
         let weapon_str = G::final_inventory_equip(weapon, armor, lamp);
 
-        let has_outfit = weapon_str != ""; //weapon != WeaponType::None || armor != ArmorType::None || lamp;
+        let has_outfit = !weapon_str.is_empty();
 
         let treasures = self.game.player_get_treasures();
 

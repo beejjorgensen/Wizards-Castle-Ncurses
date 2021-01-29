@@ -228,7 +228,7 @@ impl G {
         z: u32,
     ) -> String {
         if self.game.player_is_blind() {
-            format!("{}{}", prefix, blind_suffix).to_string()
+            format!("{}{}", prefix, blind_suffix)
         } else {
             format!(
                 "{} at ({},{}) level {}{}",
@@ -238,7 +238,6 @@ impl G {
                 z + 1,
                 suffix
             )
-            .to_string()
         }
     }
 
@@ -505,7 +504,7 @@ impl G {
             RandomMessage::HearSound => {
                 let sounds = ["a scream!", "footsteps.", "a wumpus.", "thunder."];
 
-                let i = self.rng.gen_range(0, sounds.len());
+                let i = self.rng.gen_range(0..sounds.len());
 
                 self.update_log(&format!("You hear {}", sounds[i]));
             }
@@ -614,7 +613,7 @@ impl G {
                 "wich", " stew", " soup", " burger", " roast", " munchy", " taco", " pie",
             ];
 
-            let i = self.rng.gen_range(0, suffix.len());
+            let i = self.rng.gen_range(0..suffix.len());
 
             self.update_log(&format!("You spend an hour eating {}{}.", m_str, suffix[i]));
         }
