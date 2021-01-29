@@ -194,7 +194,7 @@ impl G {
 
                 let nkey = G::norm_key(key);
 
-                if let '0'...'9' = nkey {
+                if let '0'..='9' = nkey {
                     let v = nkey.to_digit(10).unwrap();
 
                     if v > additional_points {

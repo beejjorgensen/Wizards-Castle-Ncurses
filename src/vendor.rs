@@ -83,7 +83,7 @@ impl G {
 
             let nch = G::norm_key(ch);
             match nch {
-                '1'...'9' => {
+                '1'..='9' => {
                     let index = (nch.to_digit(10).unwrap() - 1) as usize;
                     if index < treasures.len() {
                         let tt = treasures[index];

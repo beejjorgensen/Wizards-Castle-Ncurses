@@ -49,7 +49,7 @@ impl G {
 
             let ch = G::norm_key(getch());
             match ch {
-                '1'...'8' => {
+                '1'..='8' => {
                     let v = ch.to_digit(10).unwrap();
 
                     coord[state as usize] = v - 1;
