@@ -8,7 +8,7 @@ edition = "2018"
 cheat = []
 
 [dependencies]
-wizardscastle = { git = "https://github.com/beejjorgensen/Wizards-Castle-Rust", tag = "v0.9.0"}
+wizardscastle = { git = "https://github.com/beejjorgensen/Wizards-Castle-Rust", tag = "v0.9.1"}
 #wizardscastle = { path = "../Wizards-Castle-Rust/" }
 ncurses = "5.98.0"
 rand = "0.6"
