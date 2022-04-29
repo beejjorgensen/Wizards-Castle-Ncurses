@@ -17,7 +17,7 @@ impl G {
     }
 
     pub fn update_log_good(&self, s: &str) {
-        self.update_log_attr(&s, self.wcget(G::A_LOG_GOOD()));
+        self.update_log_attr(s, self.wcget(G::A_LOG_GOOD()));
     }
 
     pub fn update_log_bad(&self, s: &str) {
@@ -25,7 +25,7 @@ impl G {
     }
 
     pub fn update_log_error(&self, s: &str) {
-        self.update_log_attr(&s, self.wcget(G::A_LOG_ERROR()));
+        self.update_log_attr(s, self.wcget(G::A_LOG_ERROR()));
     }
 
     pub fn update_log_attr(&self, s: &str, attr: u32) {

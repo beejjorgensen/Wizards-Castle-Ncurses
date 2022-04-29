@@ -274,15 +274,13 @@ impl G {
 
         let key = getch();
 
-        let dir;
-
-        match G::norm_key(key) {
-            'N' => dir = Some(Direction::North),
-            'S' => dir = Some(Direction::South),
-            'W' => dir = Some(Direction::West),
-            'E' => dir = Some(Direction::East),
-            _ => dir = None,
-        }
+        let dir = match G::norm_key(key) {
+            'N' => Some(Direction::North),
+            'S' => Some(Direction::South),
+            'W' => Some(Direction::West),
+            'E' => Some(Direction::East),
+            _ => None,
+        };
 
         if let Some(d) = dir {
             match self.game.shine_lamp(d) {
@@ -428,7 +426,7 @@ impl G {
         if error {
             self.update_log_error(&s);
         } else {
-            logf(&self, &format!("You see {}", s));
+            logf(self, &format!("You see {}", s));
         }
     }
 
@@ -674,7 +672,7 @@ impl G {
                 }
 
                 if result.defeated {
-                    self.monster_defeated_message(result, &mon_art, &mon_str);
+                    self.monster_defeated_message(result, mon_art, mon_str);
                     return true;
                 }
             }
@@ -1021,7 +1019,7 @@ impl G {
                             "Here you find the {}! It's now yours!",
                             G::treasure_name(*t.treasure_type())
                         );
-                        self.update_log_good(&msg);
+                        self.update_log_good(msg);
                     }
                     Event::Combat(monster_type) => automove = self.combat(monster_type),
                     Event::Vendor => {

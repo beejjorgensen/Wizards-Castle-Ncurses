@@ -50,7 +50,7 @@ impl G {
             self.print_gps(w);
 
             for (i, t) in treasures.iter().enumerate() {
-                let price = match pricemap.get(&t) {
+                let price = match pricemap.get(t) {
                     Some(p) => p,
                     None => panic!("price missing"),
                 };

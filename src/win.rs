@@ -191,15 +191,14 @@ impl G {
 
     /// Pop-up a new window of a given size with a border.
     pub fn popup(lines: i32, cols: i32) -> WINDOW {
-        let mut y;
         let x = (COLS() - cols) / 2;
 
         // Aesthetic positioning logic
-        if LINES() <= 25 && lines >= 12 {
-            y = (LINES() as f32 / 2.5) as i32 - lines / 2;
+        let mut y = if LINES() <= 25 && lines >= 12 {
+            (LINES() as f32 / 2.5) as i32 - lines / 2
         } else {
-            y = LINES() / 4 - lines / 2;
-        }
+            LINES() / 4 - lines / 2
+        };
 
         if y < 0 {
             y = 0;

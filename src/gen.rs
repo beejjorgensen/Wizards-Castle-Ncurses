@@ -303,7 +303,7 @@ impl G {
         );
         self.wcoff(w, G::A_TITLE());
 
-        self.mvwprintw_center(w, 4, &"Here is a list of armor you can buy.".to_string());
+        self.mvwprintw_center(w, 4, "Here is a list of armor you can buy.");
 
         wattr_on(w, A_BOLD());
 
@@ -311,12 +311,11 @@ impl G {
 
         for armor_type in armor.iter() {
             if self.armor_can_afford(*armor_type, false) {
-                let cost_str;
 
-                if *armor_type == ArmorType::None {
-                    cost_str = String::from("     ");
+                let cost_str = if *armor_type == ArmorType::None {
+                    String::from("     ")
                 } else {
-                    cost_str = format!("{:2>} GP", Armor::cost(*armor_type, false));
+                    format!("{:2>} GP", Armor::cost(*armor_type, false))
                 };
 
                 self.mvwprintw_center_notrim(
@@ -326,7 +325,7 @@ impl G {
                         "{:<14} {}",
                         G::name_to_menuitem(&G::armor_name(*armor_type)),
                         cost_str
-                    ),
+                    )
                 );
 
                 row_count += 1;
@@ -397,12 +396,11 @@ impl G {
 
         for weapon_type in weapon.iter() {
             if self.weapon_can_afford(*weapon_type, false) {
-                let cost_str;
 
-                if *weapon_type == WeaponType::None {
-                    cost_str = String::from("     ");
+                let cost_str = if *weapon_type == WeaponType::None {
+                    String::from("     ")
                 } else {
-                    cost_str = format!("{:2>} GP", Weapon::cost(*weapon_type, false));
+                    format!("{:2>} GP", Weapon::cost(*weapon_type, false))
                 };
 
                 self.mvwprintw_center_notrim(
