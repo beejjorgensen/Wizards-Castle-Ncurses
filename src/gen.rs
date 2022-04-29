@@ -311,7 +311,6 @@ impl G {
 
         for armor_type in armor.iter() {
             if self.armor_can_afford(*armor_type, false) {
-
                 let cost_str = if *armor_type == ArmorType::None {
                     String::from("     ")
                 } else {
@@ -325,7 +324,7 @@ impl G {
                         "{:<14} {}",
                         G::name_to_menuitem(&G::armor_name(*armor_type)),
                         cost_str
-                    )
+                    ),
                 );
 
                 row_count += 1;
@@ -396,7 +395,6 @@ impl G {
 
         for weapon_type in weapon.iter() {
             if self.weapon_can_afford(*weapon_type, false) {
-
                 let cost_str = if *weapon_type == WeaponType::None {
                     String::from("     ")
                 } else {

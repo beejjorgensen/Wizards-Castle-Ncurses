@@ -35,7 +35,7 @@ impl G {
                     Ordering::Less => {
                         wattroff(w, A_REVERSE());
                         mvwprintw(w, 4 + i, 18, &format!("{}", coord[i as usize] + 1));
-                    },
+                    }
                     Ordering::Equal => {
                         wattron(w, A_REVERSE());
                         mvwprintw(w, 4 + i, 18, " ");
