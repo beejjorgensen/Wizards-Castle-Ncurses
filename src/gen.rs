@@ -202,7 +202,7 @@ impl G {
                     }
 
                     if let Err(err) = self.game.player_allocate_points(*stat, v) {
-                        panic!(err);
+                        panic!("{:?}", err);
                     }
 
                     break;
@@ -477,7 +477,7 @@ impl G {
         };
 
         if let Err(err) = r {
-            panic!(err);
+            panic!("{:?}", err);
         }
 
         G::popup_close(w);
@@ -537,7 +537,7 @@ impl G {
                     self.popup_error(&format!("You can only afford {}!", gps));
                 } else {
                     if let Err(err) = self.game.player_purchase_flares(num) {
-                        panic!(err);
+                        panic!("{:?}", err);
                     }
                     success = true;
                 }

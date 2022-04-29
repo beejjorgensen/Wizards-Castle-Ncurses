@@ -295,7 +295,7 @@ impl G {
                         G::room_name(&room_type)
                     ));
                 }
-                Err(err) => panic!(err),
+                Err(err) => panic!("{:?}", err),
             }
         }
 
@@ -443,7 +443,7 @@ impl G {
                 }
             },
 
-            Err(err) => panic!(err),
+            Err(err) => panic!("{:?}", err),
         }
 
         println!();
@@ -469,7 +469,7 @@ impl G {
                     "The book sticks to your hands--now you can't draw your weapon!",
                 ),
             },
-            Err(err) => panic!(err),
+            Err(err) => panic!("{:?}", err),
         }
     }
 

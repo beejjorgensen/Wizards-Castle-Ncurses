@@ -29,7 +29,7 @@ impl G {
 
         let pricemap = match self.game.vendor_treasure_offer() {
             Ok(p) => p,
-            Err(err) => panic!(err),
+            Err(err) => panic!("{:?}", err),
         };
 
         let height = (10 + treasures.len()) as i32;
@@ -89,7 +89,7 @@ impl G {
                         let tt = treasures[index];
                         if !sold.contains(&tt) {
                             if let Err(err) = self.game.vendor_treasure_accept(tt) {
-                                panic!(err);
+                                panic!("{:?}", err);
                             }
                             sold.push(tt);
                         }
