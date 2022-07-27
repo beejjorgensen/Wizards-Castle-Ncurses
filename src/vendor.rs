@@ -109,14 +109,12 @@ impl G {
 
     /// Print armor name and price
     fn print_armor_prompt(&self, w: WINDOW, armor_type: ArmorType) {
-        let name;
-
-        match armor_type {
-            ArmorType::Leather => name = "|[L]|eather",
-            ArmorType::Chainmail => name = "|[C]|hainmail",
-            ArmorType::Plate => name = "|[P]|late",
+        let name = match armor_type {
+            ArmorType::Leather => "|[L]|eather",
+            ArmorType::Chainmail => "|[C]|hainmail",
+            ArmorType::Plate => "|[P]|late",
             t => panic!("invalid armor type {:#?}", t),
-        }
+        };
 
         let costgp = Armor::cost(armor_type, true);
 
@@ -135,14 +133,12 @@ impl G {
 
     /// Print weapon name and price
     fn print_weapon_prompt(&self, w: WINDOW, weapon_type: WeaponType) {
-        let name;
-
-        match weapon_type {
-            WeaponType::Dagger => name = "|[D]|agger",
-            WeaponType::Mace => name = "|[M]|ace",
-            WeaponType::Sword => name = "|[S]|word",
+        let name = match weapon_type {
+            WeaponType::Dagger => "|[D]|agger",
+            WeaponType::Mace => "|[M]|ace",
+            WeaponType::Sword => "|[S]|word",
             t => panic!("invalid weapon type {:#?}", t),
-        }
+        };
 
         let costgp = Weapon::cost(weapon_type, true);
 
