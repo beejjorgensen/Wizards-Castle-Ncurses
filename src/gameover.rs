@@ -7,6 +7,7 @@ use wizardscastle::player::Stat;
 use wizardscastle::weapon::WeaponType;
 
 use std::cmp;
+use std::fmt::Write;
 
 impl G {
     /// Initial screen if dead
@@ -124,12 +125,12 @@ impl G {
             let last = i == strs.len() - 1;
 
             if first {
-                final_str.push_str(&G::initial_upper(&s.to_lowercase()));
+                let _ = write!(final_str, "{}", &G::initial_upper(&s.to_lowercase()));
                 first = false;
             } else {
                 let and = if last { "and " } else { "" };
                 let comma = if strs.len() > 2 { "," } else { "" };
-                final_str.push_str(&format!("{} {}{}", comma, and, s.to_lowercase()));
+                let _ = write!(final_str, "{} {}{}", comma, and, s.to_lowercase());
             }
         }
 
