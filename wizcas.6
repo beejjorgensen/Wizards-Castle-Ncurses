@@ -1,82 +1,55 @@
 .\" Contact: Brian "Beej Jorgensen" Hall <beej@beej.us>
-
 .\" Yes, this is hand-coded.
-
 .TH WIZCAS 6 "2019-02-03" "Games Manual" "Games Manual"
-
 .SH NAME
 Wizard's Castle
-
 .SH SYNOPSIS
 .BR wizcas " [options]"
-
 .SH OPTIONS
 Options are non-functional by default. The project must be built with:
-
 .in +4n
 .B cargo build --feature cheat
 .in
-
 to enable the options.
-
 .TP
 .B \-d
 Permanently discover all rooms on the map
-
 .TP
 .B \-b
 Force black-and-white mode
-
 .TP
 .B \-z
 Give the player the Orb of Zot
-
 .TP
 .B \-r
 Give the player the Runestaff
-
 .TP
 .B \-l
 Display the locations of the Runestaff and Orb of Zot
-
 .SH DESCRIPTION
-
-This dungeon-crawl of an adventure leads you through a random castle full of
-creatures, gold, treasure, and many other mysterious rooms, both good and bad.
-
-If you're skilled (and lucky!) you might escape the dungeon with the
-long-sought-after
+This dungeon-crawl of an adventure leads you through a random castle
+full of creatures, gold, treasure, and many other mysterious rooms, both
+good and bad. If you're skilled (and lucky!) you might escape the
+dungeon with the long-sought-after
 .IR "Orb of Zot" !
-
 .SS Winning
-
 To win:
-
 .IP 1. 4n
 Find and kill the monster that is carrying the Runestaff.
-
 .IP 2. 4n
 Find the warp that is the Orb of Zot in disguise.
-
 .IP 3. 4n
 Teleport directly into that warp using the Runestaff.
-
 .IP 4. 4n
 Head back to the entrance, and walk north to exit to victory!
-
 .PP
-
-
 .SS Losing and Dying
+If you walk north from the entrance, you exit the dungeon. If you do
+this without the Orb of Zot, you lose... but at least you survived!
 
-If you walk north from the entrance, you exit the dungeon. If you do this
-without the Orb of Zot, you lose... but at least you survived!
-
-If any of your stats (strength, intelligence, dexterity) falls to zero, you die.
-
-
+If any of your stats (strength, intelligence, dexterity) falls to zero,
+you die.
 .SS Character generation
-
 You can be an
 .IR Hobbit ,
 .IR Elf ,
@@ -84,14 +57,14 @@ You can be an
 or
 .IR Dwarf .
 
-Hobbits are the weakest and most nimble. Dwarves are the strongest and least
-nimble. Elves and humans are in between.
+Hobbits are the weakest and most nimble. Dwarves are the strongest and
+least nimble. Elves and humans are in between.
 
 You may choose male or female gender. This has no bearing on gameplay.
 
-The next step is stat allocation. You have additional points to allocate among
-your strength, intelligence, and dexterity. Hobbits get half as many allocation
-points as the other races.
+The next step is stat allocation. You have additional points to allocate
+among your strength, intelligence, and dexterity. Hobbits get half as
+many allocation points as the other races.
 
 Armor ranges from
 .IR plate ,
@@ -108,371 +81,291 @@ being the worst.
 If you still have money remaining, you may buy a lamp.
 
 Any gold pieces remaining at this point may be used to buy flares.
-
-
 .SS Gameplay
-
-When the game begins, the player sees the map in the upper left, with their
-position bracketed with
+When the game begins, the player sees the map in the upper left, with
+their position bracketed with
 .B "< >"
 signs.
 
 The player's stats appear in the upper right.
-
 .TP
 .B ST
 Strength
-
 .TP
 .B IQ
 Intelligence
-
 .TP
 .B DX
 Dexterity
-
 .TP
 .B R
 This appears if the player is carrying the Runestaff
-
 .TP
 .B Z
 This appears if the player is carrying the Orb of Zot
-
 .TP
 .B GP
 Gold pieces
-
 .TP
 .B FL
 Flares
-
 .TP
 .B T
 Turn number
-
 .PP
 Messages appear at the bottom of the screen.
 
-When the game begins, the player is standing at the entrance and is free to
-enter a command.
-
+When the game begins, the player is standing at the entrance and is free
+to enter a command.
 .SS Commands 
-
-Note that not all commands are available in all rooms on the map. Keep an eye on
-the stats window for additional commands that might be available in certain
-contexts.
+Note that not all commands are available in all rooms on the map. Keep
+an eye on the stats window for additional commands that might be
+available in certain contexts.
 
 Commands are case-insensitive.
-
 .TP
 .BR N , S , W , E
 Head north, south, west, or east
-
 .TP
 .BR U , D
 Go up or down stairs
-
 .TP
 .B T
 Trade with a vendor, or teleport if you have the Runestaff
-
 .TP
 .B A
 Attack a vendor or monster (in combat only)
-
 .TP
 .B B
 Bribe a monster (in combat only)
-
 .TP
 .B C
 Cast a spell (in combat only)
-
 .TP
 .B L
 Shine your lamp a direction
-
 .TP
 .B F
 Fire off a flare
-
 .TP
 .B I
 See your inventory
-
 .TP
 .B P
 Teleport, alias for
 .BR T .
-
 .TP
 .B R
 Read a book, alias for 
 .BR O .
-
 .TP
 .B D
 Drink from a pool
-
 .TP
 .B O
 Open a chest or book
-
 .TP
 .B G
 Gaze into an orb
-
 .TP
 .BR H , ?
 Show help
-
 .TP
 .B C
 Display copyright information
-
 .TP
 .B Q
 Quit
-
 .PP
-
 .SS The map
-
 Symbols on the map describe what the room contains.
-
 .TP
 .B .
 An empty room
-
 .TP
 .B E
 The entrance. Go north from here to exit the castle. If you possess the Orb of
 Zot when you exit, you win the game.
-
 .TP
 .B D
 Stairs going down
-
 .TP
 .B U
 Stairs going up
-
 .TP
 .B G
 Gold pieces, free for the taking
-
 .TP
 .B P
 A pool. When you drink from the pool, your stats change--for better or worse.
 You might be surprised at what other changes you undergo.
-
 .TP
 .B C
 A chest. There might be a pile of gold pieces inside. Or it could be trapped.
-
 .TP
 .B F
 Flares. Use these to light the surrounding rooms.
-
 .TP
 .B W
-A warp. This will teleport you randomly to another location in the dungeon.
+A warp. This will teleport you randomly to another location in the
+dungeon.
 
 One important exception is that one of the warps is the
 .I Orb of Zot
-in disguise. If you walk into this warp, you will simply appear on the other
-side. Teleporting directly into this warp with the Runestaff will bring you into
-possession of the Orb of Zot!
-
+in disguise. If you walk into this warp, you will simply appear on the
+other side. Teleporting directly into this warp with the Runestaff will
+bring you into possession of the Orb of Zot!
 .TP
 .B S
-Sinkhole. You will drop into the level below. If you are in the deepest level,
-you will drop to the top level!
-
+Sinkhole. You will drop into the level below. If you are in the deepest
+level, you will drop to the top level!
 .TP
 .B O
-A crystal Orb. If you gaze into this orb, you will see a variety of different
-things. You might even see where the Orb of Zot is located--if the orb isn't
-misleading you. If you see yourself in a bloody heap, your strength will suffer
-and the orb will disintegrate.
+A crystal Orb. If you gaze into this orb, you will see a variety of
+different things. You might even see where the Orb of Zot is located--if
+the orb isn't misleading you. If you see yourself in a bloody heap, your
+strength will suffer and the orb will disintegrate.
 
 Note that this is
 .B not
 the
 .I "Orb of Zot" !
-
 .TP
 .B B
-A book. Reading the book might help your stats. Or it might make you blind, or
-stick to your hands preventing you from fighting with your weapon.
+A book. Reading the book might help your stats. Or it might make you
+blind, or stick to your hands preventing you from fighting with your
+weapon.
 
 The Blue Flame will dissolve books stuck to your hands.
 
 The Opal Eye will cure blindness.
-
 .TP
 .B M
-A monster of some kind. One of these monsters carries the Runestaff, and must be
-slain to acquire it.
+A monster of some kind. One of these monsters carries the Runestaff, and
+must be slain to acquire it.
 
-When fighting monsters, you can attack with a weapon (if you have one), cast a
-spell (if your intelligence is high enough), or bribe (if you have a treasure).
+When fighting monsters, you can attack with a weapon (if you have one),
+cast a spell (if your intelligence is high enough), or bribe (if you
+have a treasure).
 
 Be careful fighting Dragons and Gargoyles--your weapon might break!
-
 .TP
 .B V
-A vendor. You can sell treasures to the vendor, buy weapons, armor, and lamps at
-hugely-inflated prices, and purchase potions of gain stat.
+A vendor. You can sell treasures to the vendor, buy weapons, armor, and
+lamps at hugely-inflated prices, and purchase potions of gain stat.
 
 You can attack vendors, but if you attack one, they
 .B all
-turn against you. You have to successfully bribe one to get back in their good
-graces.
+turn against you. You have to successfully bribe one to get back in
+their good graces.
 
 Defeating a vendor gives you all their wares.
-
 .TP
 .B T
-A treasure. Some of the treasures have beneficial effects, while others are just
-pretty.
-
+A treasure. Some of the treasures have beneficial effects, while others
+are just pretty.
 .PP
-
 .SS Curses
+Some of the empty rooms in the dungeon are cursed, and you catch the
+curse by stepping into the room.
 
-Some of the empty rooms in the dungeon are cursed, and you catch the curse by
-stepping into the room.
-
-Once you have a curse, you can never be rid of it. However, possessing certain
-treasures wards off the effects.
-
+Once you have a curse, you can never be rid of it. However, possessing
+certain treasures wards off the effects.
 .TP
 .B Lethargy
-Monsters get the first attack. Your turn counter increases at double speed.
+Monsters get the first attack. Your turn counter increases at double
+speed.
 
 This curse is warded by The Ruby Red.
-
 .TP
 .B The Leech
 Causes you to lose gold pieces each turn.
 
 This curse is warded by The Pale Pearl.
-
 .TP
 .B Forgetfulness
 Slowly returns the map to being unexplored.
 
 This curse is warded by The Green Gem.
-
-
 .SS Treasures
-
 .TP
 .B The Ruby Red
 Protects against the curse of Lethargy
-
 .TP
 .B The Norn Stone
 No special power
-
 .TP
 .B The Pale Pearl
 Protects against the curse of The Leech
-
 .TP
 .B The Opal Eye
 Cures blindness
-
 .TP
 .B The Green Gem
 Protects against the curse of Forgetfulness
-
 .TP
 .B The Blue Flame
 Dissolves books stuck to your hands
-
 .TP
 .B The Palintir
 No special power
-
 .TP
 .B The Silmaril
 No special power
-
 .PP
-
-
 .SS Changes from the original game
+There was a bug in the original game that prevented curses from taking
+effect unless the user was in the cursed room. This has been fixed.
 
-There was a bug in the original game that prevented curses from taking effect
-unless the user was in the cursed room. This has been fixed.
-
-Instead of explicitly retreating from monsters or ignoring vendors, the player
-now just walks a cardinal direction for the same effect.
+Instead of explicitly retreating from monsters or ignoring vendors, the
+player now just walks a cardinal direction for the same effect.
 
 The following commands are new:
-
 .in +4n
 .BR [C] opyright
-
 .BR [H] elp
-
 .BR [I] nventory
-
 .B [P] 
 as a synonym for
 .BR [T] eleport
-
 .BR [R] ead
 as a synonym for
 .BR [O] "pening a book"
 .in
-
 .SH BUGS
-
-Resizing the terminal window does bad things, up to and including a panic.
+Resizing the terminal window does bad things, up to and including a
+panic.
 
 Probably doesn't build on Windows outside of Cygwin or WSL.
-
 .SH AUTHOR
-
 Wizard's Castle was written in the late 1970s by Joseph R. Power. It was
 published in Recreational Computing Magazine in July 1980 for the Exidy
 Sorceror, and was rapidly ported to a variety of different platforms.
 
 This recreation was written in Rust as a learning project by Brian "Beej
 Jorgensen" Hall <beej@beej.us>
-
 .SH COPYRIGHT
-
-The source code for this Rust version of Wizard's Castle is Copyright \[co] 2019 Brian
-"Beej Jorgensen" Hall <beej@beej.us>
+The source code for this Rust version of Wizard's Castle is Copyright
+\[co] 2019 Brian "Beej Jorgensen" Hall <beej@beej.us>
 
 It is distributed under the terms of the
 .UR https://opensource.org/licenses/MIT
 MIT License.
 .UE
-
 .SH SEE ALSO
-
 Information about Wizard's Castle:
-
 .in +4n
 https://github.com/beejjorgensen/Wizards-Castle-Info
 .in
 
-A Rust library to run the game, plus a command line version staying true to the
-original UI:
-
+A Rust library to run the game, plus a command line version staying true
+to the original UI:
 .in +4n
 https://github.com/beejjorgensen/Wizards-Castle-Rust
 .in
 
-Source for this version plus a command line version staying true to the original
-UI:
-
+Source for this version plus a command line version staying true to the
+original UI:
 .in +4n
 https://github.com/beejjorgensen/Wizards-Castle-Ncurses
 .in
