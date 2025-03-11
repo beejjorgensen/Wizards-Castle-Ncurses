@@ -19,7 +19,7 @@ use crate::stat::StatMode;
 
 mod bribe;
 mod gameover;
-mod gen;
+mod chargen;
 mod help;
 mod info;
 mod inv;

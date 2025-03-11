@@ -1,14 +1,14 @@
 [package]
 name = "wizards_castle_ncurses"
-version = "1.0.5"
+version = "1.0.6"
 authors = ["Brian \"Beej Jorgensen\" Hall <beej@beej.us>"]
-edition = "2021"
+edition = "2024"
 
 [features]
 cheat = []
 
 [dependencies]
-wizardscastle = { git = "https://github.com/beejjorgensen/Wizards-Castle-Rust", tag = "v0.9.3"}
+wizardscastle = { git = "https://github.com/beejjorgensen/Wizards-Castle-Rust", tag = "v0.9.5"}
 #wizardscastle = { path = "../Wizards-Castle-Rust/" }
 ncurses = "5.101.0"
 rand = "0.8.5"

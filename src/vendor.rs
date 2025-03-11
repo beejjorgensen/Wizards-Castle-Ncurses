@@ -281,8 +281,6 @@ impl G {
                 let name = "L|[a]|mp";
                 let cost = format!("{} GP", Game::vendor_lamp_cost());
 
-                if !self.game.vendor_can_afford_lamp() {}
-
                 if !self.game.vendor_can_afford_lamp() {
                     wattr_on(w, self.wcget("dim-red"));
                 }
