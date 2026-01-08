@@ -128,7 +128,7 @@ impl G {
 
         wattr_off(w, self.wcget("dim-red"));
 
-        wprintw(w, "\n");
+        let _ = wprintw(w, "\n");
     }
 
     /// Print weapon name and price
@@ -152,7 +152,7 @@ impl G {
 
         wattr_off(w, self.wcget("dim-red"));
 
-        wprintw(w, "\n");
+        let _ = wprintw(w, "\n");
     }
 
     /// Warn the user that they're about to purchase something they already have
@@ -167,7 +167,7 @@ impl G {
         self.mvwprintw_center(w, 2, &title);
         self.wcoff(w, G::A_WARN_TITLE());
 
-        wprintw(w, "\n\n");
+        let _ = wprintw(w, "\n\n");
 
         if downgrade {
             self.wprintw_center(w, "Are you sure you want to buy this?");
@@ -175,7 +175,7 @@ impl G {
             self.wprintw_center(w, "Do you really want to buy it again?");
         }
 
-        wprintw(w, "\n\n");
+        let _ = wprintw(w, "\n\n");
 
         self.wprintw_center(w, "|[Y]|es   |[N]|o");
 
@@ -260,22 +260,22 @@ impl G {
             }
 
             self.wprintw_center(w, &cur_equip);
-            wprintw(w, "\n");
+            let _ = wprintw(w, "\n");
             self.wprintw_center(w, &format!("and {} GPs", self.game.player_gp()));
 
-            wprintw(w, "\n\n");
+            let _ = wprintw(w, "\n\n");
 
             self.print_armor_prompt(w, ArmorType::Leather);
             self.print_armor_prompt(w, ArmorType::Chainmail);
             self.print_armor_prompt(w, ArmorType::Plate);
 
-            wprintw(w, "\n");
+            let _ = wprintw(w, "\n");
 
             self.print_weapon_prompt(w, WeaponType::Dagger);
             self.print_weapon_prompt(w, WeaponType::Mace);
             self.print_weapon_prompt(w, WeaponType::Sword);
 
-            wprintw(w, "\n");
+            let _ = wprintw(w, "\n");
 
             {
                 let name = "L|[a]|mp";

@@ -37,7 +37,7 @@ impl G {
 
         self.wprintw_center(w, &cod);
 
-        wprintw(w, "\n\n");
+        let _ = wprintw(w, "\n\n");
 
         self.wprintw_center(w, "|[C]|ontinue");
 
@@ -76,7 +76,7 @@ impl G {
         let punc = if win { "!" } else { "." };
         let copy = format!("You left the castle with{} the Orb of Zot{}\n\n", out, punc);
 
-        wprintw(w, "\n\n");
+        let _ = wprintw(w, "\n\n");
 
         self.wprintw_center(w, &copy);
 
@@ -239,7 +239,7 @@ impl G {
             self.wprintw_center(w, "Nothing!\n");
         }
 
-        wprintw(w, "\n");
+        let _ = wprintw(w, "\n");
 
         self.wprintw_center(w, &format!("{}\n\n", turn_str));
 
@@ -284,7 +284,7 @@ impl G {
 
         self.wcoff(w, G::A_TITLE());
 
-        wattr_on(w, A_REVERSE());
+        wattr_on(w, A_REVERSE);
 
         if play_again {
             self.mvwprintw_center_notrim(w, 4, " Press any key to start ");
@@ -292,7 +292,7 @@ impl G {
             self.mvwprintw_center_notrim(w, 4, " Press any key to exit ");
         }
 
-        wattr_off(w, A_REVERSE());
+        wattr_off(w, A_REVERSE);
 
         box_(w, 0, 0);
 

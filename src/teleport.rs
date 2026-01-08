@@ -26,20 +26,20 @@ impl G {
             self.mvwprintw_center(w, 2, "Teleport to where?");
             self.wcoff(w, G::A_TITLE());
 
-            mvwprintw(w, 4, 9, "X coord:");
-            mvwprintw(w, 5, 9, "Y coord:");
-            mvwprintw(w, 6, 9, "Z coord:");
+            let _ = mvwprintw(w, 4, 9, "X coord:");
+            let _ = mvwprintw(w, 5, 9, "Y coord:");
+            let _ = mvwprintw(w, 6, 9, "Z coord:");
 
             for i in 0..3 {
                 match i.cmp(&state) {
                     Ordering::Less => {
-                        wattroff(w, A_REVERSE());
-                        mvwprintw(w, 4 + i, 18, &format!("{}", coord[i as usize] + 1));
+                        wattroff(w, A_REVERSE);
+                        let _ = mvwprintw(w, 4 + i, 18, &format!("{}", coord[i as usize] + 1));
                     }
                     Ordering::Equal => {
-                        wattron(w, A_REVERSE());
-                        mvwprintw(w, 4 + i, 18, " ");
-                        wattroff(w, A_REVERSE());
+                        wattron(w, A_REVERSE);
+                        let _ = mvwprintw(w, 4 + i, 18, " ");
+                        wattroff(w, A_REVERSE);
                     }
                     _ => (),
                 }

@@ -139,16 +139,16 @@ impl G {
                     match c {
                         'r' => {
                             if on {
-                                wattr_on(w, A_REVERSE());
+                                wattr_on(w, A_REVERSE);
                             } else {
-                                wattr_off(w, A_REVERSE());
+                                wattr_off(w, A_REVERSE);
                             }
                         }
                         'b' => {
                             if on {
-                                wattr_on(w, A_BOLD());
+                                wattr_on(w, A_BOLD);
                             } else {
-                                wattr_off(w, A_BOLD());
+                                wattr_off(w, A_BOLD);
                             }
                         }
                         'D' => {
@@ -178,14 +178,14 @@ impl G {
                 let reversed = G::invert_state(&mut state_map, 'r');
 
                 if reversed {
-                    wattr_on(w, A_REVERSE());
+                    wattr_on(w, A_REVERSE);
                 } else {
-                    wattr_off(w, A_REVERSE());
+                    wattr_off(w, A_REVERSE);
                 }
                 continue;
             }
 
-            wprintw(w, &format!("{}", c));
+            let _ = wprintw(w, &format!("{}", c));
         }
     }
 
@@ -244,14 +244,14 @@ impl G {
 
         self.mvwprintw_center(w, 4, s);
 
-        wattron(w, A_REVERSE());
+        wattron(w, A_REVERSE);
         self.mvwprintw_center(w, 6, " Press any key ");
-        wattroff(w, A_REVERSE());
+        wattroff(w, A_REVERSE);
 
         self.wcon(w, "bold-red");
-        wattr_on(w, A_REVERSE());
+        wattr_on(w, A_REVERSE);
         box_(w, 0, 0);
-        wattr_off(w, A_REVERSE());
+        wattr_off(w, A_REVERSE);
         self.wcoff(w, "bold-red");
 
         wrefresh(w);

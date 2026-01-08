@@ -21,9 +21,9 @@ impl G {
             "https://github.com/beejjorgensen/Wizards-Castle-Info\n\n",
         );
 
-        wattron(w, A_REVERSE());
+        wattron(w, A_REVERSE);
         self.wprintw_center_notrim(w, " Press any key ");
-        wattroff(w, A_REVERSE());
+        wattroff(w, A_REVERSE);
 
         box_(w, 0, 0);
         wrefresh(w);

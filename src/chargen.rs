@@ -14,7 +14,7 @@ impl G {
         self.mvwprintw_center(w, 2, "* * * THE WIZARD'S CASTLE * * *\n\n");
         self.wcoff(w, G::A_TITLE());
 
-        wattron(w, A_BOLD());
+        wattron(w, A_BOLD);
         self.wprintw_center(w, "Many cycles ago, in the Kingdom of N'DIC, the gnomic\n");
         self.wprintw_center(w, "wizard ZOT forged his great *ORB OF POWER*. He soon\n");
         self.wprintw_center(w, "vanished, leaving behind his vast subterranean castle\n");
@@ -34,11 +34,11 @@ impl G {
             w,
             "of now, *NONE* has ever emerged victoriously! BEWARE!!\n\n",
         );
-        wattroff(w, A_BOLD());
+        wattroff(w, A_BOLD);
 
-        wattron(w, A_REVERSE());
+        wattron(w, A_REVERSE);
         self.wprintw_center(w, " Press any key ");
-        wattroff(w, A_REVERSE());
+        wattroff(w, A_REVERSE);
 
         box_(w, 0, 0);
 
@@ -57,9 +57,9 @@ impl G {
         self.mvwprintw_center(w, 2, "All right, Bold One. You may be an:");
         self.wcoff(w, G::A_TITLE());
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
         self.mvwprintw_center(w, 4, "|[E]|lf  |[D]|warf  Hu|[m]|an  |[H]|obbit");
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
 
@@ -88,9 +88,9 @@ impl G {
         self.mvwprintw_center(w, 2, "Which sex do you prefer?");
         self.wcoff(w, G::A_TITLE());
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
         self.mvwprintw_center(w, 4, "|[F]|emale  |[M]|ale");
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
 
@@ -172,7 +172,7 @@ impl G {
                 ),
             );
 
-            wattr_on(w, A_BOLD());
+            wattr_on(w, A_BOLD);
             self.mvwprintw_center(
                 w,
                 10,
@@ -183,7 +183,7 @@ impl G {
             );
 
             self.mvwprintw_center(w, 12, &format!("Press |[0]| to |[{}]|", additional_points));
-            wattr_off(w, A_BOLD());
+            wattr_off(w, A_BOLD);
 
             box_(w, 0, 0);
 
@@ -305,7 +305,7 @@ impl G {
 
         self.mvwprintw_center(w, 4, "Here is a list of armor you can buy.");
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
 
         let mut row_count = 0;
 
@@ -331,7 +331,7 @@ impl G {
             }
         }
 
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
 
@@ -389,7 +389,7 @@ impl G {
 
         self.mvwprintw_center(w, 4, "Here is a list of weapons you can buy.");
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
 
         let mut row_count = 0;
 
@@ -415,7 +415,7 @@ impl G {
             }
         }
 
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
 
@@ -454,9 +454,9 @@ impl G {
         self.mvwprintw_center(w, 2, "Want to buy a lamp for 20 GPs?");
         self.wcoff(w, G::A_TITLE());
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
         self.mvwprintw_center(w, 4, "|[Y]|es  |[N]|o");
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
 
@@ -510,8 +510,8 @@ impl G {
         box_(w, 0, 0);
 
         while !success {
-            mvwprintw(w, 6, 15 + 22, "    "); // erase old input
-            mvwprintw(w, 6, 15, "How many do you want? ");
+            let _ = mvwprintw(w, 6, 15 + 22, "    "); // erase old input
+            let _ = mvwprintw(w, 6, 15, "How many do you want? ");
 
             wrefresh(w);
             redrawwin(w);

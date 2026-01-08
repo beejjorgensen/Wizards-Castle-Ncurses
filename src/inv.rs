@@ -42,19 +42,19 @@ impl G {
 
         for i in inv {
             self.wprintw_center_notrim(w, &format!("The {:<11}", i));
-            wprintw(w, "\n");
+            let _ = wprintw(w, "\n");
         }
 
         if player_has_magic_item {
-            wattr_on(w, A_BOLD());
+            wattr_on(w, A_BOLD);
             self.wprintw_center_notrim(w, &format!("The {:<11}", magic_item));
-            wprintw(w, "\n");
-            wattr_off(w, A_BOLD());
+            let _ = wprintw(w, "\n");
+            wattr_off(w, A_BOLD);
         }
 
-        wattron(w, A_REVERSE());
+        wattron(w, A_REVERSE);
         self.mvwprintw_center_notrim(w, height - 3, " Press any key ");
-        wattroff(w, A_REVERSE());
+        wattroff(w, A_REVERSE);
 
         box_(w, 0, 0);
         wrefresh(w);

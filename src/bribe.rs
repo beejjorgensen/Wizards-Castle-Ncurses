@@ -69,9 +69,9 @@ impl G {
             self.mvwprintw_center(w, 2, "Ok, just don't tell anyone.\n\n");
             self.wcoff(w, G::A_TITLE());
 
-            wattr_on(w, A_REVERSE());
+            wattr_on(w, A_REVERSE);
             self.wprintw_center_notrim(w, " Press any key ");
-            wattr_off(w, A_REVERSE());
+            wattr_off(w, A_REVERSE);
 
             box_(w, 0, 0);
 

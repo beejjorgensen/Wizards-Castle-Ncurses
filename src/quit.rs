@@ -20,9 +20,9 @@ impl G {
         self.mvwprintw_center(w, 2, s);
         self.wcoff(w, "bold-yellow");
 
-        wattr_on(w, A_BOLD());
+        wattr_on(w, A_BOLD);
         self.mvwprintw_center(w, 4, "|[Y]|es or |[N]|o");
-        wattr_off(w, A_BOLD());
+        wattr_off(w, A_BOLD);
 
         box_(w, 0, 0);
         wrefresh(w);

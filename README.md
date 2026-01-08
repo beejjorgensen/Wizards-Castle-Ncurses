@@ -12,6 +12,10 @@ But this one is full of ncurses goodness:
 
 ## TODO
 
+Since the ncurses-rs package has been frozen, I probably won't do
+anything else with this. It'll be a Ratatui port from scratch, if
+anything.
+
 * Bold on all key prompts? Or on none?
 
 * Fix terminal resize bugs

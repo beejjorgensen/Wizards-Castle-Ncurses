@@ -24,9 +24,9 @@ impl G {
             self.mvwprintw_center_notrim(w, i as i32 + 4, s);
         }
 
-        wattron(w, A_REVERSE());
+        wattron(w, A_REVERSE);
         self.mvwprintw_center_notrim(w, 12, " Press any key ");
-        wattroff(w, A_REVERSE());
+        wattroff(w, A_REVERSE);
 
         box_(w, 0, 0);
         wrefresh(w);
