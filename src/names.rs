@@ -62,7 +62,7 @@ impl G {
             MonsterType::Dragon,
         ];
 
-        let i = self.rng.gen_range(0..monster.len());
+        let i = self.rng.random_range(0..monster.len());
 
         G::monster_name(monster[i])
     }

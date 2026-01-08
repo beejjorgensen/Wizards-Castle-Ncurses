@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::env;
 
 use rand::rngs::ThreadRng;
-use rand::thread_rng;
+use rand::rng;
 use rand::Rng;
 
 use wizardscastle::error::Error;
@@ -136,7 +136,7 @@ impl G {
 
             retreat_direction: None,
 
-            rng: thread_rng(),
+            rng: rng(),
 
             options,
         };
@@ -500,7 +500,7 @@ impl G {
             RandomMessage::HearSound => {
                 let sounds = ["a scream!", "footsteps.", "a wumpus.", "thunder."];
 
-                let i = self.rng.gen_range(0..sounds.len());
+                let i = self.rng.random_range(0..sounds.len());
 
                 self.update_log(&format!("You hear {}", sounds[i]));
             }
@@ -609,7 +609,7 @@ impl G {
                 "wich", " stew", " soup", " burger", " roast", " munchy", " taco", " pie",
             ];
 
-            let i = self.rng.gen_range(0..suffix.len());
+            let i = self.rng.random_range(0..suffix.len());
 
             self.update_log(&format!("You spend an hour eating {}{}.", m_str, suffix[i]));
         }
