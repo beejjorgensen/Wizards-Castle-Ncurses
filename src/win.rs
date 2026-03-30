@@ -209,7 +209,7 @@ impl G {
 
     /// Close a popup
     pub fn popup_close(w: WINDOW) {
-        wclear(w);
+        werase(w);
         wrefresh(w);
         delwin(w);
     }

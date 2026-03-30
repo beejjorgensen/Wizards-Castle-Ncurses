@@ -5,7 +5,7 @@ impl G {
     pub fn update_map(&self, show_all: bool) {
         let z = self.game.player_z();
 
-        wclear(self.mapwin); // If we don't clear first, nothing redraws...??
+        werase(self.mapwin);
 
         wprintw(self.mapwin, "\n ");
 

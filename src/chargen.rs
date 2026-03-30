@@ -122,7 +122,7 @@ impl G {
                 break;
             }
 
-            wclear(w);
+            werase(w);
 
             self.wcon(w, G::A_TITLE());
             self.mvwprintw_center(
