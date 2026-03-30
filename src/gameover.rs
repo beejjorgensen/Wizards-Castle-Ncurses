@@ -37,7 +37,7 @@ impl G {
 
         self.wprintw_center(w, &cod);
 
-        let _ = wprintw(w, "\n\n");
+        let _ = waddstr(w, "\n\n");
 
         self.wprintw_center(w, "|[C]|ontinue");
 
@@ -76,7 +76,7 @@ impl G {
         let punc = if win { "!" } else { "." };
         let copy = format!("You left the castle with{} the Orb of Zot{}\n\n", out, punc);
 
-        let _ = wprintw(w, "\n\n");
+        let _ = waddstr(w, "\n\n");
 
         self.wprintw_center(w, &copy);
 
@@ -239,7 +239,7 @@ impl G {
             self.wprintw_center(w, "Nothing!\n");
         }
 
-        let _ = wprintw(w, "\n");
+        let _ = waddstr(w, "\n");
 
         self.wprintw_center(w, &format!("{}\n\n", turn_str));
 

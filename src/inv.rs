@@ -42,13 +42,13 @@ impl G {
 
         for i in inv {
             self.wprintw_center_notrim(w, &format!("The {:<11}", i));
-            let _ = wprintw(w, "\n");
+            let _ = waddstr(w, "\n");
         }
 
         if player_has_magic_item {
             wattr_on(w, A_BOLD);
             self.wprintw_center_notrim(w, &format!("The {:<11}", magic_item));
-            let _ = wprintw(w, "\n");
+            let _ = waddstr(w, "\n");
             wattr_off(w, A_BOLD);
         }
 

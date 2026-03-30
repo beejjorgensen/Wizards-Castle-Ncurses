@@ -30,7 +30,7 @@ impl G {
 
     pub fn update_log_attr(&self, s: &str, attr: u32) {
         wattr_on(self.loginner, attr);
-        let _ = wprintw(self.loginner, &format!("\n{}", s));
+        let _ = waddstr(self.loginner, &format!("\n{}", s));
         wattr_off(self.loginner, attr);
 
         box_(self.logwin, 0, 0);

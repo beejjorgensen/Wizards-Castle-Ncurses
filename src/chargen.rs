@@ -510,8 +510,8 @@ impl G {
         box_(w, 0, 0);
 
         while !success {
-            let _ = mvwprintw(w, 6, 15 + 22, "    "); // erase old input
-            let _ = mvwprintw(w, 6, 15, "How many do you want? ");
+            let _ = mvwaddstr(w, 6, 15 + 22, "    "); // erase old input
+            let _ = mvwaddstr(w, 6, 15, "How many do you want? ");
 
             wrefresh(w);
             redrawwin(w);
