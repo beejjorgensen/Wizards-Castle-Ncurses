@@ -185,7 +185,7 @@ impl G {
                 continue;
             }
 
-            let _ = wprintw(w, &format!("{}", c));
+            let _ = waddch(w, c as chtype);
         }
     }
 
