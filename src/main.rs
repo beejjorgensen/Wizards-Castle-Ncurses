@@ -160,7 +160,7 @@ impl G {
             self.game.debug_give_runestaff();
         }
 
-        wclear(self.loginner);
+        werase(self.loginner);
         wmove(self.loginner, 0, 0);
     }
 
@@ -882,8 +882,9 @@ impl G {
 
         let mut playing = true;
 
+        clear();
         while playing {
-            clear();
+            erase();
             refresh();
 
             self.restart(true);

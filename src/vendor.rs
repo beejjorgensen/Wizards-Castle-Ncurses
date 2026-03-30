@@ -41,7 +41,7 @@ impl G {
         let mut bailout = false;
 
         while !done {
-            wclear(w);
+            werase(w);
 
             self.wcon(w, G::A_TITLE());
             self.mvwprintw_center(w, 2, "What do you want to sell?\n\n");
@@ -243,7 +243,7 @@ impl G {
         let mut done = false;
 
         while !done {
-            wclear(w);
+            werase(w);
 
             self.wcon(w, G::A_TITLE());
             self.mvwprintw_center(w, 2, "What equipment would you like to buy?\n\n");
@@ -368,7 +368,7 @@ impl G {
         let mut done = false;
 
         while !done {
-            wclear(w);
+            werase(w);
 
             self.wcon(w, G::A_TITLE());
             self.mvwprintw_center(w, 2, "Would you like to buy some potions?\n\n");
