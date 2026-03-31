@@ -3,9 +3,9 @@ use std::char;
 use std::collections::HashMap;
 use std::env;
 
-use rand::rngs::ThreadRng;
+use rand::RngExt;
 use rand::rng;
-use rand::Rng;
+use rand::rngs::ThreadRng;
 
 use wizardscastle::error::Error;
 use wizardscastle::game::{
@@ -18,8 +18,8 @@ use wizardscastle::room::RoomType;
 use crate::stat::StatMode;
 
 mod bribe;
-mod gameover;
 mod chargen;
+mod gameover;
 mod help;
 mod info;
 mod inv;
@@ -303,24 +303,12 @@ impl G {
     // Drink from a pool
     fn drink(&mut self) {
         let s = match self.game.drink() {
-            Ok(DrinkEvent::Stronger) => {
-                String::from("feel stronger!")
-            }
-            Ok(DrinkEvent::Weaker) => {
-                String::from("feel weaker.")
-            }
-            Ok(DrinkEvent::Smarter) => {
-                String::from("feel smarter!")
-            }
-            Ok(DrinkEvent::Dumber) => {
-                String::from("feel dumber.")
-            }
-            Ok(DrinkEvent::Nimbler) => {
-                String::from("feel nimbler!")
-            }
-            Ok(DrinkEvent::Clumsier) => {
-                String::from("feel clumsier.")
-            }
+            Ok(DrinkEvent::Stronger) => String::from("feel stronger!"),
+            Ok(DrinkEvent::Weaker) => String::from("feel weaker."),
+            Ok(DrinkEvent::Smarter) => String::from("feel smarter!"),
+            Ok(DrinkEvent::Dumber) => String::from("feel dumber."),
+            Ok(DrinkEvent::Nimbler) => String::from("feel nimbler!"),
+            Ok(DrinkEvent::Clumsier) => String::from("feel clumsier."),
             Ok(DrinkEvent::ChangeRace) => {
                 format!("turn into a {}!", self.race_name())
             }
@@ -580,10 +568,10 @@ impl G {
         let mut is_vendor = false;
         let can_teleport = self.game.player_has_runestaff();
 
-        if let RoomType::Monster(m) = self.game.room_at_player().room_type() {
-            if m.monster_type() == MonsterType::Vendor {
-                is_vendor = true;
-            }
+        if let RoomType::Monster(m) = self.game.room_at_player().room_type()
+            && m.monster_type() == MonsterType::Vendor
+        {
+            is_vendor = true;
         }
 
         if is_vendor {

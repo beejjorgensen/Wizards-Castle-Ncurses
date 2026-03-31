@@ -8,7 +8,7 @@ use wizardscastle::room::RoomType;
 use wizardscastle::treasure::TreasureType;
 use wizardscastle::weapon::WeaponType;
 
-use rand::Rng;
+use rand::RngExt;
 
 impl G {
     pub fn player_race_name(&self) -> &str {
