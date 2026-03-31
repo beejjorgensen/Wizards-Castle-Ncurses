@@ -1,15 +1,15 @@
 .\" Contact: Brian "Beej Jorgensen" Hall <beej@beej.us>
 .\" Yes, this is hand-coded.
-.TH WIZCAS 6 "2019-02-03" "Games Manual" "Games Manual"
+.TH WIZCASN 6 "2026-03-30" "Games Manual" "Games Manual"
 .SH NAME
-Wizard's Castle
+Wizard's Castle (ncurses edition)
 .SH SYNOPSIS
-.BR wizcas " [options]"
+.BR wizcasn " [options]"
 .SH OPTIONS
 Options are non-functional by default. The project must be built with:
-.in +4n
+.RS +4n
 .B cargo build --feature cheat
-.in
+.RE
 to enable the options.
 .TP
 .B \-d
@@ -78,9 +78,11 @@ being the best, to a
 .IR dagger ,
 being the worst.
 
-If you still have money remaining, you may buy a lamp.
+If you still have money remaining, you may buy a lamp. This can be used
+to examine rooms before you step into them.
 
-Any gold pieces remaining at this point may be used to buy flares.
+Any gold pieces remaining at this point may be used to buy flares. These
+will illuminate the 3x3 square of rooms surrounding the player.
 .SS Gameplay
 When the game begins, the player sees the map in the upper left, with
 their position bracketed with
@@ -124,10 +126,10 @@ available in certain contexts.
 
 Commands are case-insensitive.
 .TP
-.BR N , S , W , E
+.BR N , " S" , " W" , " E"
 Head north, south, west, or east
 .TP
-.BR U , D
+.BR U , " D"
 Go up or down stairs
 .TP
 .B T
@@ -168,7 +170,7 @@ Open a chest or book
 .B G
 Gaze into an orb
 .TP
-.BR H , ?
+.BR H , " ?"
 Show help
 .TP
 .B C
@@ -197,8 +199,8 @@ Stairs going up
 Gold pieces, free for the taking
 .TP
 .B P
-A pool. When you drink from the pool, your stats change--for better or worse.
-You might be surprised at what other changes you undergo.
+A pool. When you drink from the pool, your stats change\(emfor better or
+worse. You might be surprised at what other changes you undergo.
 .TP
 .B C
 A chest. There might be a pile of gold pieces inside. Or it could be trapped.
@@ -222,9 +224,9 @@ level, you will drop to the top level!
 .TP
 .B O
 A crystal Orb. If you gaze into this orb, you will see a variety of
-different things. You might even see where the Orb of Zot is located--if
-the orb isn't misleading you. If you see yourself in a bloody heap, your
-strength will suffer and the orb will disintegrate.
+different things. You might even see where the Orb of Zot is
+located\(emif the orb isn't misleading you. If you see yourself in a
+bloody heap, your strength will suffer and the orb will disintegrate.
 
 Note that this is
 .B not
@@ -248,7 +250,7 @@ When fighting monsters, you can attack with a weapon (if you have one),
 cast a spell (if your intelligence is high enough), or bribe (if you
 have a treasure).
 
-Be careful fighting Dragons and Gargoyles--your weapon might break!
+Be careful fighting Dragons and Gargoyles\(emyour weapon might break!
 .TP
 .B V
 A vendor. You can sell treasures to the vendor, buy weapons, armor, and
@@ -290,28 +292,28 @@ This curse is warded by The Green Gem.
 .SS Treasures
 .TP
 .B The Ruby Red
-Protects against the curse of Lethargy
+Protects against the curse of Lethargy.
 .TP
 .B The Norn Stone
 No special power
 .TP
 .B The Pale Pearl
-Protects against the curse of The Leech
+Protects against the curse of The Leech.
 .TP
 .B The Opal Eye
 Cures blindness
 .TP
 .B The Green Gem
-Protects against the curse of Forgetfulness
+Protects against the curse of Forgetfulness.
 .TP
 .B The Blue Flame
-Dissolves books stuck to your hands
+Dissolves books stuck to your hands.
 .TP
 .B The Palintir
-No special power
+No special power.
 .TP
 .B The Silmaril
-No special power
+No special power.
 .PP
 .SS Changes from the original game
 There was a bug in the original game that prevented curses from taking
@@ -349,26 +351,29 @@ This recreation was written in Rust as a learning project by Brian "Beej
 Jorgensen" Hall <beej@beej.us>
 .SH COPYRIGHT
 The source code for this Rust version of Wizard's Castle is Copyright
-\[co] 2019 Brian "Beej Jorgensen" Hall <beej@beej.us>
+\(co 2026 Brian "Beej Jorgensen" Hall <beej@beej.us>
 
 It is distributed under the terms of the
 .UR https://opensource.org/licenses/MIT
 MIT License.
 .UE
 .SH SEE ALSO
+.PP
+.BR wizcas (6)
+.PP
 Information about Wizard's Castle:
-.in +4n
+.RS 4n
 https://github.com/beejjorgensen/Wizards-Castle-Info
-.in
+.RE
 
 A Rust library to run the game, plus a command line version staying true
 to the original UI:
-.in +4n
+.RS 4n
 https://github.com/beejjorgensen/Wizards-Castle-Rust
-.in
+.RE
 
 Source for this version plus a command line version staying true to the
 original UI:
-.in +4n
+.RS 4n
 https://github.com/beejjorgensen/Wizards-Castle-Ncurses
-.in
+.RE
